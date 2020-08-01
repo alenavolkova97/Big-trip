@@ -1,24 +1,33 @@
 'use strict';
 
 const headerElement = document.querySelector(`.page-header`);
-const tripInfoContainerElement = headerElement.querySelector(`.trip-main`);
-const tripControlsContainerElement = tripInfoContainerElement.querySelector(`.trip-controls`);
+const headerContainerElement = headerElement.querySelector(`.trip-main`);
+const tripControlsContainerElement = headerContainerElement.querySelector(`.trip-controls`);
 const siteMenuHeaderElement = tripControlsContainerElement.querySelector(`h2:nth-child(1)`);
 const tripEventsFilterHeaderElement = tripControlsContainerElement.querySelector(`h2:nth-child(2)`);
 
-const createTripInfoTemplate = () => {
+const createTripInfoContainerTemplate = () => {
   return (
     `<section class="trip-main__trip-info  trip-info">
-      <div class="trip-info__main">
-        <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
-
-        <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
-      </div>
-
-      <p class="trip-info__cost">
-        Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
-      </p>
     </section>`
+  );
+};
+
+const createTripInfoTemplate = () => {
+  return (
+    `<div class="trip-info__main">
+      <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
+
+      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+    </div>`
+  );
+};
+
+const createTripPriceTemplate = () => {
+  return (
+    `<p class="trip-info__cost">
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+    </p>`
   );
 };
 
@@ -58,6 +67,11 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(tripInfoContainerElement, createTripInfoTemplate(), `afterbegin`);
+render(headerContainerElement, createTripInfoContainerTemplate(), `afterbegin`);
+
+const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
+
+render(tripInfoContainerElement, createTripInfoTemplate(), `beforeend`);
+render(tripInfoContainerElement, createTripPriceTemplate(), `beforeend`);
 render(siteMenuHeaderElement, createSiteMenuTemplate(), `afterend`);
 render(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), `afterend`);
