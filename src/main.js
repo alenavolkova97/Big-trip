@@ -9,7 +9,6 @@ import {createTripDayTemplate} from './view/trip-day.js';
 import {createTripEventEditTemplate} from './view/trip-event-edit.js';
 import {createTripEventTemplate} from './view/trip-event.js';
 import {generateTripEvent} from './mock/trip-event.js';
-import {arrivals} from './mock/trip-event.js';
 
 const TRIP_EVENT_COUNT = 15;
 const tripEvents = new Array(TRIP_EVENT_COUNT).fill().map(generateTripEvent);
@@ -44,9 +43,9 @@ render(tripDaysContainerElement, createTripDayTemplate(), `beforeend`);
 
 const tripsEventsList = tripDaysContainerElement.querySelector(`.trip-events__list`);
 
-render(tripsEventsList, createTripEventEditTemplate(), `beforeend`);
+render(tripsEventsList, createTripEventEditTemplate(tripEvents[0]), `beforeend`);
 
-for (let i = 0; i < TRIP_EVENT_COUNT; i++) {
+for (let i = 1; i < TRIP_EVENT_COUNT; i++) {
   render(tripsEventsList, createTripEventTemplate(tripEvents[i]), `beforeend`);
 }
 

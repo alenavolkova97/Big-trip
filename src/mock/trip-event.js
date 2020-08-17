@@ -1,4 +1,5 @@
-export const arrivals = [`Check-in`, `Sightseeing`, `Restaurant`];
+import {ARRIVALS} from '../const.js';
+import {MOVEMENTS} from '../const.js';
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -8,8 +9,7 @@ const getRandomInteger = (a = 0, b = 1) => {
 };
 
 const generateEventType = () => {
-  const types = arrivals.concat([`Taxi`, `Bus`, `Train`, `Ship`, `Transport`,
-    `Drive`, `Flight`]);
+  const types = ARRIVALS.concat(MOVEMENTS);
 
   const randomIndex = getRandomInteger(0, types.length - 1);
 
