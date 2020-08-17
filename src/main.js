@@ -10,9 +10,8 @@ import {createTripEventEditTemplate} from './view/trip-event-edit.js';
 import {createTripEventTemplate} from './view/trip-event.js';
 import {generateTripEvent} from './mock/trip-event.js';
 
-const TRIP_EVENT_COUNT = 15;
+const TRIP_EVENT_COUNT = 20;
 const tripEvents = new Array(TRIP_EVENT_COUNT).fill().map(generateTripEvent);
-console.log(tripEvents);
 
 const headerElement = document.querySelector(`.page-header`);
 const headerContainerElement = headerElement.querySelector(`.trip-main`);
@@ -30,7 +29,7 @@ render(headerContainerElement, createTripInfoContainerTemplate(), `afterbegin`);
 
 const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
 
-render(tripInfoContainerElement, createTripInfoTemplate(), `beforeend`);
+render(tripInfoContainerElement, createTripInfoTemplate(tripEvents), `beforeend`);
 render(tripInfoContainerElement, createTripPriceTemplate(), `beforeend`);
 render(siteMenuHeaderElement, createSiteMenuTemplate(), `afterend`);
 render(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), `afterend`);
