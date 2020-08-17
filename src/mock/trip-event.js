@@ -36,23 +36,26 @@ const generateEventDestinationDescription = () => {
     `Nunc fermentum tortor ac porta dapibus.`,
     `In rutrum ac purus sit amet tempus.`];
 
-  const randomQuantity = getRandomInteger(1, 5);
-  const ChosenDestinationDescriptionParts = [];
+  // вариант 2 с циклом
+  // const randomQuantity = getRandomInteger(1, 5);
+  // const ChosenDestinationDescriptionParts = [];
 
-  for (let i = 0; i < randomQuantity; i++) {
-    const randomIndex = getRandomInteger(0, destinationDescriptionParts.length - 1);
-    ChosenDestinationDescriptionParts.push(destinationDescriptionParts[randomIndex]);
-  }
+  // for (let i = 0; i < randomQuantity; i++) {
+  //   const randomIndex = getRandomInteger(0, destinationDescriptionParts.length - 1);
+  //   ChosenDestinationDescriptionParts.push(destinationDescriptionParts[randomIndex]);
+  // }
+
+  const ChosenDestinationDescriptionParts = new Array(getRandomInteger(1, 5))
+    .fill()
+    .map(() => destinationDescriptionParts[getRandomInteger(0, destinationDescriptionParts.length - 1)]);
 
   return ChosenDestinationDescriptionParts.join(` `);
 };
 
 const generateEventPhotos = () => {
-  const photos = [];
-
-  for (const i = 0; i < getRandomInteger(1, 10); i++) { // максимальное кол-во фото?
-    photos.push(`http://picsum.photos/248/152?r=${Math.random()}`);
-  }
+  const photos = new Array(getRandomInteger(1, 10)) //  кол-во фото? возврат массива?
+    .fill()
+    .map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
 
   return photos;
 };
@@ -64,5 +67,6 @@ export const generateTripEvent = () => {
     // options:
     destinationDescription: generateEventDestinationDescription(),
     photos: generateEventPhotos()
+    // price ?
   };
 };

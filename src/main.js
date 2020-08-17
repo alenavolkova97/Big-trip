@@ -8,8 +8,11 @@ import {createTripDaysContainerTemplate} from './view/trip-days-container.js';
 import {createTripDayTemplate} from './view/trip-day.js';
 import {createTripEventEditTemplate} from './view/trip-event-edit.js';
 import {createTripEventTemplate} from './view/trip-event.js';
+import {generateTripEvent} from './mock/trip-event.js';
 
-const TRIP_EVENT_COUNT = 3;
+const TRIP_EVENT_COUNT = 15;
+const tripEvents = new Array(TRIP_EVENT_COUNT).fill().map(generateTripEvent);
+console.log(tripEvents);
 
 const headerElement = document.querySelector(`.page-header`);
 const headerContainerElement = headerElement.querySelector(`.trip-main`);
@@ -43,6 +46,6 @@ const tripsEventsList = tripDaysContainerElement.querySelector(`.trip-events__li
 render(tripsEventsList, createTripEventEditTemplate(), `beforeend`);
 
 for (let i = 0; i < TRIP_EVENT_COUNT; i++) {
-  render(tripsEventsList, createTripEventTemplate(), `beforeend`);
+  render(tripsEventsList, createTripEventTemplate(tripEvents[i]), `beforeend`);
 }
 
