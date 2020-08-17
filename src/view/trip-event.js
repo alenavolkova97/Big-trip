@@ -1,11 +1,15 @@
-export const createTripEventTemplate = () => {
-  return (
+import {arrivals} from '../mock/trip-event.js';
+
+export const createTripEventTemplate = (tripEvent) => {
+  const {type, destination, price} = tripEvent;
+
+  return ( // time and offers?
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">Taxi to Amsterdam</h3>
+        <h3 class="event__title">${type} ${arrivals.includes(type) ? `in` : `to`} ${destination}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
@@ -17,7 +21,7 @@ export const createTripEventTemplate = () => {
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">20</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>

@@ -1,3 +1,5 @@
+export const arrivals = [`Check-in`, `Sightseeing`, `Restaurant`];
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -6,8 +8,8 @@ const getRandomInteger = (a = 0, b = 1) => {
 };
 
 const generateEventType = () => {
-  const types = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`,
-    `Drive`, `Flight`, `Check`, `Sightseeing`, `Restaurant`];
+  const types = arrivals.concat([`Taxi`, `Bus`, `Train`, `Ship`, `Transport`,
+    `Drive`, `Flight`]);
 
   const randomIndex = getRandomInteger(0, types.length - 1);
 
@@ -64,9 +66,9 @@ export const generateTripEvent = () => {
   return {
     type: generateEventType(),
     destination: generateEventDestination(),
+    price: getRandomInteger(1, 1000), // ограничения?
     // options:
-    destinationDescription: generateEventDestinationDescription(),
+    description: generateEventDestinationDescription(),
     photos: generateEventPhotos()
-    // price ?
   };
 };
