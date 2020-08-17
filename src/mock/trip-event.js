@@ -1,5 +1,6 @@
 import {ARRIVALS} from '../const.js';
 import {MOVEMENTS} from '../const.js';
+import {DESTINATIONS} from '../const.js';
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -17,12 +18,9 @@ const generateEventType = () => {
 };
 
 const generateEventDestination = () => {
-  const destinations = [`Amsterdam`, `Chamonix`, `Geneva`,
-    `Paris`, `Barselona`, `Berlin`, `Minsk`, `Kiev`, `Helsinki`];
+  const randomIndex = getRandomInteger(0, DESTINATIONS.length - 1);
 
-  const randomIndex = getRandomInteger(0, destinations.length - 1);
-
-  return destinations[randomIndex];
+  return DESTINATIONS[randomIndex];
 };
 
 const generateEventDestinationDescription = () => {
