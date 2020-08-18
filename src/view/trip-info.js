@@ -8,11 +8,11 @@ export const createTripInfoTemplate = (allEvents) => {
       destinations.join(` &mdash; `);
   };
 
-  return ( // date ?
+  return (
     `<div class="trip-info__main">
       <h1 class="trip-info__title">${createTripRoute()}</h1>
 
-      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+      <p class="trip-info__dates">${allEvents[0].time.start}&nbsp;&mdash;&nbsp;${allEvents[allEvents.length - 1].time.end}</p>
     </div>`
   );
 };
