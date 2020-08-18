@@ -8,10 +8,11 @@ import {createTripDaysContainerTemplate} from './view/trip-days-container.js';
 import {createTripDayTemplate} from './view/trip-day.js';
 import {createTripEventEditTemplate} from './view/trip-event-edit.js';
 import {createTripEventTemplate} from './view/trip-event.js';
-import {generateTripEvent} from './mock/trip-event.js';
+import {generateTripDay} from './mock/trip-event.js';
+import {getRandomInteger} from './utils.js';
 
-const TRIP_EVENT_COUNT = 20;
-const tripEvents = new Array(TRIP_EVENT_COUNT).fill().map(generateTripEvent);
+export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
+// may be from 1 to 6 days (mock number)
 
 const headerElement = document.querySelector(`.page-header`);
 const headerContainerElement = headerElement.querySelector(`.trip-main`);
@@ -25,11 +26,21 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
+const getAllEvents = (days) => {
+  let allEvents = [];
+
+  for (let i = 0; i < days.length; i++) {
+    allEvents = [...allEvents, ...days[i].tripEvents];
+  }
+
+  return allEvents;
+};
+
 render(headerContainerElement, createTripInfoContainerTemplate(), `afterbegin`);
 
 const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
 
-render(tripInfoContainerElement, createTripInfoTemplate(tripEvents), `beforeend`);
+render(tripInfoContainerElement, createTripInfoTemplate(getAllEvents(tripDays)), `beforeend`);
 render(tripInfoContainerElement, createTripPriceTemplate(), `beforeend`);
 render(siteMenuHeaderElement, createSiteMenuTemplate(), `afterend`);
 render(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), `afterend`);
@@ -38,13 +49,18 @@ render(tripEventsContainerElement, createTripDaysContainerTemplate(), `beforeend
 
 const tripDaysContainerElement = tripEventsContainerElement.querySelector(`.trip-days`);
 
-render(tripDaysContainerElement, createTripDayTemplate(), `beforeend`);
+for (let i = 0; i < tripDays.length; i++) { // render days and events in each day
+  render(tripDaysContainerElement, createTripDayTemplate(tripDays[i]), `beforeend`);
 
-const tripsEventsList = tripDaysContainerElement.querySelector(`.trip-events__list`);
+  let tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${i + 1})`);
+  let tripEventsList = tripDay.querySelector(`.trip-events__list`);
 
-render(tripsEventsList, createTripEventEditTemplate(tripEvents[0]), `beforeend`);
-
-for (let i = 1; i < TRIP_EVENT_COUNT; i++) {
-  render(tripsEventsList, createTripEventTemplate(tripEvents[i]), `beforeend`);
+  for (let j = 0; j < tripDays[i].tripEvents.length; j++) {
+    render(tripEventsList, createTripEventTemplate(tripDays[i].tripEvents[j]), `beforeend`);
+  }
 }
 
+const theFirstTripDay = tripDaysContainerElement.querySelector(`.day:nth-child(1)`);
+const theFirstDayTripEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
+
+render(theFirstDayTripEventsList, createTripEventEditTemplate(getAllEvents(tripDays)[0]), `afterbegin`);

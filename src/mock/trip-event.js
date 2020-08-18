@@ -107,3 +107,10 @@ export const generateTripEvent = () => {
     photos: generateEventPhotos()
   };
 };
+
+export const generateTripDay = () => {
+  return {
+    date: Date.now(),
+    tripEvents: new Array(getRandomInteger(1, 10)).fill().map(generateTripEvent)
+  };
+};

@@ -1,5 +1,5 @@
-export const createTripInfoTemplate = (tripEvents) => {
-  const destinationsWithRepeating = tripEvents.map((tripEvent) => tripEvent.destination);
+export const createTripInfoTemplate = (allEvents) => {
+  const destinationsWithRepeating = allEvents.map((tripEvent) => tripEvent.destination);
   const destinations = Array.from(new Set(destinationsWithRepeating));
 
   const createTripRoute = () => {
