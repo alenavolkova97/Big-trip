@@ -1,3 +1,4 @@
+import {getRandomInteger} from '../utils.js';
 import {ARRIVALS} from '../const.js';
 import {MOVEMENTS} from '../const.js';
 
@@ -16,40 +17,38 @@ const DESTINATION_DESCRIPTION_PARTS = [`Lorem ipsum dolor sit amet, consectetur 
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`];
 
-const OFFERS = [ // ?
+const OFFERS = [ // isChecked ?
   {
-    type:,
+    type: `flight`,
+    key: `luggage`,
     name: `Add luggage`,
     price: 30
   },
   {
-    type:,
+    type: `flight`,
+    key: `comfort`,
     name: `Switch to comfort class`,
     price: 100
   },
   {
-    type:,
+    type: `flight`,
+    key: `meal`,
     name: `Add meal`,
     price: 15
   },
   {
-    type:,
+    type: `flight`,
+    key: `seats`,
     name: `Choose seats`,
     price: 5
   },
   {
-    type:,
+    type: `flight`,
+    key: `train`,
     name: `Travel by train`,
     price: 40
   }
 ];
-
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
 
 const generateEventType = () => {
   const types = ARRIVALS.concat(MOVEMENTS);
@@ -91,7 +90,7 @@ const generateEventDestinationDescription = () => {
 };
 
 const generateEventPhotos = () => {
-  const photos = new Array(getRandomInteger(1, 10)) //  кол-во фото?
+  const photos = new Array(getRandomInteger(1, 10))
     .fill()
     .map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
 
@@ -102,7 +101,7 @@ export const generateTripEvent = () => {
   return {
     type: generateEventType(),
     destination: generateEventDestination(),
-    price: getRandomInteger(1, 1000), // ограничения?
+    price: getRandomInteger(1, 1000),
     offers: generateEventTypeOffers(),
     description: generateEventDestinationDescription(),
     photos: generateEventPhotos()
