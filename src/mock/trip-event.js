@@ -16,6 +16,34 @@ const DESTINATION_DESCRIPTION_PARTS = [`Lorem ipsum dolor sit amet, consectetur 
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`];
 
+const OFFERS = [ // ?
+  {
+    type:,
+    name: `Add luggage`,
+    price: 30
+  },
+  {
+    type:,
+    name: `Switch to comfort class`,
+    price: 100
+  },
+  {
+    type:,
+    name: `Add meal`,
+    price: 15
+  },
+  {
+    type:,
+    name: `Choose seats`,
+    price: 5
+  },
+  {
+    type:,
+    name: `Travel by train`,
+    price: 40
+  }
+];
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -37,6 +65,14 @@ const generateEventDestination = () => {
   return DESTINATIONS[randomIndex];
 };
 
+const generateEventTypeOffers = () => {
+  const offers = new Array(getRandomInteger(0, 5))
+  .fill()
+  .map(() => OFFERS[getRandomInteger(0, OFFERS.length - 1)]);
+
+  return offers;
+};
+
 const generateEventDestinationDescription = () => {
   // вариант 2 с циклом
   // const randomQuantity = getRandomInteger(1, 5);
@@ -55,7 +91,7 @@ const generateEventDestinationDescription = () => {
 };
 
 const generateEventPhotos = () => {
-  const photos = new Array(getRandomInteger(1, 10)) //  кол-во фото? возврат массива?
+  const photos = new Array(getRandomInteger(1, 10)) //  кол-во фото?
     .fill()
     .map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
 
@@ -67,7 +103,7 @@ export const generateTripEvent = () => {
     type: generateEventType(),
     destination: generateEventDestination(),
     price: getRandomInteger(1, 1000), // ограничения?
-    // options:
+    offers: generateEventTypeOffers(),
     description: generateEventDestinationDescription(),
     photos: generateEventPhotos()
   };
