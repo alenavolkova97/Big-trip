@@ -2,7 +2,7 @@ import {ARRIVALS} from '../const.js';
 import {MOVEMENTS} from '../const.js';
 import {DESTINATIONS} from '../mock/trip-event.js';
 
-const createTripMovementTypeSelect = () => {
+const createTripMovementTypeSelectTemplate = () => {
   return MOVEMENTS.map((movementType) =>
     `<div class="event__type-item">
       <input id="event-type-${movementType.toLowerCase()}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${movementType.toLowerCase()}">
@@ -10,7 +10,7 @@ const createTripMovementTypeSelect = () => {
     </div>`).join(``);
 };
 
-const createTripArrivalTypeSelect = () => {
+const createTripArrivalTypeSelectTemplate = () => {
   return ARRIVALS.map((arrivalType) =>
     `<div class="event__type-item">
       <input id="event-type-${arrivalType.toLowerCase()}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${arrivalType.toLowerCase()}">
@@ -18,13 +18,19 @@ const createTripArrivalTypeSelect = () => {
     </div>`).join(``);
 };
 
-const createTripDestinationSelect = () => {
+const createTripDestinationSelectTemplate = () => {
+  // destinations will need like data from server
   return DESTINATIONS.map((destination) =>
     `<option value="${destination}"></option>`).join(``);
 };
 
+const createTripPhotosTemplate = (photos) => {
+  return photos.map((photo) =>
+    `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``);
+};
+
 export const createTripEventEditTemplate = (tripEvent = {}) => {
-  const {// значения по умолчанию?
+  const {
     type = `Flight`,
     destination = `Geneva`,
     price = ``,
@@ -36,11 +42,6 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
       `../../public/img/photos/3.jpg`, `../../public/img/photos/4.jpg`,
       `../../public/img/photos/5.jpg`]
   } = tripEvent; // options ?
-
-  const createTripPhotos = () => {
-    return photos.map((photo) =>
-      `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``);
-  };
 
   return ( // time, offers ?
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -55,12 +56,12 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Transfer</legend>
-              ${createTripMovementTypeSelect()}
+              ${createTripMovementTypeSelectTemplate()}
             </fieldset>
 
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Activity</legend>
-              ${createTripArrivalTypeSelect()}
+              ${createTripArrivalTypeSelectTemplate()}
             </fieldset>
           </div>
         </div>
@@ -71,7 +72,7 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
           </label>
           <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${destination}" list="destination-list">
           <datalist id="destination-list">
-            ${createTripDestinationSelect()}
+            ${createTripDestinationSelectTemplate()}
           </datalist>
         </div>
 
@@ -156,7 +157,7 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
-              ${createTripPhotos()}
+              ${createTripPhotosTemplate(photos)}
             </div>
           </div>
         </section>

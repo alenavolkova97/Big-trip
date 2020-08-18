@@ -21,31 +21,31 @@ const OFFERS = [ // isChecked ?
   {
     type: `flight`,
     key: `luggage`,
-    name: `Add luggage`,
+    title: `Add luggage`,
     price: 30
   },
   {
     type: `flight`,
     key: `comfort`,
-    name: `Switch to comfort class`,
+    title: `Switch to comfort class`,
     price: 100
   },
   {
     type: `flight`,
     key: `meal`,
-    name: `Add meal`,
+    title: `Add meal`,
     price: 15
   },
   {
     type: `flight`,
     key: `seats`,
-    name: `Choose seats`,
+    title: `Choose seats`,
     price: 5
   },
   {
     type: `flight`,
     key: `train`,
-    name: `Travel by train`,
+    title: `Travel by train`,
     price: 40
   }
 ];
@@ -71,10 +71,6 @@ const generateTime = () => {
   const minutesGap = getRandomInteger(0, maxMinutesGap);
   const currentDate = new Date();
 
-  // По заданию дедлайн у задачи устанавливается без учёта времеми,
-  // но объект даты без времени завести нельзя,
-  // поэтому будем считать срок у всех задач -
-  // это 23:59:59 установленной даты
   currentDate.setHours(currentDate.getHours() + hoursGap);
   currentDate.setMinutes(currentDate.getMinutes() + minutesGap);
 

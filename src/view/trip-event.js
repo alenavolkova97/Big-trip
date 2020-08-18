@@ -1,9 +1,18 @@
 import {ARRIVALS} from '../const.js';
 
-export const createTripEventTemplate = (tripEvent) => {
-  const {type, destination, price} = tripEvent;
+const createTripEventOffersTemplate = (offers) => {
+  return offers.slice(0, 3).map((offer) =>
+    `<li class="event__offer">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;
+      &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+    </li>`).join(``);
+};
 
-  return ( // time and offers?
+export const createTripEventTemplate = (tripEvent) => {
+  const {type, destination, time, price, offers} = tripEvent;
+
+  return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
@@ -13,9 +22,9 @@ export const createTripEventTemplate = (tripEvent) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${time.start}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${time.end}</time>
           </p>
           <p class="event__duration">30M</p>
         </div>
@@ -26,11 +35,7 @@ export const createTripEventTemplate = (tripEvent) => {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">20</span>
-          </li>
+          ${createTripEventOffersTemplate(offers)}
         </ul>
 
         <button class="event__rollup-btn" type="button">
