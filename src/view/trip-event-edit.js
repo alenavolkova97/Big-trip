@@ -1,6 +1,6 @@
 import {ARRIVALS} from '../const.js';
 import {MOVEMENTS} from '../const.js';
-import {DESTINATIONS} from '../const.js';
+import {DESTINATIONS} from '../mock/trip-event.js';
 
 const createTripMovementTypeSelect = () => {
   return MOVEMENTS.map((movementType) =>
@@ -46,11 +46,11 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-1">
+          <label class="event__type  event__type-btn" for="event-type-toggle">
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -69,8 +69,8 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
           <label class="event__label  event__type-output" for="event-destination">
             ${type} ${ARRIVALS.includes(type) ? `in` : `to`}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${destination}" list="destination-list-1">
-          <datalist id="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination" type="text" name="event-destination" value="${destination}" list="destination-list">
+          <datalist id="destination-list">
             ${createTripDestinationSelect()}
           </datalist>
         </div>

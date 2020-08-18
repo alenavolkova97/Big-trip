@@ -1,6 +1,20 @@
 import {ARRIVALS} from '../const.js';
 import {MOVEMENTS} from '../const.js';
-import {DESTINATIONS} from '../const.js';
+
+export const DESTINATIONS = [`Amsterdam`, `Chamonix`, `Geneva`, `Paris`, `Barselona`,
+  `Berlin`, `Minsk`, `Kiev`, `Helsinki`];
+
+const DESTINATION_DESCRIPTION_PARTS = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+  `Cras aliquet varius magna, non porta ligula feugiat eget.`,
+  `Fusce tristique felis at fermentum pharetra.`,
+  `Aliquam id orci ut lectus varius viverra.`,
+  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
+  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
+  `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
+  `Sed sed nisi sed augue convallis suscipit in sed felis.`,
+  `Aliquam erat volutpat.`,
+  `Nunc fermentum tortor ac porta dapibus.`,
+  `In rutrum ac purus sit amet tempus.`];
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -24,30 +38,18 @@ const generateEventDestination = () => {
 };
 
 const generateEventDestinationDescription = () => {
-  const destinationDescriptionParts = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-    `Cras aliquet varius magna, non porta ligula feugiat eget.`,
-    `Fusce tristique felis at fermentum pharetra.`,
-    `Aliquam id orci ut lectus varius viverra.`,
-    `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
-    `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-    `Sed sed nisi sed augue convallis suscipit in sed felis.`,
-    `Aliquam erat volutpat.`,
-    `Nunc fermentum tortor ac porta dapibus.`,
-    `In rutrum ac purus sit amet tempus.`];
-
   // вариант 2 с циклом
   // const randomQuantity = getRandomInteger(1, 5);
   // const ChosenDestinationDescriptionParts = [];
 
   // for (let i = 0; i < randomQuantity; i++) {
-  //   const randomIndex = getRandomInteger(0, destinationDescriptionParts.length - 1);
-  //   ChosenDestinationDescriptionParts.push(destinationDescriptionParts[randomIndex]);
+  //   const randomIndex = getRandomInteger(0, DESTINATION_DESCRIPTION_PARTS.length - 1);
+  //   ChosenDestinationDescriptionParts.push(DESTINATION_DESCRIPTION_PARTS[randomIndex]);
   // }
 
   const ChosenDestinationDescriptionParts = new Array(getRandomInteger(1, 5))
     .fill()
-    .map(() => destinationDescriptionParts[getRandomInteger(0, destinationDescriptionParts.length - 1)]);
+    .map(() => DESTINATION_DESCRIPTION_PARTS[getRandomInteger(0, DESTINATION_DESCRIPTION_PARTS.length - 1)]);
 
   return ChosenDestinationDescriptionParts.join(` `);
 };
