@@ -64,6 +64,23 @@ const generateEventDestination = () => {
   return DESTINATIONS[randomIndex];
 };
 
+const generateTime = () => {
+  const maxHoursGap = 12;
+  const maxMinutesGap = 60;
+  const hoursGap = getRandomInteger(0, maxHoursGap);
+  const minutesGap = getRandomInteger(0, maxMinutesGap);
+  const currentDate = new Date();
+
+  // По заданию дедлайн у задачи устанавливается без учёта времеми,
+  // но объект даты без времени завести нельзя,
+  // поэтому будем считать срок у всех задач -
+  // это 23:59:59 установленной даты
+  currentDate.setHours(currentDate.getHours() + hoursGap);
+  currentDate.setMinutes(currentDate.getMinutes() + minutesGap);
+
+  return currentDate;
+};
+
 const generateEventTypeOffers = () => {
   const offers = new Array(getRandomInteger(0, 5))
   .fill()
@@ -73,15 +90,6 @@ const generateEventTypeOffers = () => {
 };
 
 const generateEventDestinationDescription = () => {
-  // вариант 2 с циклом
-  // const randomQuantity = getRandomInteger(1, 5);
-  // const ChosenDestinationDescriptionParts = [];
-
-  // for (let i = 0; i < randomQuantity; i++) {
-  //   const randomIndex = getRandomInteger(0, DESTINATION_DESCRIPTION_PARTS.length - 1);
-  //   ChosenDestinationDescriptionParts.push(DESTINATION_DESCRIPTION_PARTS[randomIndex]);
-  // }
-
   const ChosenDestinationDescriptionParts = new Array(getRandomInteger(1, 5))
     .fill()
     .map(() => DESTINATION_DESCRIPTION_PARTS[getRandomInteger(0, DESTINATION_DESCRIPTION_PARTS.length - 1)]);
@@ -101,6 +109,10 @@ export const generateTripEvent = () => {
   return {
     type: generateEventType(),
     destination: generateEventDestination(),
+    time: {
+      start: generateTime().toISOString(),
+      end: generateTime().toISOString()
+    },
     price: getRandomInteger(1, 1000),
     offers: generateEventTypeOffers(),
     description: generateEventDestinationDescription(),
