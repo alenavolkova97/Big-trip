@@ -111,8 +111,8 @@ export const generateTripEvent = () => {
     type: generateEventType(),
     destination: generateEventDestination(),
     time: {
-      start: generateTime().toISOString(),
-      end: generateTime().toISOString()
+      start: generateTime(),
+      end: generateTime()
     },
     price: getRandomInteger(1, 1000),
     offers: generateEventTypeOffers(),

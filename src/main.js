@@ -49,13 +49,14 @@ render(tripEventsContainerElement, createTripDaysContainerTemplate(), `beforeend
 
 const tripDaysContainerElement = tripEventsContainerElement.querySelector(`.trip-days`);
 
-tripDays.forEach((day, index) => { // render days and events in each day
+tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
+  // render days and events in each day
   render(tripDaysContainerElement, createTripDayTemplate(day), `beforeend`);
 
   let tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${index + 1})`);
   let tripEventsList = tripDay.querySelector(`.trip-events__list`);
 
-  day.tripEvents.forEach((tripEvent) => {
+  day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
     render(tripEventsList, createTripEventTemplate(tripEvent), `beforeend`);
   });
 });
