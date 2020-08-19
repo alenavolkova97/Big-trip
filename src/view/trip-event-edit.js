@@ -1,6 +1,7 @@
 import {ARRIVALS} from '../const.js';
 import {MOVEMENTS} from '../const.js';
 import {DESTINATIONS} from '../mock/trip-event.js';
+import {OFFERS} from '../mock/trip-event.js';
 
 const createTripMovementTypeSelectTemplate = () => {
   return MOVEMENTS.map((movementType) =>
@@ -19,9 +20,21 @@ const createTripArrivalTypeSelectTemplate = () => {
 };
 
 const createTripDestinationSelectTemplate = () => {
-  // destinations will need like data from server
+  // destinations list will be received from the server
   return DESTINATIONS.map((destination) =>
     `<option value="${destination}"></option>`).join(``);
+};
+
+const createTripOffersTemplate = (offers) => {
+  return offers.map((offer) =>
+    `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage" type="checkbox" name="event-offer-luggage" checked>
+      <label class="event__offer-label" for="event-offer-luggage">
+        <span class="event__offer-title">Add luggage</span>
+        &plus;
+        &euro;&nbsp;<span class="event__offer-price">30</span>
+      </label>
+    </div>`).join(``);
 };
 
 const createTripPhotosTemplate = (photos) => {
@@ -30,10 +43,16 @@ const createTripPhotosTemplate = (photos) => {
 };
 
 export const createTripEventEditTemplate = (tripEvent = {}) => {
+  // нужны ли непустые значения по умолчанию ??
   const {
     type = `Flight`,
     destination = `Geneva`,
+    time = {
+      start: `18/03/19 00:00`,
+      end: `18/03/19 00:00`
+    },
     price = ``,
+    offers = OFFERS, // offers list (in case of create new event) will be received from the server
     description = `Geneva is a city in Switzerland that lies at
       the southern tip of expansive Lac Léman (Lake Geneva).
       Surrounded by the Alps and Jura mountains,
@@ -41,9 +60,9 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
     photos = [`../../public/img/photos/1.jpg`, `../../public/img/photos/2jpg`,
       `../../public/img/photos/3.jpg`, `../../public/img/photos/4.jpg`,
       `../../public/img/photos/5.jpg`]
-  } = tripEvent; // options ?
+  } = tripEvent;
 
-  return ( // time, offers ?
+  return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
@@ -80,12 +99,12 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
           <label class="visually-hidden" for="event-start-time">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="18/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${time.start}">
           &mdash;
           <label class="visually-hidden" for="event-end-time">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="18/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${time.end}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -110,42 +129,6 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
                 <span class="event__offer-title">Add luggage</span>
                 &plus;
                 &euro;&nbsp;<span class="event__offer-price">30</span>
-              </label>
-            </div>
-
-            <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort" type="checkbox" name="event-offer-comfort" checked>
-              <label class="event__offer-label" for="event-offer-comfort">
-                <span class="event__offer-title">Switch to comfort class</span>
-                &plus;
-                &euro;&nbsp;<span class="event__offer-price">100</span>
-              </label>
-            </div>
-
-            <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal" type="checkbox" name="event-offer-meal">
-              <label class="event__offer-label" for="event-offer-meal">
-                <span class="event__offer-title">Add meal</span>
-                &plus;
-                &euro;&nbsp;<span class="event__offer-price">15</span>
-              </label>
-            </div>
-
-            <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats" type="checkbox" name="event-offer-seats">
-              <label class="event__offer-label" for="event-offer-seats">
-                <span class="event__offer-title">Choose seats</span>
-                &plus;
-                &euro;&nbsp;<span class="event__offer-price">5</span>
-              </label>
-            </div>
-
-            <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-train" type="checkbox" name="event-offer-train">
-              <label class="event__offer-label" for="event-offer-train">
-                <span class="event__offer-title">Travel by train</span>
-                &plus;
-                &euro;&nbsp;<span class="event__offer-price">40</span>
               </label>
             </div>
           </div>

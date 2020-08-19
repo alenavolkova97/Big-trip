@@ -22,31 +22,36 @@ const OFFERS = [ // isChecked ?
     type: `flight`,
     key: `luggage`,
     title: `Add luggage`,
-    price: 30
+    price: 30,
+    isChecked: true
   },
   {
     type: `flight`,
     key: `comfort`,
     title: `Switch to comfort class`,
-    price: 100
+    price: 100,
+    isChecked: true
   },
   {
     type: `flight`,
     key: `meal`,
     title: `Add meal`,
-    price: 15
+    price: 15,
+    isChecked: false
   },
   {
     type: `flight`,
     key: `seats`,
     title: `Choose seats`,
-    price: 5
+    price: 5,
+    isChecked: false
   },
   {
     type: `flight`,
     key: `train`,
     title: `Travel by train`,
-    price: 40
+    price: 40,
+    isChecked: false
   }
 ];
 
