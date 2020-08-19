@@ -29,9 +29,9 @@ const render = (container, template, place) => {
 const getAllEvents = (days) => {
   let allEvents = [];
 
-  for (let i = 0; i < days.length; i++) {
-    allEvents = [...allEvents, ...days[i].tripEvents];
-  }
+  days.forEach((day) => {
+    allEvents = [...allEvents, ...day.tripEvents];
+  });
 
   return allEvents;
 };
@@ -49,16 +49,16 @@ render(tripEventsContainerElement, createTripDaysContainerTemplate(), `beforeend
 
 const tripDaysContainerElement = tripEventsContainerElement.querySelector(`.trip-days`);
 
-for (let i = 0; i < tripDays.length; i++) { // render days and events in each day
-  render(tripDaysContainerElement, createTripDayTemplate(tripDays[i]), `beforeend`);
+tripDays.forEach((day, index) => { // render days and events in each day
+  render(tripDaysContainerElement, createTripDayTemplate(day), `beforeend`);
 
-  let tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${i + 1})`);
+  let tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${index + 1})`);
   let tripEventsList = tripDay.querySelector(`.trip-events__list`);
 
-  for (let j = 0; j < tripDays[i].tripEvents.length; j++) {
-    render(tripEventsList, createTripEventTemplate(tripDays[i].tripEvents[j]), `beforeend`);
-  }
-}
+  day.tripEvents.forEach((tripEvent) => {
+    render(tripEventsList, createTripEventTemplate(tripEvent), `beforeend`);
+  });
+});
 
 const theFirstTripDay = tripDaysContainerElement.querySelector(`.day:nth-child(1)`);
 const theFirstDayTripEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
