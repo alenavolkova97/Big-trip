@@ -27,7 +27,7 @@ const render = (container, template, place) => {
 };
 
 const getAllEvents = (days) => {
-  let allEvents = [];
+  let allEvents = []; // не могу объявить как const, так как он меняется в цикле forEach
 
   days.forEach((day) => {
     allEvents = [...allEvents, ...day.tripEvents];
@@ -39,8 +39,9 @@ const getAllEvents = (days) => {
 render(headerContainerElement, createTripInfoContainerTemplate(), `afterbegin`);
 
 const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
+const allEvents = getAllEvents(tripDays);
 
-render(tripInfoContainerElement, createTripInfoTemplate(getAllEvents(tripDays)), `beforeend`);
+render(tripInfoContainerElement, createTripInfoTemplate(allEvents), `beforeend`);
 render(tripInfoContainerElement, createTripPriceTemplate(), `beforeend`);
 render(siteMenuHeaderElement, createSiteMenuTemplate(), `afterend`);
 render(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), `afterend`);
@@ -53,8 +54,8 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
   // render days and events in each day
   render(tripDaysContainerElement, createTripDayTemplate(day), `beforeend`);
 
-  let tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${index + 1})`);
-  let tripEventsList = tripDay.querySelector(`.trip-events__list`);
+  const tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${index + 1})`);
+  const tripEventsList = tripDay.querySelector(`.trip-events__list`);
 
   day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
     render(tripEventsList, createTripEventTemplate(tripEvent), `beforeend`);
@@ -64,4 +65,4 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
 const theFirstTripDay = tripDaysContainerElement.querySelector(`.day:nth-child(1)`);
 const theFirstDayTripEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
 
-render(theFirstDayTripEventsList, createTripEventEditTemplate(getAllEvents(tripDays)[0]), `afterbegin`);
+render(theFirstDayTripEventsList, createTripEventEditTemplate(allEvents[0]), `afterbegin`);

@@ -17,7 +17,7 @@ const DESTINATION_DESCRIPTION_PARTS = [`Lorem ipsum dolor sit amet, consectetur 
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`];
 
-const OFFERS = [
+export const OFFERS = [
   {
     type: `flight`,
     key: `luggage`,
