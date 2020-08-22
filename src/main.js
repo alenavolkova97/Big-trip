@@ -1,7 +1,7 @@
 import {createTripInfoContainerTemplate} from './view/trip-info-container.js';
 import {createTripInfoTemplate} from './view/trip-info.js';
 import {createTripPriceTemplate} from './view/trip-price.js';
-import {createSiteMenuTemplate} from './view/site-menu.js';
+import SiteMenuView from './view/site-menu.js';
 import {createTripEventsFilterTemplate} from './view/trip-events-filter.js';
 import {createTripEventsSorting} from './view/trip-events-sorting.js';
 import {createTripDaysContainerTemplate} from './view/trip-days-container.js';
@@ -39,7 +39,7 @@ const allEvents = getAllEvents(tripDays);
 
 renderTemplate(tripInfoContainerElement, createTripInfoTemplate(allEvents));
 renderTemplate(tripInfoContainerElement, createTripPriceTemplate());
-renderTemplate(siteMenuHeaderElement, createSiteMenuTemplate(), `afterend`); // ?
+renderElement(siteMenuHeaderElement, new SiteMenuView().getElement(), `afterend`); // ПЕРЕДЕЛАТЬ?
 renderTemplate(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), `afterend`); // ?
 renderTemplate(tripEventsContainerElement, createTripEventsSorting());
 renderTemplate(tripEventsContainerElement, createTripDaysContainerTemplate());
