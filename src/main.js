@@ -2,8 +2,8 @@ import {createTripInfoContainerTemplate} from './view/trip-info-container.js';
 import {createTripInfoTemplate} from './view/trip-info.js';
 import {createTripPriceTemplate} from './view/trip-price.js';
 import SiteMenuView from './view/site-menu.js';
-import {createTripEventsFilterTemplate} from './view/trip-events-filter.js';
-import {createTripEventsSorting} from './view/trip-events-sorting.js';
+import TripEventsFilterView from './view/trip-events-filter.js';
+import TripEventsSortingView from './view/trip-events-sorting.js';
 import TripDaysContainerView from './view/trip-days-container.js';
 import TripDayView from './view/trip-day.js';
 import {createTripEventEditTemplate} from './view/trip-event-edit.js';
@@ -40,8 +40,8 @@ const allEvents = getAllEvents(tripDays);
 renderTemplate(tripInfoContainerElement, createTripInfoTemplate(allEvents));
 renderTemplate(tripInfoContainerElement, createTripPriceTemplate());
 renderElement(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
-renderTemplate(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), RenderPosition.AFTEREND);
-renderTemplate(tripEventsContainerElement, createTripEventsSorting());
+renderElement(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), RenderPosition.AFTEREND);
+renderElement(tripEventsContainerElement, new TripEventsSortingView().getElement());
 
 const tripDaysContainerComponent = new TripDaysContainerView();
 // создать переменную tripDaysContainerElement ?
