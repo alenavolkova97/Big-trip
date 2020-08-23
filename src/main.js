@@ -39,8 +39,8 @@ const allEvents = getAllEvents(tripDays);
 
 renderTemplate(tripInfoContainerElement, createTripInfoTemplate(allEvents));
 renderTemplate(tripInfoContainerElement, createTripPriceTemplate());
-renderElement(siteMenuHeaderElement, new SiteMenuView().getElement(), `afterend`); // ПЕРЕДЕЛАТЬ?
-renderTemplate(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), `afterend`); // ?
+renderElement(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
+renderTemplate(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), RenderPosition.AFTEREND);
 renderTemplate(tripEventsContainerElement, createTripEventsSorting());
 renderTemplate(tripEventsContainerElement, createTripDaysContainerTemplate());
 
