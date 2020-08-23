@@ -7,7 +7,7 @@ import {createTripEventsSorting} from './view/trip-events-sorting.js';
 import TripDaysContainerView from './view/trip-days-container.js';
 import TripDayView from './view/trip-day.js';
 import {createTripEventEditTemplate} from './view/trip-event-edit.js';
-import {createTripEventTemplate} from './view/trip-event.js';
+import TripEventView from './view/trip-event.js';
 import {generateTripDay} from './mock/trip-event.js';
 import {getRandomInteger, RenderPosition, renderTemplate, renderElement} from './utils.js';
 
@@ -56,7 +56,7 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
   const tripEventsList = tripDay.querySelector(`.trip-events__list`);
 
   day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
-    renderTemplate(tripEventsList, createTripEventTemplate(tripEvent));
+    renderElement(tripEventsList, new TripEventView(tripEvent).getElement());
   });
 });
 

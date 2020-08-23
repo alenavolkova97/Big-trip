@@ -1,4 +1,5 @@
 import {ARRIVALS} from '../const.js';
+import {createElement} from '../utils.js';
 
 const createTripEventOffersTemplate = (offers) => {
   return offers.slice(0, 3).map((offer) =>
@@ -9,7 +10,7 @@ const createTripEventOffersTemplate = (offers) => {
     </li>`).join(``);
 };
 
-export const createTripEventTemplate = (tripEvent) => {
+const createTripEventTemplate = (tripEvent) => {
   const {type, destination, time, price, offers} = tripEvent;
 
   return (
@@ -45,3 +46,27 @@ export const createTripEventTemplate = (tripEvent) => {
     </li>`
   );
 };
+
+export default class TripEvent {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  _getTemplate() {
+    return createTripEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() { // ?
+    this._element = null;
+  }
+}
+
