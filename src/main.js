@@ -4,7 +4,7 @@ import {createTripPriceTemplate} from './view/trip-price.js';
 import SiteMenuView from './view/site-menu.js';
 import {createTripEventsFilterTemplate} from './view/trip-events-filter.js';
 import {createTripEventsSorting} from './view/trip-events-sorting.js';
-import {createTripDaysContainerTemplate} from './view/trip-days-container.js';
+import TripDaysContainerView from './view/trip-days-container.js';
 import TripDayView from './view/trip-day.js';
 import {createTripEventEditTemplate} from './view/trip-event-edit.js';
 import {createTripEventTemplate} from './view/trip-event.js';
@@ -42,15 +42,17 @@ renderTemplate(tripInfoContainerElement, createTripPriceTemplate());
 renderElement(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
 renderTemplate(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), RenderPosition.AFTEREND);
 renderTemplate(tripEventsContainerElement, createTripEventsSorting());
-renderTemplate(tripEventsContainerElement, createTripDaysContainerTemplate());
 
-const tripDaysContainerElement = tripEventsContainerElement.querySelector(`.trip-days`);
+const tripDaysContainerComponent = new TripDaysContainerView();
+// создать переменную tripDaysContainerElement ?
+
+renderElement(tripEventsContainerElement, tripDaysContainerComponent.getElement());
 
 tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
   // render days and events in each day
-  renderElement(tripDaysContainerElement, new TripDayView(day).getElement());
+  renderElement(tripDaysContainerComponent.getElement(), new TripDayView(day).getElement());
 
-  const tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${index + 1})`);
+  const tripDay = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
   const tripEventsList = tripDay.querySelector(`.trip-events__list`);
 
   day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
@@ -58,7 +60,7 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
   });
 });
 
-const theFirstTripDay = tripDaysContainerElement.querySelector(`.day:nth-child(1)`);
+const theFirstTripDay = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(1)`);
 const theFirstDayTripEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
 
 renderTemplate(theFirstDayTripEventsList, createTripEventEditTemplate(allEvents[0]), RenderPosition.AFTERBEGIN);
