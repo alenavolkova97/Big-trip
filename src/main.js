@@ -52,8 +52,8 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
   // render days and events in each day
   render(tripDaysContainerComponent.getElement(), new TripDayView(day).getElement());
 
-  const tripDay = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
-  const tripEventsList = tripDay.querySelector(`.trip-events__list`);
+  const tripDayElement = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
+  const tripEventsList = tripDayElement.querySelector(`.trip-events__list`);
 
   day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
     render(tripEventsList, new TripEventView(tripEvent).getElement());
@@ -61,6 +61,6 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
 });
 
 const theFirstTripDay = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(1)`);
-const theFirstDayTripEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
+const theFirstTripDayEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
 
-render(theFirstDayTripEventsList, new TripEventEditView(allEvents[0]).getElement(), RenderPosition.AFTERBEGIN);
+render(theFirstTripDayEventsList, new TripEventEditView(allEvents[0]).getElement(), RenderPosition.AFTERBEGIN);
