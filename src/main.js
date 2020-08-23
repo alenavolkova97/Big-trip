@@ -5,7 +5,7 @@ import SiteMenuView from './view/site-menu.js';
 import {createTripEventsFilterTemplate} from './view/trip-events-filter.js';
 import {createTripEventsSorting} from './view/trip-events-sorting.js';
 import {createTripDaysContainerTemplate} from './view/trip-days-container.js';
-import {createTripDayTemplate} from './view/trip-day.js';
+import TripDayView from './view/trip-day.js';
 import {createTripEventEditTemplate} from './view/trip-event-edit.js';
 import {createTripEventTemplate} from './view/trip-event.js';
 import {generateTripDay} from './mock/trip-event.js';
@@ -48,7 +48,7 @@ const tripDaysContainerElement = tripEventsContainerElement.querySelector(`.trip
 
 tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
   // render days and events in each day
-  renderTemplate(tripDaysContainerElement, createTripDayTemplate(day));
+  renderElement(tripDaysContainerElement, new TripDayView(day).getElement);
 
   const tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${index + 1})`);
   const tripEventsList = tripDay.querySelector(`.trip-events__list`);
