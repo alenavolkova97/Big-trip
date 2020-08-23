@@ -1,7 +1,25 @@
-import {ARRIVALS} from '../const.js';
-import {MOVEMENTS} from '../const.js';
-import {DESTINATIONS} from '../mock/trip-event.js';
-import {OFFERS} from '../mock/trip-event.js';
+import {ARRIVALS, MOVEMENTS} from '../const.js';
+import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
+import {createElement} from '../utils.js';
+
+const BLANK_EVENT = {// нужны ли непустые значения по умолчанию ??
+  type: `Flight`,
+  destination: `Geneva`,
+  time: {
+    start: `18/03/19 00:00`,
+    end: `18/03/19 00:00`
+  },
+  price: ``,
+  offers: OFFERS,
+  // offers list (in case of create new event) will be received from the server
+  description: `Geneva is a city in Switzerland that lies at
+    the southern tip of expansive Lac Léman (Lake Geneva).
+    Surrounded by the Alps and Jura mountains,
+    the city has views of dramatic Mont Blanc.`,
+  photos: [`../../public/img/photos/1.jpg`, `../../public/img/photos/2jpg`,
+    `../../public/img/photos/3.jpg`, `../../public/img/photos/4.jpg`,
+    `../../public/img/photos/5.jpg`]
+};
 
 const createTripMovementTypeSelectTemplate = () => {
   return MOVEMENTS.map((movementType) =>
@@ -61,26 +79,8 @@ const createTripEventPhotosTemplate = (photos) => {
     `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``);
 };
 
-export const createTripEventEditTemplate = (tripEvent = {}) => {
-  // нужны ли непустые значения по умолчанию ??
-  const {
-    type = `Flight`,
-    destination = `Geneva`,
-    time = {
-      start: `18/03/19 00:00`,
-      end: `18/03/19 00:00`
-    },
-    price = ``,
-    offers = OFFERS,
-    // offers list (in case of create new event) will be received from the server
-    description = `Geneva is a city in Switzerland that lies at
-      the southern tip of expansive Lac Léman (Lake Geneva).
-      Surrounded by the Alps and Jura mountains,
-      the city has views of dramatic Mont Blanc.`,
-    photos = [`../../public/img/photos/1.jpg`, `../../public/img/photos/2jpg`,
-      `../../public/img/photos/3.jpg`, `../../public/img/photos/4.jpg`,
-      `../../public/img/photos/5.jpg`]
-  } = tripEvent;
+const createTripEventEditTemplate = (tripEvent = {}) => {
+  const {type, destination, time, price, offers, description, photos} = tripEvent;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -152,3 +152,26 @@ export const createTripEventEditTemplate = (tripEvent = {}) => {
     </form>`
   );
 };
+
+export default class TripEventEdit {
+  constructor(event = BLANK_EVENT) {
+    this._element = null;
+    this._event = event;
+  }
+
+  _getTemplate() {
+    return createTripEventEditTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() { // ?
+    this._element = null;
+  }
+}

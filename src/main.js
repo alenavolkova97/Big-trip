@@ -6,10 +6,10 @@ import TripEventsFilterView from './view/trip-events-filter.js';
 import TripEventsSortingView from './view/trip-events-sorting.js';
 import TripDaysContainerView from './view/trip-days-container.js';
 import TripDayView from './view/trip-day.js';
-import {createTripEventEditTemplate} from './view/trip-event-edit.js';
+import TripEventEditView from './view/trip-event-edit.js';
 import TripEventView from './view/trip-event.js';
 import {generateTripDay} from './mock/trip-event.js';
-import {getRandomInteger, RenderPosition, renderTemplate, renderElement} from './utils.js';
+import {getRandomInteger, RenderPosition, renderElement} from './utils.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
 // may be from 1 to 6 days (mock number)
@@ -63,4 +63,4 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
 const theFirstTripDay = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(1)`);
 const theFirstDayTripEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
 
-renderTemplate(theFirstDayTripEventsList, createTripEventEditTemplate(allEvents[0]), RenderPosition.AFTERBEGIN);
+renderElement(theFirstDayTripEventsList, new TripEventEditView(allEvents[0]).getElement(), RenderPosition.AFTERBEGIN);
