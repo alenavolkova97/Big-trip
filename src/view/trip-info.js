@@ -1,4 +1,6 @@
-export const createTripInfoTemplate = (allEvents) => {
+import {createElement} from '../utils.js';
+
+const createTripInfoTemplate = (allEvents) => {
   const destinationsWithRepeating = allEvents.map((tripEvent) => tripEvent.destination);
   const destinations = Array.from(new Set(destinationsWithRepeating));
 
@@ -16,3 +18,27 @@ export const createTripInfoTemplate = (allEvents) => {
     </div>`
   );
 };
+
+export default class TripInfo {
+  constructor(events) {
+    this._element = null;
+    this._events = events;
+  }
+
+  _getTemplate() {
+    return createTripInfoTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() { // ?
+    this._element = null;
+  }
+}
+

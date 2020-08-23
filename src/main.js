@@ -1,6 +1,6 @@
-import {createTripInfoContainerTemplate} from './view/trip-info-container.js';
-import {createTripInfoTemplate} from './view/trip-info.js';
-import {createTripPriceTemplate} from './view/trip-price.js';
+import TripInfoContainerView from './view/trip-info-container.js';
+import TripInfoView from './view/trip-info.js';
+import TripPriceView from './view/trip-price.js';
 import SiteMenuView from './view/site-menu.js';
 import TripEventsFilterView from './view/trip-events-filter.js';
 import TripEventsSortingView from './view/trip-events-sorting.js';
@@ -32,13 +32,13 @@ const getAllEvents = (days) => {
   return allEvents;
 };
 
-renderTemplate(headerContainerElement, createTripInfoContainerTemplate(), RenderPosition.AFTERBEGIN);
+renderElement(headerContainerElement, new TripInfoContainerView().getElement(), RenderPosition.AFTERBEGIN);
 
 const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
 const allEvents = getAllEvents(tripDays);
 
-renderTemplate(tripInfoContainerElement, createTripInfoTemplate(allEvents));
-renderTemplate(tripInfoContainerElement, createTripPriceTemplate());
+renderElement(tripInfoContainerElement, new TripInfoView(allEvents).getElement());
+renderElement(tripInfoContainerElement, new TripPriceView().getElement());
 renderElement(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
 renderElement(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), RenderPosition.AFTEREND);
 renderElement(tripEventsContainerElement, new TripEventsSortingView().getElement());
