@@ -1,7 +1,7 @@
 import {tripDays} from '../main.js';
 import {createElement} from '../utils.js';
 
-const createTripDayTemplate = (tripDay) => {
+const createTripDayTemplate = (tripDay) => { // нужно ли отделять список событий в отдельный модуль ?
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">

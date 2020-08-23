@@ -48,7 +48,7 @@ const tripDaysContainerElement = tripEventsContainerElement.querySelector(`.trip
 
 tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
   // render days and events in each day
-  renderElement(tripDaysContainerElement, new TripDayView(day).getElement);
+  renderElement(tripDaysContainerElement, new TripDayView(day).getElement());
 
   const tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${index + 1})`);
   const tripEventsList = tripDay.querySelector(`.trip-events__list`);
