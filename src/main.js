@@ -34,7 +34,7 @@ const getAllEvents = (days) => {
 
 const renderTripEvent = (tripListElement, event) => {
   const tripEventComponent = new TripEventView(event);
-  const tripEventEditComponent = new TripEventEditView(event);
+  let tripEventEditComponent;
 
   const replaceEventToForm = () => {
     tripListElement.replaceChild(tripEventEditComponent.getElement(), tripEventComponent.getElement());
@@ -44,10 +44,18 @@ const renderTripEvent = (tripListElement, event) => {
     tripListElement.replaceChild(tripEventComponent.getElement(), tripEventEditComponent.getElement());
   };
 
-  tripEventComponent.getElement().querySelector(`.event__rollup-btn`)
-    .addEventListener(`click`, replaceEventToForm);
+  tripEventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    if (!tripEventEditComponent) {
+      tripEventEditComponent = new TripEventEditView(event); // create component when click happen
+    }
+    replaceEventToForm();
 
-  tripEventEditComponent.getElement().addEventListener(`submit`, replaceFormToEvent);
+    tripEventEditComponent.getElement().addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      replaceFormToEvent();
+    });
+  });
+
 
   render(tripListElement, tripEventComponent.getElement());
 };
