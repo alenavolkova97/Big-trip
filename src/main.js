@@ -36,6 +36,19 @@ const renderTripEvent = (tripListElement, event) => {
   const tripEventComponent = new TripEventView(event);
   const tripEventEditComponent = new TripEventEditView(event);
 
+  const replaceEventToForm = () => {
+    tripListElement.replaceChild(tripEventEditComponent.getElement(), tripEventComponent.getElement());
+  };
+
+  const replaceFormToEvent = () => {
+    tripListElement.replaceChild(tripEventComponent.getElement(), tripEventEditComponent.getElement());
+  };
+
+  tripEventComponent.getElement().querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, replaceEventToForm);
+
+  tripEventEditComponent.getElement().addEventListener(`submit`, replaceFormToEvent);
+
   render(tripListElement, tripEventComponent.getElement());
 };
 
@@ -64,11 +77,10 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
 
   day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
     renderTripEvent(tripEventsList, tripEvent);
-    // render(tripEventsList, new TripEventView(tripEvent).getElement());
   });
 });
 
-const theFirstTripDay = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(1)`);
-const theFirstTripDayEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
+// const theFirstTripDay = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(1)`);
+// const theFirstTripDayEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
 
-render(theFirstTripDayEventsList, new TripEventEditView(allEvents[0]).getElement(), RenderPosition.AFTERBEGIN);
+// render(theFirstTripDayEventsList, new TripEventEditView(allEvents[0]).getElement(), RenderPosition.AFTERBEGIN);
