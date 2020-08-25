@@ -79,7 +79,7 @@ const createTripEventPhotosTemplate = (photos) => {
     `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``);
 };
 
-const createTripEventEditTemplate = (tripEvent = {}) => {
+const createTripEventEditTemplate = (tripEvent) => {
   const {type, destination, time, price, offers, description, photos} = tripEvent;
 
   return (

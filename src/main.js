@@ -23,7 +23,7 @@ const mainElement = document.querySelector(`main`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
 
 const getAllEvents = (days) => {
-  let allEvents = []; // не могу объявить как const, так как он меняется в цикле forEach
+  let allEvents = [];
 
   days.forEach((day) => {
     allEvents = [...allEvents, ...day.tripEvents];
