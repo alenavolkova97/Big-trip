@@ -32,6 +32,13 @@ const getAllEvents = (days) => {
   return allEvents;
 };
 
+const renderTripEvent = (tripListElement, event) => {
+  const tripEventComponent = new TripEventView(event);
+  const tripEventEditComponent = new TripEventEditView(event);
+
+  render(tripListElement, tripEventComponent.getElement());
+};
+
 render(headerContainerElement, new TripInfoContainerView().getElement(), RenderPosition.AFTERBEGIN);
 
 const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
@@ -56,7 +63,8 @@ tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
   const tripEventsList = tripDayElement.querySelector(`.trip-events__list`);
 
   day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
-    render(tripEventsList, new TripEventView(tripEvent).getElement());
+    renderTripEvent(tripEventsList, tripEvent);
+    // render(tripEventsList, new TripEventView(tripEvent).getElement());
   });
 });
 
