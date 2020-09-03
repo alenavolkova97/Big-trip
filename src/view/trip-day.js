@@ -7,7 +7,7 @@ export default class TripDay {
     this._day = day;
   }
 
-  _getTemplate() {
+  _getTemplate() { // отделить список событий по необходимости
     return (
       `<li class="trip-days__item  day">
         <div class="day__info">

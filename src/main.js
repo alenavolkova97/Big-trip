@@ -56,7 +56,6 @@ const renderTripEvent = (tripListElement, event) => {
     });
   });
 
-
   render(tripListElement, tripEventComponent.getElement());
 };
 
