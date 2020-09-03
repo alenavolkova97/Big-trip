@@ -1,18 +1,14 @@
 import {createElement} from '../utils.js';
 
-const createTripDaysContainerTemplate = () => {
-  return (
-    `<ul class="trip-days"></ul>`
-  );
-};
-
 export default class TripDaysContainer {
   constructor() {
     this._element = null;
   }
 
   _getTemplate() {
-    return createTripDaysContainerTemplate();
+    return (
+      `<ul class="trip-days"></ul>`
+    );
   }
 
   getElement() {

@@ -1,20 +1,16 @@
 import {createElement} from '../utils.js';
 
-const createTripPriceTemplate = () => {
-  return (
-    `<p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
-    </p>`
-  );
-};
-
 export default class TripPrice {
   constructor() {
     this._element = null;
   }
 
   _getTemplate() {
-    return createTripPriceTemplate();
+    return (
+      `<p class="trip-info__cost">
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+      </p>`
+    );
   }
 
   getElement() {
@@ -25,7 +21,7 @@ export default class TripPrice {
     return this._element;
   }
 
-  removeElement() { // ?
+  removeElement() {
     this._element = null;
   }
 }

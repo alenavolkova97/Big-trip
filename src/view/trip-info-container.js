@@ -1,19 +1,15 @@
 import {createElement} from '../utils.js';
 
-const createTripInfoContainerTemplate = () => {
-  return (
-    `<section class="trip-main__trip-info  trip-info">
-    </section>`
-  );
-};
-
 export default class TripInfoContainer {
   constructor() {
     this._element = null;
   }
 
   _getTemplate() {
-    return createTripInfoContainerTemplate();
+    return (
+      `<section class="trip-main__trip-info  trip-info">
+      </section>`
+    );
   }
 
   getElement() {
@@ -24,7 +20,7 @@ export default class TripInfoContainer {
     return this._element;
   }
 
-  removeElement() { // ?
+  removeElement() {
     this._element = null;
   }
 }

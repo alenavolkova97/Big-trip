@@ -72,7 +72,6 @@ render(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), R
 render(tripEventsContainerElement, new TripEventsSortingView().getElement());
 
 const tripDaysContainerComponent = new TripDaysContainerView();
-// создать переменную tripDaysContainerElement ?
 
 render(tripEventsContainerElement, tripDaysContainerComponent.getElement());
 
