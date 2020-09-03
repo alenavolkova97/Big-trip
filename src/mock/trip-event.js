@@ -17,7 +17,7 @@ const DESTINATION_DESCRIPTION_PARTS = [`Lorem ipsum dolor sit amet, consectetur 
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`];
 
-const OFFERS = [
+export const OFFERS = [
   {
     type: `flight`,
     key: `luggage`,
@@ -111,8 +111,8 @@ export const generateTripEvent = () => {
     type: generateEventType(),
     destination: generateEventDestination(),
     time: {
-      start: generateTime().toISOString(),
-      end: generateTime().toISOString()
+      start: generateTime(),
+      end: generateTime()
     },
     price: getRandomInteger(1, 1000),
     offers: generateEventTypeOffers(),

@@ -1,15 +1,15 @@
-import {createTripInfoContainerTemplate} from './view/trip-info-container.js';
-import {createTripInfoTemplate} from './view/trip-info.js';
-import {createTripPriceTemplate} from './view/trip-price.js';
-import {createSiteMenuTemplate} from './view/site-menu.js';
-import {createTripEventsFilterTemplate} from './view/trip-events-filter.js';
-import {createTripEventsSorting} from './view/trip-events-sorting.js';
-import {createTripDaysContainerTemplate} from './view/trip-days-container.js';
-import {createTripDayTemplate} from './view/trip-day.js';
-import {createTripEventEditTemplate} from './view/trip-event-edit.js';
-import {createTripEventTemplate} from './view/trip-event.js';
+import TripInfoContainerView from './view/trip-info-container.js';
+import TripInfoView from './view/trip-info.js';
+import TripPriceView from './view/trip-price.js';
+import SiteMenuView from './view/site-menu.js';
+import TripEventsFilterView from './view/trip-events-filter.js';
+import TripEventsSortingView from './view/trip-events-sorting.js';
+import TripDaysContainerView from './view/trip-days-container.js';
+import TripDayView from './view/trip-day.js';
+import TripEventEditView from './view/trip-event-edit.js';
+import TripEventView from './view/trip-event.js';
 import {generateTripDay} from './mock/trip-event.js';
-import {getRandomInteger} from './utils.js';
+import {getRandomInteger, RenderPosition, render} from './utils.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
 // may be from 1 to 6 days (mock number)
@@ -22,10 +22,6 @@ const tripEventsFilterHeaderElement = tripControlsContainerElement.querySelector
 const mainElement = document.querySelector(`main`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 const getAllEvents = (days) => {
   let allEvents = [];
 
@@ -36,31 +32,56 @@ const getAllEvents = (days) => {
   return allEvents;
 };
 
-render(headerContainerElement, createTripInfoContainerTemplate(), `afterbegin`);
+const renderTripEvent = (tripListElement, event) => {
+  const tripEventComponent = new TripEventView(event);
+  let tripEventEditComponent;
+
+  const replaceEventToForm = () => {
+    tripListElement.replaceChild(tripEventEditComponent.getElement(), tripEventComponent.getElement());
+  };
+
+  const replaceFormToEvent = () => {
+    tripListElement.replaceChild(tripEventComponent.getElement(), tripEventEditComponent.getElement());
+  };
+
+  tripEventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    if (!tripEventEditComponent) {
+      tripEventEditComponent = new TripEventEditView(event); // create component when click happen
+    }
+    replaceEventToForm();
+
+    tripEventEditComponent.getElement().addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      replaceFormToEvent();
+    });
+  });
+
+  render(tripListElement, tripEventComponent.getElement());
+};
+
+render(headerContainerElement, new TripInfoContainerView().getElement(), RenderPosition.AFTERBEGIN);
 
 const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
+const allEvents = getAllEvents(tripDays);
 
-render(tripInfoContainerElement, createTripInfoTemplate(getAllEvents(tripDays)), `beforeend`);
-render(tripInfoContainerElement, createTripPriceTemplate(), `beforeend`);
-render(siteMenuHeaderElement, createSiteMenuTemplate(), `afterend`);
-render(tripEventsFilterHeaderElement, createTripEventsFilterTemplate(), `afterend`);
-render(tripEventsContainerElement, createTripEventsSorting(), `beforeend`);
-render(tripEventsContainerElement, createTripDaysContainerTemplate(), `beforeend`);
+render(tripInfoContainerElement, new TripInfoView(allEvents).getElement());
+render(tripInfoContainerElement, new TripPriceView().getElement());
+render(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
+render(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), RenderPosition.AFTEREND);
+render(tripEventsContainerElement, new TripEventsSortingView().getElement());
 
-const tripDaysContainerElement = tripEventsContainerElement.querySelector(`.trip-days`);
+const tripDaysContainerComponent = new TripDaysContainerView();
 
-tripDays.forEach((day, index) => { // render days and events in each day
-  render(tripDaysContainerElement, createTripDayTemplate(day), `beforeend`);
+render(tripEventsContainerElement, tripDaysContainerComponent.getElement());
 
-  let tripDay = tripDaysContainerElement.querySelector(`.day:nth-child(${index + 1})`);
-  let tripEventsList = tripDay.querySelector(`.trip-events__list`);
+tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
+  // render days and events in each day
+  render(tripDaysContainerComponent.getElement(), new TripDayView(day).getElement());
 
-  day.tripEvents.forEach((tripEvent) => {
-    render(tripEventsList, createTripEventTemplate(tripEvent), `beforeend`);
+  const tripDayElement = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
+  const tripEventsList = tripDayElement.querySelector(`.trip-events__list`);
+
+  day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
+    renderTripEvent(tripEventsList, tripEvent);
   });
 });
-
-const theFirstTripDay = tripDaysContainerElement.querySelector(`.day:nth-child(1)`);
-const theFirstDayTripEventsList = theFirstTripDay.querySelector(`.trip-events__list`);
-
-render(theFirstDayTripEventsList, createTripEventEditTemplate(getAllEvents(tripDays)[0]), `afterbegin`);
