@@ -16,7 +16,7 @@ export default class TripEvent {
       </li>`).join(``);
   }
 
-  _getTemplate() {
+  getTemplate() {
     const {type, destination, time, price, offers} = this._event;
     return (
       `<li class="trip-events__item">
@@ -55,7 +55,7 @@ export default class TripEvent {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

@@ -59,7 +59,7 @@ export default class TripEventEdit {
       </div>`).join(``);
   }
 
-  _getTemplate() {
+  getTemplate() {
     const {type, destination, time, price, offers, description, photos} = this._event;
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -146,7 +146,7 @@ export default class TripEventEdit {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

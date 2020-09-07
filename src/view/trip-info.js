@@ -6,7 +6,7 @@ export default class TripInfo {
     this._events = events;
   }
 
-  _getTemplate() {
+  getTemplate() {
     const destinationsWithRepeating = this._events.map((tripEvent) => tripEvent.destination);
     const destinations = Array.from(new Set(destinationsWithRepeating));
 
@@ -27,7 +27,7 @@ export default class TripInfo {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

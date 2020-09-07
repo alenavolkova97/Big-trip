@@ -5,7 +5,7 @@ export default class TripDaysContainer {
     this._element = null;
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `<ul class="trip-days"></ul>`
     );
@@ -13,7 +13,7 @@ export default class TripDaysContainer {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

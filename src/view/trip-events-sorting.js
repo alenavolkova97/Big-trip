@@ -5,7 +5,7 @@ export default class TripEventsSorting {
     this._element = null;
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
         <span class="trip-sort__item  trip-sort__item--day">Day</span>
@@ -45,7 +45,7 @@ export default class TripEventsSorting {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

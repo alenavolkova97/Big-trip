@@ -5,7 +5,7 @@ export default class TripEventsFilter {
     this._element = null;
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `<form class="trip-filters" action="#" method="get">
         <div class="trip-filters__filter">
@@ -33,7 +33,7 @@ export default class TripEventsFilter {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

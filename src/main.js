@@ -68,25 +68,29 @@ const renderTripEvent = (tripListElement, event) => {
   render(tripListElement, tripEventComponent.getElement());
 };
 
-const allEvents = getAllEvents(tripDays);
+const renderTripInfo = (container, events) => {
+  render(container, new TripInfoContainerView().getElement(), RenderPosition.AFTERBEGIN);
 
-render(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
-render(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), RenderPosition.AFTEREND);
-render(headerContainerElement, new TripInfoContainerView().getElement(), RenderPosition.AFTERBEGIN);
+  const tripInfoContainerElement = container.querySelector(`.trip-info`);
 
-const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
+  render(tripInfoContainerElement, new TripPriceView().getElement());
+  // цена должна быть = 0 при пустом массиве allEvents
 
-render(tripInfoContainerElement, new TripPriceView().getElement());
-// цена должна быть = 0 при пустом массиве allEvents
+  if (events.length !== 0) {
+    render(tripInfoContainerElement, new TripInfoView(events).getElement(), RenderPosition.AFTERBEGIN);
+  }
+};
 
-if (allEvents.length === 0) {
-  render(tripEventsContainerElement, new NoEventsView().getElement());
-} else {
+const renderTripEvents = (container, events) => {
   const tripDaysContainerComponent = new TripDaysContainerView();
 
-  render(tripInfoContainerElement, new TripInfoView(allEvents).getElement(), RenderPosition.AFTERBEGIN);
-  render(tripEventsContainerElement, new TripEventsSortingView().getElement());
-  render(tripEventsContainerElement, tripDaysContainerComponent.getElement());
+  if (events.length === 0) {
+    render(container, new NoEventsView().getElement());
+    return;
+  }
+
+  render(container, new TripEventsSortingView().getElement());
+  render(container, tripDaysContainerComponent.getElement());
 
   tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
     // render days and events in each day
@@ -99,4 +103,12 @@ if (allEvents.length === 0) {
       renderTripEvent(tripEventsList, tripEvent);
     });
   });
-}
+};
+
+render(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
+render(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), RenderPosition.AFTEREND);
+
+const allEvents = getAllEvents(tripDays);
+
+renderTripInfo(headerContainerElement, allEvents);
+renderTripEvents(tripEventsContainerElement, allEvents);

@@ -5,7 +5,7 @@ export default class TripPrice {
     this._element = null;
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `<p class="trip-info__cost">
         Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
@@ -15,7 +15,7 @@ export default class TripPrice {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
