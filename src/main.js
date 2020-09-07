@@ -8,6 +8,7 @@ import TripDaysContainerView from './view/trip-days-container.js';
 import TripDayView from './view/trip-day.js';
 import TripEventEditView from './view/trip-event-edit.js';
 import TripEventView from './view/trip-event.js';
+import NoEventsView from './view/no-events.js';
 import {generateTripDay} from './mock/trip-event.js';
 import {getRandomInteger, RenderPosition, render} from './utils.js';
 
@@ -44,11 +45,19 @@ const renderTripEvent = (tripListElement, event) => {
     tripListElement.replaceChild(tripEventComponent.getElement(), tripEventEditComponent.getElement());
   };
 
+  const onEscPress = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      replaceFormToEvent();
+      document.removeEventListener(`keydown`, onEscPress);
+    }
+  };
+
   tripEventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
     if (!tripEventEditComponent) {
       tripEventEditComponent = new TripEventEditView(event); // create component when click happen
     }
     replaceEventToForm();
+    document.addEventListener(`keydown`, onEscPress);
 
     tripEventEditComponent.getElement().addEventListener(`submit`, (evt) => {
       evt.preventDefault();
@@ -59,29 +68,35 @@ const renderTripEvent = (tripListElement, event) => {
   render(tripListElement, tripEventComponent.getElement());
 };
 
+const allEvents = getAllEvents(tripDays);
+
+render(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
+render(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), RenderPosition.AFTEREND);
 render(headerContainerElement, new TripInfoContainerView().getElement(), RenderPosition.AFTERBEGIN);
 
 const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
-const allEvents = getAllEvents(tripDays);
 
-render(tripInfoContainerElement, new TripInfoView(allEvents).getElement());
 render(tripInfoContainerElement, new TripPriceView().getElement());
-render(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
-render(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), RenderPosition.AFTEREND);
-render(tripEventsContainerElement, new TripEventsSortingView().getElement());
+// цена должна быть = 0 при пустом массиве allEvents
 
-const tripDaysContainerComponent = new TripDaysContainerView();
+if (allEvents.length === 0) {
+  render(tripEventsContainerElement, new NoEventsView().getElement());
+} else {
+  const tripDaysContainerComponent = new TripDaysContainerView();
 
-render(tripEventsContainerElement, tripDaysContainerComponent.getElement());
+  render(tripInfoContainerElement, new TripInfoView(allEvents).getElement(), RenderPosition.AFTERBEGIN);
+  render(tripEventsContainerElement, new TripEventsSortingView().getElement());
+  render(tripEventsContainerElement, tripDaysContainerComponent.getElement());
 
-tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
-  // render days and events in each day
-  render(tripDaysContainerComponent.getElement(), new TripDayView(day).getElement());
+  tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
+    // render days and events in each day
+    render(tripDaysContainerComponent.getElement(), new TripDayView(day).getElement());
 
-  const tripDayElement = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
-  const tripEventsList = tripDayElement.querySelector(`.trip-events__list`);
+    const tripDayElement = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
+    const tripEventsList = tripDayElement.querySelector(`.trip-events__list`);
 
-  day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
-    renderTripEvent(tripEventsList, tripEvent);
+    day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
+      renderTripEvent(tripEventsList, tripEvent);
+    });
   });
-});
+}

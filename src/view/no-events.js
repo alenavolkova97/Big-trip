@@ -1,13 +1,13 @@
 import {createElement} from '../utils.js';
 
-export default class TripInfoContainer {
+export default class NoEvents {
   constructor() {
     this._element = null;
   }
 
   _getTemplate() {
     return (
-      `<section class="trip-main__trip-info  trip-info"></section>`
+      `<p class="trip-events__msg">Click New Event to create your first point</p>`
     );
   }
 
