@@ -8,6 +8,7 @@ import TripDaysContainerView from './view/trip-days-container.js';
 import TripDayView from './view/trip-day.js';
 import TripEventEditView from './view/trip-event-edit.js';
 import TripEventView from './view/trip-event.js';
+import NoEventsView from './view/no-events.js';
 import {generateTripDay} from './mock/trip-event.js';
 import {getRandomInteger, RenderPosition, render} from './utils.js';
 
@@ -44,11 +45,19 @@ const renderTripEvent = (tripListElement, event) => {
     tripListElement.replaceChild(tripEventComponent.getElement(), tripEventEditComponent.getElement());
   };
 
+  const onEscPress = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      replaceFormToEvent();
+      document.removeEventListener(`keydown`, onEscPress);
+    }
+  };
+
   tripEventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
     if (!tripEventEditComponent) {
       tripEventEditComponent = new TripEventEditView(event); // create component when click happen
     }
     replaceEventToForm();
+    document.addEventListener(`keydown`, onEscPress);
 
     tripEventEditComponent.getElement().addEventListener(`submit`, (evt) => {
       evt.preventDefault();
@@ -59,29 +68,47 @@ const renderTripEvent = (tripListElement, event) => {
   render(tripListElement, tripEventComponent.getElement());
 };
 
-render(headerContainerElement, new TripInfoContainerView().getElement(), RenderPosition.AFTERBEGIN);
+const renderTripInfo = (container, events) => {
+  render(container, new TripInfoContainerView().getElement(), RenderPosition.AFTERBEGIN);
 
-const tripInfoContainerElement = headerContainerElement.querySelector(`.trip-info`);
-const allEvents = getAllEvents(tripDays);
+  const tripInfoContainerElement = container.querySelector(`.trip-info`);
 
-render(tripInfoContainerElement, new TripInfoView(allEvents).getElement());
-render(tripInfoContainerElement, new TripPriceView().getElement());
+  render(tripInfoContainerElement, new TripPriceView().getElement());
+  // цена должна быть = 0 при пустом массиве allEvents
+
+  if (events.length !== 0) {
+    render(tripInfoContainerElement, new TripInfoView(events).getElement(), RenderPosition.AFTERBEGIN);
+  }
+};
+
+const renderTripEvents = (container, events) => {
+  const tripDaysContainerComponent = new TripDaysContainerView();
+
+  if (events.length === 0) {
+    render(container, new NoEventsView().getElement());
+    return;
+  }
+
+  render(container, new TripEventsSortingView().getElement());
+  render(container, tripDaysContainerComponent.getElement());
+
+  tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
+    // render days and events in each day
+    render(tripDaysContainerComponent.getElement(), new TripDayView(day).getElement());
+
+    const tripDayElement = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
+    const tripEventsList = tripDayElement.querySelector(`.trip-events__list`);
+
+    day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
+      renderTripEvent(tripEventsList, tripEvent);
+    });
+  });
+};
+
 render(siteMenuHeaderElement, new SiteMenuView().getElement(), RenderPosition.AFTEREND);
 render(tripEventsFilterHeaderElement, new TripEventsFilterView().getElement(), RenderPosition.AFTEREND);
-render(tripEventsContainerElement, new TripEventsSortingView().getElement());
 
-const tripDaysContainerComponent = new TripDaysContainerView();
+const allEvents = getAllEvents(tripDays);
 
-render(tripEventsContainerElement, tripDaysContainerComponent.getElement());
-
-tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
-  // render days and events in each day
-  render(tripDaysContainerComponent.getElement(), new TripDayView(day).getElement());
-
-  const tripDayElement = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
-  const tripEventsList = tripDayElement.querySelector(`.trip-events__list`);
-
-  day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
-    renderTripEvent(tripEventsList, tripEvent);
-  });
-});
+renderTripInfo(headerContainerElement, allEvents);
+renderTripEvents(tripEventsContainerElement, allEvents);

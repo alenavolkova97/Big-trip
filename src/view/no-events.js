@@ -1,15 +1,13 @@
 import {createElement} from '../utils.js';
 
-export default class TripPrice {
+export default class NoEvents {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
     return (
-      `<p class="trip-info__cost">
-        Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
-      </p>`
+      `<p class="trip-events__msg">Click New Event to create your first point</p>`
     );
   }
 

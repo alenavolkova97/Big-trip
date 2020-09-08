@@ -7,7 +7,7 @@ export default class TripDay {
     this._day = day;
   }
 
-  _getTemplate() { // отделить список событий по необходимости
+  getTemplate() { // отделить список событий по необходимости
     return (
       `<li class="trip-days__item  day">
         <div class="day__info">
@@ -22,7 +22,7 @@ export default class TripDay {
 
   getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
