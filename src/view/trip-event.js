@@ -1,9 +1,9 @@
 import {ARRIVALS} from '../const.js';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
-export default class TripEvent {
+export default class TripEvent extends AbstractView {
   constructor(event) {
-    this._element = null;
+    super();
     this._event = event;
   }
 
@@ -51,18 +51,6 @@ export default class TripEvent {
         </div>
       </li>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

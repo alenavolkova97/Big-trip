@@ -1,8 +1,8 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
-export default class TripInfo {
+export default class TripInfo extends AbstractView {
   constructor(events) {
-    this._element = null;
+    super();
     this._events = events;
   }
 
@@ -23,18 +23,6 @@ export default class TripInfo {
         </p>
       </div>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 
