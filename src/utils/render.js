@@ -11,6 +11,14 @@ export const RenderPosition = {
 // };
 
 export const render = (container, child, place = RenderPosition.BEFOREEND) => {
+  if (!container) {
+    throw new Error(`No container provided...`);
+  }
+
+  if (!child) {
+    throw new Error(`No child provided...`);
+  }
+
   if (container instanceof Abstract) {
     container = container.getElement();
   }

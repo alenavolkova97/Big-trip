@@ -35,27 +35,27 @@ export default class Trip {
 
   _renderDays() {
     this.tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
-      // render days and events in each day
-      this._renderDay(day);
-      this._renderEvents(day, index);
+      this._renderDay(day, index);
     });
   }
 
-  _renderDay(day) {
+  _renderDay(day, index) {
     const tripDayComponent = new TripDayView(day);
     render(this._tripDaysContainerComponent, tripDayComponent);
+    this._renderEvents(day, index); // render day and events in this day
   }
 
   _renderEvents(day, index) {
-    const tripDayElement = this._tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
-    const tripEventsList = tripDayElement.querySelector(`.trip-events__list`); // ?
+    const tripDayElement = this._tripDaysContainerComponent.getElement()
+      .querySelector(`.day:nth-child(${index + 1})`); // ?
+    const tripEventList = tripDayElement.querySelector(`.trip-events__list`); // находим список событий в дне?
 
     day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
-      this._renderEvent(tripEventsList, tripEvent);
+      this._renderEvent(tripEventList, tripEvent);
     });
   }
 
-  _renderEvent(tripListElement, event) {
+  _renderEvent(container, event) {
     const tripEventComponent = new TripEventView(event);
     let tripEventEditComponent;
 
@@ -86,7 +86,7 @@ export default class Trip {
       });
     });
 
-    render(tripListElement, tripEventComponent);
+    render(container, tripEventComponent);
   }
 
   _renderTrip() {
