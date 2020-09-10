@@ -52,15 +52,14 @@ const renderTripEvent = (tripListElement, event) => {
     }
   };
 
-  tripEventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+  tripEventComponent.setRollupClickHandler(() => {
     if (!tripEventEditComponent) {
       tripEventEditComponent = new TripEventEditView(event); // create component when click happen
     }
     replaceEventToForm();
     document.addEventListener(`keydown`, onEscPress);
 
-    tripEventEditComponent.getElement().addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
+    tripEventEditComponent.setFormSubmitHandler(() => {
       replaceFormToEvent();
     });
   });

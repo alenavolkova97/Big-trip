@@ -26,6 +26,7 @@ export default class TripEventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
     super();
     this._event = event;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   _createTripEventTimeTemplate(time) {
@@ -142,5 +143,15 @@ export default class TripEventEdit extends AbstractView {
         </section>
       </form>`
     );
+  }
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
 }

@@ -5,6 +5,7 @@ export default class TripEvent extends AbstractView {
   constructor(event) {
     super();
     this._event = event;
+    this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 
   _createTripEventOffersTemplate(offers) {
@@ -51,6 +52,15 @@ export default class TripEvent extends AbstractView {
         </div>
       </li>`
     );
+  }
+
+  _rollupClickHandler() {
+    this._callback.rollupClick();
+  }
+
+  setRollupClickHandler(callback) {
+    this._callback.rollupClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupClickHandler);
   }
 }
 
