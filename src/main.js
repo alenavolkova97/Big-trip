@@ -3,15 +3,10 @@ import TripInfoView from './view/trip-info.js';
 import TripPriceView from './view/trip-price.js';
 import SiteMenuView from './view/site-menu.js';
 import TripEventsFilterView from './view/trip-events-filter.js';
-import TripEventsSortingView from './view/trip-events-sorting.js';
-import TripDaysContainerView from './view/trip-days-container.js';
-import TripDayView from './view/trip-day.js';
-import TripEventEditView from './view/trip-event-edit.js';
-import TripEventView from './view/trip-event.js';
-import NoEventsView from './view/no-events.js';
 import {generateTripDay} from './mock/trip-event.js';
 import {getRandomInteger} from './utils/common.js';
-import {RenderPosition, render, replace} from './utils/render.js';
+import {RenderPosition, render} from './utils/render.js';
+import TripPresenter from './presenter/trip.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
 // may be from 1 to 6 days (mock number)
@@ -34,39 +29,7 @@ const getAllEvents = (days) => {
   return allEvents;
 };
 
-const renderTripEvent = (tripListElement, event) => {
-  const tripEventComponent = new TripEventView(event);
-  let tripEventEditComponent;
-
-  const replaceEventToForm = () => {
-    replace(tripEventEditComponent, tripEventComponent);
-  };
-
-  const replaceFormToEvent = () => {
-    replace(tripEventComponent, tripEventEditComponent);
-  };
-
-  const onEscPress = (evt) => {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      replaceFormToEvent();
-      document.removeEventListener(`keydown`, onEscPress);
-    }
-  };
-
-  tripEventComponent.setRollupClickHandler(() => {
-    if (!tripEventEditComponent) {
-      tripEventEditComponent = new TripEventEditView(event); // create component when click happen
-    }
-    replaceEventToForm();
-    document.addEventListener(`keydown`, onEscPress);
-
-    tripEventEditComponent.setFormSubmitHandler(() => {
-      replaceFormToEvent();
-    });
-  });
-
-  render(tripListElement, tripEventComponent);
-};
+const tripPresenter = new TripPresenter(tripEventsContainerElement);
 
 const renderTripInfo = (container, events) => {
   render(container, new TripInfoContainerView(), RenderPosition.AFTERBEGIN);
@@ -81,34 +44,10 @@ const renderTripInfo = (container, events) => {
   }
 };
 
-const renderTripEvents = (container, events) => {
-  const tripDaysContainerComponent = new TripDaysContainerView();
-
-  if (events.length === 0) {
-    render(container, new NoEventsView());
-    return;
-  }
-
-  render(container, new TripEventsSortingView());
-  render(container, tripDaysContainerComponent);
-
-  tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
-    // render days and events in each day
-    render(tripDaysContainerComponent, new TripDayView(day));
-
-    const tripDayElement = tripDaysContainerComponent.getElement().querySelector(`.day:nth-child(${index + 1})`);
-    const tripEventsList = tripDayElement.querySelector(`.trip-events__list`);
-
-    day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
-      renderTripEvent(tripEventsList, tripEvent);
-    });
-  });
-};
-
 render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
 render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition.AFTEREND);
 
 const allEvents = getAllEvents(tripDays);
 
 renderTripInfo(headerContainerElement, allEvents);
-renderTripEvents(tripEventsContainerElement, allEvents);
+tripPresenter.init(tripDays, allEvents);
