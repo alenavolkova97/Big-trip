@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils.js';
+import {getRandomInteger} from '../utils/common.js';
 import {ARRIVALS} from '../const.js';
 import {MOVEMENTS} from '../const.js';
 

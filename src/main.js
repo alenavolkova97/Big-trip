@@ -10,7 +10,8 @@ import TripEventEditView from './view/trip-event-edit.js';
 import TripEventView from './view/trip-event.js';
 import NoEventsView from './view/no-events.js';
 import {generateTripDay} from './mock/trip-event.js';
-import {getRandomInteger, RenderPosition, render} from './utils.js';
+import {getRandomInteger} from './utils/common.js';
+import {RenderPosition, render} from './utils/render.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
 // may be from 1 to 6 days (mock number)
