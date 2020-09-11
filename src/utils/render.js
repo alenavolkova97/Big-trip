@@ -1,4 +1,4 @@
-import Abstract from '../view/abstract.js';
+import AbstractElement from '../view/abstract.js';
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
@@ -19,11 +19,11 @@ export const render = (container, child, place = RenderPosition.BEFOREEND) => {
     throw new Error(`No child provided...`);
   }
 
-  if (container instanceof Abstract) {
+  if (container instanceof AbstractElement) {
     container = container.getElement();
   }
 
-  if (child instanceof Abstract) {
+  if (child instanceof AbstractElement) {
     child = child.getElement();
   }
 
@@ -49,11 +49,11 @@ export const createElement = (template) => {
 };
 
 export const replace = (newChild, oldChild) => {
-  if (newChild instanceof Abstract) {
+  if (newChild instanceof AbstractElement) {
     newChild = newChild.getElement();
   }
 
-  if (oldChild instanceof Abstract) {
+  if (oldChild instanceof AbstractElement) {
     oldChild = oldChild.getElement();
   }
 

@@ -4,28 +4,28 @@ import TripPriceView from '../view/trip-price.js';
 import {render, RenderPosition} from '../utils/render.js';
 
 export default class Info {
-  constructor(infoContainer, tripEvents) {
+  constructor(infoContainer) {
     this._infoContainer = infoContainer;
-    this._tripEvents = tripEvents;
 
     this._tripInfoContainerComponent = new TripInfoContainerView();
     this._tripPriceComponent = new TripPriceView();
-    this._tripInfoComponent = new TripInfoView(this._tripEvents);
   }
 
-  init() {
+  init(tripEvents) {
+    this._tripEvents = tripEvents;
+    this._tripInfoComponent = new TripInfoView(this._tripEvents);
+
     render(this._infoContainer, this._tripInfoContainerComponent, RenderPosition.AFTERBEGIN);
     this._renderAllInfo();
   }
 
   _renderPrice() {
-    this._tripInfoContainerElement = this._infoContainer.querySelector(`.trip-info`); // ?
-    render(this._tripInfoContainerElement, this._tripPriceComponent);
+    render(this._tripInfoContainerComponent, this._tripPriceComponent);
     // цена должна быть = 0 при пустом массиве allEvents
   }
 
   _renderTripInfo() {
-    render(this._tripInfoContainerElement, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
+    render(this._tripInfoContainerComponent, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderAllInfo() {

@@ -27,28 +27,13 @@ const getAllEvents = (days) => {
   return allEvents;
 };
 
-
-
-// const renderTripInfo = (container, events) => {
-//   render(container, new TripInfoContainerView(), RenderPosition.AFTERBEGIN);
-
-//   const tripInfoContainerElement = container.querySelector(`.trip-info`);
-
-//   render(tripInfoContainerElement, new TripPriceView());
-//   // цена должна быть = 0 при пустом массиве allEvents
-
-//   if (events.length !== 0) {
-//     render(tripInfoContainerElement, new TripInfoView(events), RenderPosition.AFTERBEGIN);
-//   }
-// };
-
-const allEvents = getAllEvents(tripDays);
-
 const tripPresenter = new TripPresenter(tripEventsContainerElement);
-const infoPresenter = new InfoPresenter(headerContainerElement, allEvents);
+const infoPresenter = new InfoPresenter(headerContainerElement);
 
 render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
 render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition.AFTEREND);
 
-infoPresenter.init();
+const allEvents = getAllEvents(tripDays);
+
+infoPresenter.init(allEvents);
 tripPresenter.init(tripDays, allEvents);
