@@ -34,7 +34,7 @@ export default class Trip {
   }
 
   _renderDays() {
-    this.tripDays.sort((a, b) => a.date - b.date).forEach((day, index) => {
+    this.tripDays.forEach((day, index) => {
       this._renderDay(day, index);
     });
   }
@@ -50,7 +50,7 @@ export default class Trip {
       .querySelector(`.day:nth-child(${index + 1})`); // ?
     const tripEventList = tripDayElement.querySelector(`.trip-events__list`); // находим список событий в дне?
 
-    day.tripEvents.sort((a, b) => a.time.start - b.time.start).forEach((tripEvent) => {
+    day.tripEvents.forEach((tripEvent) => {
       this._renderEvent(tripEventList, tripEvent);
     });
   }

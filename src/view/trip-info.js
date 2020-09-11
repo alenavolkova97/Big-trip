@@ -7,7 +7,8 @@ export default class TripInfo extends AbstractView {
   }
 
   getTemplate() {
-    const destinationsWithRepeating = this._events.map((tripEvent) => tripEvent.destination);
+    const destinationsWithRepeating = this._events
+      .map((tripEvent) => tripEvent.destination);
     const destinations = Array.from(new Set(destinationsWithRepeating));
 
     return (
