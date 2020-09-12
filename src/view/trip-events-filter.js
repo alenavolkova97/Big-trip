@@ -1,10 +1,6 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
-export default class TripEventsFilter {
-  constructor() {
-    this._element = null;
-  }
-
+export default class TripEventsFilter extends AbstractView {
   getTemplate() {
     return (
       `<form class="trip-filters" action="#" method="get">
@@ -29,17 +25,5 @@ export default class TripEventsFilter {
         <button class="visually-hidden" type="submit">Accept filter</button>
       </form>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

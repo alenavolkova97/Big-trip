@@ -1,10 +1,11 @@
 import {ARRIVALS} from '../const.js';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
-export default class TripEvent {
+export default class TripEvent extends AbstractView {
   constructor(event) {
-    this._element = null;
+    super();
     this._event = event;
+    this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 
   _createTripEventOffersTemplate(offers) {
@@ -53,16 +54,13 @@ export default class TripEvent {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _rollupClickHandler() {
+    this._callback.rollupClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setRollupClickHandler(callback) {
+    this._callback.rollupClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupClickHandler);
   }
 }
 

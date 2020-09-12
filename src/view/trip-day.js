@@ -1,9 +1,9 @@
 import {tripDays} from '../main.js';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
-export default class TripDay {
+export default class TripDay extends AbstractView {
   constructor(day) {
-    this._element = null;
+    super();
     this._day = day;
   }
 
@@ -18,17 +18,5 @@ export default class TripDay {
         <ul class="trip-events__list"></ul>
       </li>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils.js';
+import {getRandomInteger} from '../utils/common.js';
 import {ARRIVALS} from '../const.js';
 import {MOVEMENTS} from '../const.js';
 
@@ -69,18 +69,27 @@ const generateEventDestination = () => {
   return DESTINATIONS[randomIndex];
 };
 
-const generateTime = () => {
-  const maxHoursGap = 12;
-  const maxMinutesGap = 60;
-  const hoursGap = getRandomInteger(0, maxHoursGap);
-  const minutesGap = getRandomInteger(0, maxMinutesGap);
-  const currentDate = new Date();
+const timeGeneratorCreator = (minDelta, maxDelta) => {
+  let startTime = Date.now();
 
-  currentDate.setHours(currentDate.getHours() + hoursGap);
-  currentDate.setMinutes(currentDate.getMinutes() + minutesGap);
+  let delta = null;
 
-  return currentDate;
+  if (!maxDelta) {
+    delta = minDelta;
+  } else {
+    delta = getRandomInteger(minDelta, maxDelta);
+  }
+
+  return function () {
+    startTime += delta;
+
+    return new Date(startTime);
+  };
 };
+
+const generateEventTime = timeGeneratorCreator(1 * 60 * 60 * 1000, 2 * 60 * 60 * 1000);
+
+const generateDayTime = timeGeneratorCreator(24 * 60 * 60 * 1000);
 
 const generateEventTypeOffers = () => {
   const offers = new Array(getRandomInteger(0, 5))
@@ -111,8 +120,8 @@ export const generateTripEvent = () => {
     type: generateEventType(),
     destination: generateEventDestination(),
     time: {
-      start: generateTime(),
-      end: generateTime()
+      start: generateEventTime(),
+      end: generateEventTime()
     },
     price: getRandomInteger(1, 1000),
     offers: generateEventTypeOffers(),
@@ -123,7 +132,7 @@ export const generateTripEvent = () => {
 
 export const generateTripDay = () => {
   return {
-    date: Date.now(),
+    date: generateDayTime(),
     tripEvents: new Array(getRandomInteger(1, 10)).fill().map(generateTripEvent)
   };
 };

@@ -1,7 +1,7 @@
 import {ARRIVALS, MOVEMENTS} from '../const.js';
 import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
 // destinations list will be received from the server
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const BLANK_EVENT = {// нужны ли непустые значения по умолчанию ??
   type: `Flight`,
@@ -22,10 +22,11 @@ const BLANK_EVENT = {// нужны ли непустые значения по �
     `../../public/img/photos/5.jpg`]
 };
 
-export default class TripEventEdit {
+export default class TripEventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
-    this._element = null;
+    super();
     this._event = event;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   _createTripEventTimeTemplate(time) {
@@ -144,15 +145,13 @@ export default class TripEventEdit {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
 }
