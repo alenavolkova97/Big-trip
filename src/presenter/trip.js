@@ -11,7 +11,6 @@ export default class Trip {
     this._tripEventsContainer = tripEventsContainer;
 
     this._tripDaysContainerComponent = new TripDaysContainerView();
-    this._noEventsComponent = new NoEventsView();
     this._tripEventsSortingComponent = new TripEventsSortingView();
   }
 
@@ -22,11 +21,13 @@ export default class Trip {
   }
 
   _renderNoEvents() {
+    this._noEventsComponent = new NoEventsView(); // ?
     render(this._tripEventsContainer, this._noEventsComponent);
   }
 
   _renderSorting() {
     render(this._tripEventsContainer, this._tripEventsSortingComponent);
+    this._tripEventsSortingComponent.setSortTypeChangeHandler(); // callback
   }
 
   _renderDaysContainer() {
