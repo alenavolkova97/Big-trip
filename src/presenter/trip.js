@@ -5,18 +5,23 @@ import TripEventEditView from '../view/trip-event-edit.js';
 import TripEventView from '../view/trip-event.js';
 import NoEventsView from '../view/no-events.js';
 import {render, replace} from '../utils/render.js';
+import {SortType} from '../const.js';
 
 export default class Trip {
   constructor(tripEventsContainer) {
     this._tripEventsContainer = tripEventsContainer;
+    this._currentSortType = SortType.DEFAULT;
 
     this._tripDaysContainerComponent = new TripDaysContainerView();
     this._tripEventsSortingComponent = new TripEventsSortingView();
+
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(tripDays, tripEvents) {
     this.tripDays = tripDays;
     this._tripEvents = tripEvents;
+    this._sourcedTripEvents = this._tripEvents; // slice ?
     this._renderTrip();
   }
 
@@ -25,9 +30,34 @@ export default class Trip {
     render(this._tripEventsContainer, this._noEventsComponent);
   }
 
+  _sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.TIME:
+        this._tripEvents.sort(sortEventsByTime); // method
+        break;
+      case SortType.PRICE:
+        this._tripEvents.sort(sortEventsByPrice); // method
+        break;
+      default:
+        this._tripEvents = this._sourcedTripEvents;
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (sortType === this._currentSortType) {
+      return;
+    }
+
+    this._sortEvents(sortType);
+    // очистить
+    // нарисовать
+  }
+
   _renderSorting() {
     render(this._tripEventsContainer, this._tripEventsSortingComponent);
-    this._tripEventsSortingComponent.setSortTypeChangeHandler(); // callback
+    this._tripEventsSortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderDaysContainer() {
