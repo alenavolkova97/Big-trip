@@ -83,7 +83,7 @@ const timeGeneratorCreator = (minDelta, maxDelta) => {
   return function () {
     startTime += delta;
 
-    return new Date(startTime);
+    return startTime; // new Date(startTime)
   };
 };
 

@@ -6,6 +6,7 @@ import TripEventView from '../view/trip-event.js';
 import NoEventsView from '../view/no-events.js';
 import {render, replace} from '../utils/render.js';
 import {SortType} from '../const.js';
+import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 
 export default class Trip {
   constructor(tripEventsContainer) {
@@ -33,10 +34,10 @@ export default class Trip {
   _sortEvents(sortType) {
     switch (sortType) {
       case SortType.TIME:
-        this._tripEvents.sort(sortEventsByTime); // method
+        this._tripEvents.sort(sortEventsByTime);
         break;
       case SortType.PRICE:
-        this._tripEvents.sort(sortEventsByPrice); // method
+        this._tripEvents.sort(sortEventsByPrice);
         break;
       default:
         this._tripEvents = this._sourcedTripEvents;
@@ -51,8 +52,8 @@ export default class Trip {
     }
 
     this._sortEvents(sortType);
-    // очистить
-    // нарисовать
+    this._clearEvents();
+    // нарисовать только точки
   }
 
   _renderSorting() {
@@ -84,6 +85,10 @@ export default class Trip {
     day.tripEvents.forEach((tripEvent) => {
       this._renderEvent(tripEventList, tripEvent);
     });
+  }
+
+  _clearEvents() {
+    this._tripDaysContainerComponent.getElement().innerHTML = ``;
   }
 
   _renderEvent(container, event) {
