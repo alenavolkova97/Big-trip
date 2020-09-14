@@ -17,7 +17,6 @@ export default class Trip {
 
     this._tripDaysContainerComponent = new TripDaysContainerView();
     this._tripEventsSortingComponent = new TripEventsSortingView();
-    this._tripEventsContainerAfterSortingComponent = new TripEventsContainerAfterSortingView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
@@ -97,18 +96,19 @@ export default class Trip {
     });
   }
 
-  _renderEventsContainerAfterSorting() {
-    render(this._tripDaysContainerComponent, this._tripEventsContainerAfterSortingComponent);
+  _renderEventsContainerAfterSorting(eventsContainer) {
+    render(this._tripDaysContainerComponent, eventsContainer);
   }
 
   _renderEventsAfterSorting() {
-    this._renderEventsContainerAfterSorting();
-    this._renderEventsList(this._tripEvents, this._tripEventsContainerAfterSortingComponent);
+    const tripEventsContainerAfterSortingComponent = new TripEventsContainerAfterSortingView();
+
+    this._renderEventsContainerAfterSorting(tripEventsContainerAfterSortingComponent);
+    this._renderEventsList(this._tripEvents, tripEventsContainerAfterSortingComponent);
   }
 
   _clearEvents() {
     this._tripDaysContainerComponent.getElement().innerHTML = ``;
-    this._tripEventsContainerAfterSortingComponent.getElement().innerHTML = ``;
   }
 
   _renderEvent(container, event) {
