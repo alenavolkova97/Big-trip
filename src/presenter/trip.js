@@ -53,7 +53,12 @@ export default class Trip {
 
     this._sortEvents(sortType);
     this._clearEvents();
-    // нарисовать только точки
+
+    if (sortType === SortType.DEFAULT) { // render events
+      this._renderDays();
+    } else {
+      this._renderEventsWithoutDays()ж
+    }
   }
 
   _renderSorting() {
@@ -66,29 +71,33 @@ export default class Trip {
   }
 
   _renderDays() {
-    this.tripDays.forEach((day, index) => {
-      this._renderDay(day, index);
+    this.tripDays.forEach((day) => {
+      this._renderDay(day);
     });
   }
 
-  _renderDay(day, index) {
+  _renderDay(day) {
     const tripDayComponent = new TripDayView(day);
     render(this._tripDaysContainerComponent, tripDayComponent);
-    this._renderEvents(day, index); // render day and events in this day
+    this._renderEvents(day, tripDayComponent); // render day and events in this day
   }
 
-  _renderEvents(day, index) {
-    const tripDayElement = this._tripDaysContainerComponent.getElement()
-      .querySelector(`.day:nth-child(${index + 1})`); // ?
-    const tripEventList = tripDayElement.querySelector(`.trip-events__list`); // находим список событий в дне?
-
+  _renderEvents(day, tripDayComponent) {
+    const DayEventsList = tripDayComponent.getElement().querySelector(`.trip-events__list`);
     day.tripEvents.forEach((tripEvent) => {
-      this._renderEvent(tripEventList, tripEvent);
+      this._renderEvent(DayEventsList, tripEvent);
     });
+  }
+
+  _renderEventsWithoutDays() {
+    this._tripEvents.forEach((tripEvent) => {
+      this._renderEvent(, tripEvent); // рендерить в список все события
+    })
+    render(this._tripEventsContainer, ); // рендерить список с событиями в конец контейнера
   }
 
   _clearEvents() {
-    this._tripDaysContainerComponent.getElement().innerHTML = ``;
+    remove(this._tripDaysContainerComponent); // удалить список дней
   }
 
   _renderEvent(container, event) {

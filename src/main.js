@@ -7,6 +7,7 @@ import TripPresenter from './presenter/trip.js';
 import InfoPresenter from './presenter/info.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
+console.log(tripDays);
 // may be from 1 to 6 days (mock number)
 
 const headerElement = document.querySelector(`.page-header`);
