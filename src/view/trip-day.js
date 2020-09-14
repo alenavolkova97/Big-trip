@@ -7,15 +7,13 @@ export default class TripDay extends AbstractView {
     this._day = day;
   }
 
-  getTemplate() { // отделить список событий по необходимости
+  getTemplate() {
     return (
       `<li class="trip-days__item  day">
         <div class="day__info">
           <span class="day__counter">${tripDays.indexOf(this._day) + 1}</span>
           <time class="day__date" datetime="2019-03-18">${this._day.date}</time>
         </div>
-
-        <ul class="trip-events__list"></ul>
       </li>`
     );
   }
