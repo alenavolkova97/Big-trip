@@ -108,6 +108,7 @@ export default class Trip {
 
   _clearEvents() {
     this._tripDaysContainerComponent.getElement().innerHTML = ``;
+    this._tripEventsContainerAfterSortingComponent.getElement().innerHTML = ``;
   }
 
   _renderEvent(container, event) {
