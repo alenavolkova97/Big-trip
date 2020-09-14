@@ -24,7 +24,7 @@ export default class Trip {
   init(tripDays, tripEvents) {
     this.tripDays = tripDays;
     this._tripEvents = tripEvents;
-    this._sourcedTripEvents = this._tripEvents; // slice ?
+    this._sourcedTripEvents = this._tripEvents;
     this._renderTrip();
   }
 
@@ -58,8 +58,12 @@ export default class Trip {
 
     if (sortType !== SortType.DEFAULT) {
       this._renderEventsAfterSorting();
+      this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
+        .textContent = ``;
     } else {
       this._renderDays();
+      this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
+        .textContent = `Day`;
     }
   }
 
@@ -132,7 +136,7 @@ export default class Trip {
 
     tripEventComponent.setRollupClickHandler(() => {
       if (!tripEventEditComponent) {
-        tripEventEditComponent = new TripEventEditView(event); // create component when click happen
+        tripEventEditComponent = new TripEventEditView(event);
       }
       replaceEventToForm();
       document.addEventListener(`keydown`, onEscPress);
