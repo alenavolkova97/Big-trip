@@ -5,7 +5,7 @@ import TripEventsListView from '../view/trip-events-list.js';
 import TripEventEditView from '../view/trip-event-edit.js';
 import TripEventView from '../view/trip-event.js';
 import NoEventsView from '../view/no-events.js';
-import {render, replace, remove} from '../utils/render.js';
+import {render, replace} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 
@@ -54,11 +54,13 @@ export default class Trip {
 
     this._sortEvents(sortType);
     this._clearEvents();
+    this._renderDays();
 
-    if (sortType === SortType.DEFAULT) { // render events
-      this._renderDays();
-    } else {
-      this._renderEventsWithoutDays();
+    if (sortType !== SortType.DEFAULT) {
+      const dayInfoContainers = document.querySelectorAll(`.day__info`);
+      dayInfoContainers.forEach((container) => {
+        container.innerHTML = ``;
+      });
     }
   }
 
@@ -95,16 +97,8 @@ export default class Trip {
     });
   }
 
-  _renderEventsWithoutDays() {
-    const tripEventsListComponent = new TripEventsListView();
-    this._tripEvents.forEach((tripEvent) => {
-      this._renderEvent(tripEventsListComponent, tripEvent); // рендерить в список все события
-    });
-    render(this._tripEventsContainer, tripEventsListComponent); // рендерить список с событиями в конец контейнера
-  }
-
   _clearEvents() {
-    remove(this._tripDaysContainerComponent); // удалить список дней
+    this._tripDaysContainerComponent.getElement().innerHTML = ``;
   }
 
   _renderEvent(container, event) {
