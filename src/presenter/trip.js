@@ -41,7 +41,7 @@ export default class Trip {
         this._tripEvents.sort(sortEventsByPrice);
         break;
       default:
-        this._tripEvents = this._sourcedTripEvents;
+        this._tripEvents = this._sourcedTripEvents.slice();
     }
 
     this._currentSortType = sortType;

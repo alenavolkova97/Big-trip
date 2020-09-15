@@ -20,9 +20,11 @@ export default class Event {
     const prevTripEventComponent = this._tripEventComponent;
     const prevTripEventEditComponent = this._tripEventEditComponent;
 
-    this._tripEventComponent = new TripEventView(event);
+    this._tripEventComponent = new TripEventView(this._event);
+    this._tripEventEditComponent = new TripEventEditView(this._event);
 
     this._tripEventComponent.setRollupClickHandler(this._handleRollupClick);
+    this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if (prevTripEventComponent === null || prevTripEventEditComponent === null) {
       render(this._eventListContainer, this._tripEventComponent);
@@ -65,13 +67,8 @@ export default class Event {
   }
 
   _handleRollupClick() {
-    if (!this._tripEventEditComponent) {
-      this._tripEventEditComponent = new TripEventEditView(this._event);
-    }
     this._replaceEventToForm();
     document.addEventListener(`keydown`, this._escKeyDownHandler);
-
-    this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
   }
 
   _handleFormSubmit() {
