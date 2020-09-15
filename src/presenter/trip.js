@@ -3,12 +3,11 @@ import TripDaysContainerView from '../view/trip-days-container.js';
 import TripDayView from '../view/trip-day.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import TripEventsContainerAfterSortingView from '../view/trip-events-container-after-sorting.js';
-import TripEventEditView from '../view/trip-event-edit.js';
-import TripEventView from '../view/trip-event.js';
 import NoEventsView from '../view/no-events.js';
-import {render, replace} from '../utils/render.js';
+import {render} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
+import EventPresenter from './event.js';
 
 export default class Trip {
   constructor(tripEventsContainer) {
@@ -116,37 +115,8 @@ export default class Trip {
   }
 
   _renderEvent(container, event) {
-    const tripEventComponent = new TripEventView(event);
-    let tripEventEditComponent;
-
-    const replaceEventToForm = () => {
-      replace(tripEventEditComponent, tripEventComponent);
-    };
-
-    const replaceFormToEvent = () => {
-      replace(tripEventComponent, tripEventEditComponent);
-    };
-
-    const onEscPress = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        replaceFormToEvent();
-        document.removeEventListener(`keydown`, onEscPress);
-      }
-    };
-
-    tripEventComponent.setRollupClickHandler(() => {
-      if (!tripEventEditComponent) {
-        tripEventEditComponent = new TripEventEditView(event);
-      }
-      replaceEventToForm();
-      document.addEventListener(`keydown`, onEscPress);
-
-      tripEventEditComponent.setFormSubmitHandler(() => {
-        replaceFormToEvent();
-      });
-    });
-
-    render(container, tripEventComponent);
+    const eventPresenter = new EventPresenter(container);
+    eventPresenter.init(event);
   }
 
   _renderTrip() {
