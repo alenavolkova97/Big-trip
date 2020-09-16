@@ -27,13 +27,14 @@ const BLANK_EVENT = {// нужны ли непустые значения по �
 export default class TripEventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
     super();
-    // this._event = event;
+    // this._event = event; ???
     this._data = TripEventEdit.copyEvent(event);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -60,7 +61,8 @@ export default class TripEventEdit extends AbstractView {
     return offers.map((offer) =>
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.key}"
-          type="checkbox" name="event-offer-${offer.key}" ${offer.isChecked ? `checked` : ``}>
+          type="checkbox" name="event-offer-${offer.key}"  value="${offer.key}"
+          ${offer.isChecked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${offer.key}">
           <span class="event__offer-title">${offer.title}</span>
           &plus;
@@ -68,9 +70,10 @@ export default class TripEventEdit extends AbstractView {
         </label>
       </div>`).join(``);
   }
-
+  // нужно отображать доп опции, соответствующие типу
+  // cancel / delete ?
+  // isFavorite добавила прямо в данные?
   getTemplate() {
-    // isFavorite добавила прямо в данные?
     const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -134,11 +137,11 @@ export default class TripEventEdit extends AbstractView {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__reset-btn" type="reset">Cancel</button>
 
-          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
+          <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
             ${isFavorite ? `checked` : ``}>
-          <label class="event__favorite-btn" for="event-favorite-1">
+          <label class="event__favorite-btn" for="event-favorite">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
               <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -177,8 +180,8 @@ export default class TripEventEdit extends AbstractView {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this.setFormSubmitHandler(this._callback.formSubmit); // ?
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setFormSubmitHandler();
+    this.setFavoriteClickHandler();
   }
 
   _setInnerHandlers() {
@@ -194,6 +197,10 @@ export default class TripEventEdit extends AbstractView {
       .getElement()
       .querySelector(`.event__field-group--price`)
       .addEventListener(`input`, this._priceInputHandler);
+    this
+      .getElement()
+      .querySelector(`.event__available-offers`)
+      .addEventListener(`change`, this._offersChangeHandler);
   }
 
   updateData(update, isJustDataUpdating) {
@@ -245,6 +252,18 @@ export default class TripEventEdit extends AbstractView {
     }, true);
   }
 
+  _offersChangeHandler(evt) {
+    this.updateData({
+      offers: this._data.offers.map((offer) => {
+        if (offer.key === evt.target.value) {
+          offer.isChecked = !offer.isChecked;
+        }
+
+        return offer;
+      })
+    });
+  }
+
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(this._data);
@@ -255,12 +274,12 @@ export default class TripEventEdit extends AbstractView {
   }
 
   setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
+    this._callback.formSubmit = callback || this._callback.formSubmit;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
 
   setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
+    this._callback.favoriteClick = callback || this._callback.favoriteClick;
     this.getElement().querySelector(`.event__favorite-icon`).addEventListener(`click`, this._favoriteClickHandler);
   }
 

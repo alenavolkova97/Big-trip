@@ -95,14 +95,6 @@ const generateEventTime = timeGeneratorCreator(1 * 60 * 60 * 1000, 2 * 60 * 60 *
 
 const generateDayTime = timeGeneratorCreator(24 * 60 * 60 * 1000);
 
-const generateEventTypeOffers = () => {
-  const offers = new Array(getRandomInteger(0, 5))
-  .fill()
-  .map(() => OFFERS[getRandomInteger(0, OFFERS.length - 1)]);
-
-  return offers;
-};
-
 const generateEventDestinationDescription = () => {
   const ChosenDestinationDescriptionParts = new Array(getRandomInteger(1, 5))
     .fill()
@@ -130,7 +122,7 @@ export const generateTripEvent = () => {
       end: generateEventTime() + getRandomInteger(0, 1 * 60 * 60 * 1000) // ?
     },
     price: getRandomInteger(1, 1000),
-    offers: generateEventTypeOffers(),
+    offers: OFFERS,
     description: generateEventDestinationDescription(),
     photos: generateEventPhotos()
   };
