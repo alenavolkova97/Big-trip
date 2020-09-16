@@ -62,7 +62,8 @@ export default class TripEventEdit extends AbstractView {
   }
 
   getTemplate() {
-    const {type, destination, time, price, offers, description, photos} = this._event;
+    // isFavorite добавила прямо в данные либо нужно добавить в this._data и не трогать this._event ?
+    const {isFavorite, type, destination, time, price, offers, description, photos} = this._event;
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
@@ -122,7 +123,8 @@ export default class TripEventEdit extends AbstractView {
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
+            ${isFavorite ? `checked` : ``}>
           <label class="event__favorite-btn" for="event-favorite-1">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -162,7 +164,7 @@ export default class TripEventEdit extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._event);
   }
 
   _favoriteClickHandler() {

@@ -71,11 +71,20 @@ export default class Event {
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(event) {
+    this._changeData(event);
     this._replaceFormToEvent();
   }
 
   _handleFavoriteClick() {
-    // this._changeData ?
+    this._changeData(
+        Object.assign(
+            {},
+            this._event,
+            {
+              isFavorite: !this._event.isFavorite
+            }
+        )
+    );
   }
 }

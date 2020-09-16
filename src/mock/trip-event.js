@@ -122,6 +122,7 @@ const generateEventPhotos = () => {
 export const generateTripEvent = () => {
   return {
     id: generateId(),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
     type: generateEventType(),
     destination: generateEventDestination(),
     time: {
