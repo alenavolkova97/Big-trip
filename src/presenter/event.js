@@ -3,8 +3,9 @@ import TripEventEditView from '../view/trip-event-edit.js';
 import {render, replace, remove} from '../utils/render.js';
 
 export default class Event {
-  constructor(eventListContainer) {
+  constructor(eventListContainer, changeData) {
     this._eventListContainer = eventListContainer;
+    this._changeData = changeData;
 
     this._tripEventComponent = null;
     this._tripEventEditComponent = null;
@@ -12,6 +13,7 @@ export default class Event {
     this._handleRollupClick = this._handleRollupClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(event) {
@@ -25,6 +27,7 @@ export default class Event {
 
     this._tripEventComponent.setRollupClickHandler(this._handleRollupClick);
     this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._tripEventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevTripEventComponent === null || prevTripEventEditComponent === null) {
       render(this._eventListContainer, this._tripEventComponent);
@@ -70,5 +73,9 @@ export default class Event {
 
   _handleFormSubmit() {
     this._replaceFormToEvent();
+  }
+
+  _handleFavoriteClick() {
+    // this._changeData ?
   }
 }
