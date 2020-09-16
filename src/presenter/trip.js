@@ -4,7 +4,7 @@ import TripDayView from '../view/trip-day.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import TripEventsContainerAfterSortingView from '../view/trip-events-container-after-sorting.js';
 import NoEventsView from '../view/no-events.js';
-import {render} from '../utils/render.js';
+import {render, remove} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 import EventPresenter from './event.js';
@@ -13,6 +13,8 @@ export default class Trip {
   constructor(tripEventsContainer) {
     this._tripEventsContainer = tripEventsContainer;
     this._currentSortType = SortType.DEFAULT;
+    this._tripDays = [];
+    this._eventPresenters = {};
 
     this._tripDaysContainerComponent = new TripDaysContainerView();
     this._tripEventsSortingComponent = new TripEventsSortingView();
@@ -83,6 +85,7 @@ export default class Trip {
 
   _renderDay(day) {
     const tripDayComponent = new TripDayView(day);
+    this._tripDays.push(tripDayComponent);
     render(this._tripDaysContainerComponent, tripDayComponent);
     this._renderEventsList(day.tripEvents, tripDayComponent);
   }
@@ -111,12 +114,17 @@ export default class Trip {
   }
 
   _clearEvents() {
-    this._tripDaysContainerComponent.getElement().innerHTML = ``;
+    this._tripDays.forEach((day) => remove(day));
+    Object
+      .values(this._eventPresenters)
+      .forEach((presenter) => presenter.destroy());
+    this._eventPresenters = {};
   }
 
   _renderEvent(container, event) {
     const eventPresenter = new EventPresenter(container);
     eventPresenter.init(event);
+    this._eventPresenters[event.id] = eventPresenter;
   }
 
   _renderTrip() {

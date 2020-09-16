@@ -40,10 +40,7 @@ export default class Event {
     }
 
     remove(prevTripEventComponent);
-
-    if (prevTripEventEditComponent) {
-      remove(prevTripEventEditComponent);
-    }
+    remove(prevTripEventEditComponent);
   }
 
   destroy() {

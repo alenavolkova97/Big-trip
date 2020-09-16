@@ -55,6 +55,10 @@ export const OFFERS = [
   }
 ];
 
+const generateId = () => {
+  return Date.now() + parseInt(Math.random() * 10000, 10);
+};
+
 const generateEventType = () => {
   const types = ARRIVALS.concat(MOVEMENTS);
 
@@ -117,6 +121,7 @@ const generateEventPhotos = () => {
 
 export const generateTripEvent = () => {
   return {
+    id: generateId(),
     type: generateEventType(),
     destination: generateEventDestination(),
     time: {
