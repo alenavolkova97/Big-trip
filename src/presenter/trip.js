@@ -51,6 +51,11 @@ export default class Trip {
     this._currentSortType = sortType;
   }
 
+  _setDaySortingElementText(textContent) {
+    this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
+        .textContent = textContent;
+  }
+
   _handleSortTypeChange(sortType) {
     if (sortType === this._currentSortType) {
       return;
@@ -61,12 +66,10 @@ export default class Trip {
 
     if (sortType !== SortType.DEFAULT) {
       this._renderEventsAfterSorting();
-      this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
-        .textContent = ``;
+      this._setDaySortingElementText(``);
     } else {
       this._renderDays();
-      this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
-        .textContent = `Day`;
+      this._setDaySortingElementText(`Day`);
     }
   }
 
