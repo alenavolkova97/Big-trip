@@ -26,7 +26,7 @@ export default class TripEvent extends AbstractView {
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png"
               alt="Event type icon">
           </div>
-          <h3 class="event__title">${type} ${ARRIVALS.includes(type) ? `in` : `to`} ${destination}</h3>
+          <h3 class="event__title">${type[0].toUpperCase() + type.slice(1)} ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`} ${destination}</h3>
 
           <div class="event__schedule">
             <p class="event__time">

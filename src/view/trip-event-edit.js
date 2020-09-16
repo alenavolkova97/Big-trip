@@ -32,6 +32,8 @@ export default class TripEventEdit extends AbstractView {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -124,11 +126,11 @@ export default class TripEventEdit extends AbstractView {
 
           <div class="event__field-group  event__field-group--price">
             <label class="event__label" for="event-price">
-              <span class="visually-hidden">${price}</span>
+              <span class="visually-hidden">Price</span>
               &euro;
             </label>
             <input class="event__input  event__input--price" id="event-price" type="text"
-              name="event-price" value="">
+              name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -184,9 +186,17 @@ export default class TripEventEdit extends AbstractView {
       .getElement()
       .querySelector(`.event__type-list`)
       .addEventListener(`change`, this._eventTypeChangeHandler);
+    this
+      .getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
+    this
+      .getElement()
+      .querySelector(`.event__field-group--price`)
+      .addEventListener(`input`, this._priceInputHandler);
   }
 
-  updateData(update) {
+  updateData(update, isJustDataUpdating) {
     if (!update) {
       return;
     }
@@ -196,6 +206,10 @@ export default class TripEventEdit extends AbstractView {
         this._data,
         update
     );
+
+    if (isJustDataUpdating) {
+      return;
+    }
 
     this.updateElement();
   }
@@ -217,6 +231,18 @@ export default class TripEventEdit extends AbstractView {
     this.updateData({
       type: evt.target.value
     });
+  }
+
+  _destinationInputHandler(evt) {
+    this.updateData({
+      destination: evt.target.value
+    }, true);
+  }
+
+  _priceInputHandler(evt) {
+    this.updateData({
+      price: evt.target.value
+    }, true);
   }
 
   _formSubmitHandler(evt) {
