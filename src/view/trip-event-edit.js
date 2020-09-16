@@ -2,8 +2,10 @@ import {ARRIVALS, MOVEMENTS} from '../const.js';
 import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
 // destinations list will be received from the server
 import AbstractView from './abstract.js';
+import {replace} from '../utils/render.js';
 
 const BLANK_EVENT = {// нужны ли непустые значения по умолчанию ??
+  isFavorite: false,
   type: `Flight`,
   destination: `Geneva`,
   time: {
@@ -25,9 +27,13 @@ const BLANK_EVENT = {// нужны ли непустые значения по �
 export default class TripEventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
     super();
-    this._event = event;
+    // this._event = event;
+    this._data = TripEventEdit.copyEvent(event);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   _createTripEventTimeTemplate(time) {
@@ -62,8 +68,8 @@ export default class TripEventEdit extends AbstractView {
   }
 
   getTemplate() {
-    // isFavorite добавила прямо в данные либо нужно добавить в this._data и не трогать this._event ?
-    const {isFavorite, type, destination, time, price, offers, description, photos} = this._event;
+    // isFavorite добавила прямо в данные?
+    const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
@@ -80,9 +86,12 @@ export default class TripEventEdit extends AbstractView {
                 <legend class="visually-hidden">Transfer</legend>
                 ${MOVEMENTS.map((movementType) => `<div class="event__type-item">
                     <input id="event-type-${movementType.toLowerCase()}" class="event__type-input
-                      visually-hidden" type="radio" name="event-type" value="${movementType.toLowerCase()}">
+                      visually-hidden" type="radio" name="event-type" value="${movementType.toLowerCase()}"
+                      ${type === movementType ? `checked` : ``}>
                     <label class="event__type-label  event__type-label--${movementType.toLowerCase()}"
-                      for="event-type-${movementType.toLowerCase()}">${movementType}</label>
+                      for="event-type-${movementType.toLowerCase()}">
+                      ${movementType}
+                    </label>
                   </div>`).join(``)}
               </fieldset>
 
@@ -90,7 +99,8 @@ export default class TripEventEdit extends AbstractView {
                 <legend class="visually-hidden">Activity</legend>
                 ${ARRIVALS.map((arrivalType) => `<div class="event__type-item">
                   <input id="event-type-${arrivalType.toLowerCase()}" class="event__type-input
-                    visually-hidden" type="radio" name="event-type" value="${arrivalType.toLowerCase()}">
+                    visually-hidden" type="radio" name="event-type" value="${arrivalType.toLowerCase()}"
+                    ${type === arrivalType ? `checked` : ``}>
                   <label class="event__type-label  event__type-label--${arrivalType.toLowerCase()}"
                     for="event-type-${arrivalType.toLowerCase()}">${arrivalType}</label>
                 </div>`).join(``)}
@@ -100,7 +110,8 @@ export default class TripEventEdit extends AbstractView {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination">
-              ${type} ${ARRIVALS.includes(type) ? `in` : `to`}
+              ${type[0].toUpperCase() + type.slice(1)}
+              ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`}
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
               type="text" name="event-destination" value="${destination}" list="destination-list">
@@ -162,9 +173,55 @@ export default class TripEventEdit extends AbstractView {
     );
   }
 
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit); // ?
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  }
+
+  _setInnerHandlers() {
+    this
+      .getElement()
+      .querySelector(`.event__type-list`)
+      .addEventListener(`change`, this._eventTypeChangeHandler);
+  }
+
+  updateData(update) {
+    if (!update) {
+      return;
+    }
+
+    this._data = Object.assign(
+        {},
+        this._data,
+        update
+    );
+
+    this.updateElement();
+  }
+
+  updateElement() {
+    let prevElement = this.getElement();
+
+    this.removeElement();
+
+    const newElement = this.getElement();
+
+    replace(newElement, prevElement);
+    prevElement = null;
+
+    this.restoreHandlers();
+  }
+
+  _eventTypeChangeHandler(evt) {
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._event);
+    this._callback.formSubmit(this._data);
   }
 
   _favoriteClickHandler() {
@@ -179,5 +236,12 @@ export default class TripEventEdit extends AbstractView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-icon`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  static copyEvent(event) {
+    return Object.assign(
+        {},
+        event
+    );
   }
 }
