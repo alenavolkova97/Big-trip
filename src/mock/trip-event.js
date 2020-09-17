@@ -122,7 +122,7 @@ export const generateTripEvent = () => {
       end: generateEventTime() + getRandomInteger(0, 1 * 60 * 60 * 1000) // ?
     },
     price: getRandomInteger(1, 1000),
-    offers: OFFERS,
+    offers: OFFERS.map((offer) => Object.assign({}, offer)),
     description: generateEventDestinationDescription(),
     photos: generateEventPhotos()
   };
