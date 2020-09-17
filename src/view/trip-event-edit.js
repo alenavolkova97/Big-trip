@@ -2,6 +2,9 @@ import {ARRIVALS, MOVEMENTS} from '../const.js';
 import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
 // destinations list will be received from the server
 import SmartView from './smart.js';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const BLANK_EVENT = {// нужны ли непустые значения по умолчанию ??
   isFavorite: false,
@@ -265,4 +268,3 @@ export default class TripEventEdit extends SmartView {
 // cancel при создании новой точки маршрута
 // isFavorite добавила прямо в данные?
 // менять описание при выборе пункта назначения
-// ошибка в offers
