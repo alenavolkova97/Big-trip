@@ -2,6 +2,8 @@ import {ARRIVALS, MOVEMENTS} from '../const.js';
 import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
 // destinations list will be received from the server
 import SmartView from './smart.js';
+import {formatEventDate} from '../utils/event.js';
+import Mode from '../presenter/event.js';
 import flatpickr from 'flatpickr';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -54,13 +56,13 @@ export default class TripEventEdit extends SmartView {
           From
         </label>
         <input class="event__input  event__input--time" id="event-start-time"
-          type="text" name="event-start-time" value="${time.start}">
+          type="text" name="event-start-time" value="${formatEventDate(time.start, Mode.EDITING)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time">
           To
         </label>
         <input class="event__input  event__input--time" id="event-end-time"
-          type="text" name="event-end-time" value="${time.end}">
+          type="text" name="event-end-time" value="${formatEventDate(time.end)}">
       </div>`
     );
   }
