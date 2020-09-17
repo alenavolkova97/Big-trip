@@ -1,4 +1,5 @@
 import AbstractView from './abstract.js';
+import {formatDate} from '../utils/trip.js';
 
 export default class TripInfo extends AbstractView {
   constructor(events) {
@@ -19,8 +20,8 @@ export default class TripInfo extends AbstractView {
         </h1>
 
         <p class="trip-info__dates">
-          ${this._events[0].time.start}&nbsp;&mdash;&nbsp;
-          ${this._events[this._events.length - 1].time.end}
+          ${formatDate(this._events[0].time.start)}&nbsp;&mdash;&nbsp;
+          ${formatDate(this._events[this._events.length - 1].time.end)}
         </p>
       </div>`
     );

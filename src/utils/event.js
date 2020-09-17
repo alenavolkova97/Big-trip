@@ -28,6 +28,10 @@ export const formatEventDate = (date, mode) => {
   }
 };
 
+export const formatDate = (date) => {
+  return moment(date).format(`MMM DD`);
+};
+
 export const formatEventDuration = (startDate, endDate) => {
   const startEventDate = moment(startDate);
   const endEventDate = moment(endDate); // ?
