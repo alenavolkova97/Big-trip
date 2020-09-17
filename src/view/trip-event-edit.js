@@ -31,14 +31,20 @@ export default class TripEventEdit extends SmartView {
     super();
     // this._event = event; ???
     this._data = TripEventEdit.copyEvent(event);
+    this._startDatepicker = null;
+    this._endDatepicker = null;
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatePicker();
   }
 
   _createTripEventTimeTemplate(time) {
@@ -184,8 +190,42 @@ export default class TripEventEdit extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatePicker();
+
     this.setFormSubmitHandler();
     this.setFavoriteClickHandler();
+  }
+
+  _setDatePicker() {
+    if (this._startDatepicker) {
+      this._startDatepicker.destroy();
+      this._startDatepicker = null;
+    }
+
+    if (this._endDatepicker) {
+      this._endDatepicker.destroy();
+      this._endDatepicker = null;
+    }
+
+    this._startDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/Y H:i`,
+          defaultDate: this._data.time.start,
+          onClose: this._startDateChangeHandler
+        }
+    );
+
+    this._endDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/Y H:i`,
+          defaultDate: this._data.time.end,
+          onClose: this._endDateChangeHandler
+        }
+    );
   }
 
   _setInnerHandlers() {
@@ -217,6 +257,24 @@ export default class TripEventEdit extends SmartView {
     this.updateData({
       destination: evt.target.value
     }, true);
+  }
+
+  _startDateChangeHandler([userDate]) {
+    this.updateData({
+      time: {
+        start: userDate,
+        end: this._data.time.end // ?
+      }
+    });
+  }
+
+  _endDateChangeHandler([userDate]) {
+    this.updateData({
+      time: {
+        start: this._data.time.start,
+        end: userDate
+      }
+    });
   }
 
   _priceInputHandler(evt) {

@@ -87,7 +87,7 @@ const timeGeneratorCreator = (minDelta, maxDelta) => {
   return function () {
     startTime += delta;
 
-    return startTime; // было new Date(startTime)
+    return new Date(startTime);
   };
 };
 
@@ -119,7 +119,7 @@ export const generateTripEvent = () => {
     destination: generateEventDestination(),
     time: {
       start: generateEventTime(),
-      end: generateEventTime() + getRandomInteger(0, 1 * 60 * 60 * 1000) // ?
+      end: generateEventTime()
     },
     price: getRandomInteger(1, 1000),
     offers: OFFERS.map((offer) => Object.assign({}, offer)),
