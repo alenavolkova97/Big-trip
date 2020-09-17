@@ -69,10 +69,7 @@ export default class TripEventEdit extends SmartView {
         </label>
       </div>`).join(``);
   }
-  // нужно отображать доп опции, соответствующие типу
-  // cancel / delete ?
-  // isFavorite добавила прямо в данные?
-  // менять описание при выборе пункта назначения
+
   getTemplate() {
     const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
     return (
@@ -137,7 +134,7 @@ export default class TripEventEdit extends SmartView {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
 
           <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
             ${isFavorite ? `checked` : ``}>
@@ -176,6 +173,10 @@ export default class TripEventEdit extends SmartView {
         </section>
       </form>`
     );
+  }
+
+  reset(event) {
+    this.updateData(event);
   }
 
   restoreHandlers() {
@@ -259,3 +260,8 @@ export default class TripEventEdit extends SmartView {
     );
   }
 }
+
+// нужно отображать доп опции, соответствующие типу (при смене дополнительных опций выбранные значения не сохраняются)
+// cancel при создании новой точки маршрута
+// isFavorite добавила прямо в данные?
+// менять описание при выборе пункта назначения
