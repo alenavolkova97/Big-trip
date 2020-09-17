@@ -1,8 +1,7 @@
 import {ARRIVALS, MOVEMENTS} from '../const.js';
 import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
 // destinations list will be received from the server
-import AbstractView from './abstract.js';
-import {replace} from '../utils/render.js';
+import SmartView from './smart.js';
 
 const BLANK_EVENT = {// нужны ли непустые значения по умолчанию ??
   isFavorite: false,
@@ -24,7 +23,7 @@ const BLANK_EVENT = {// нужны ли непустые значения по �
     `../../public/img/photos/5.jpg`]
 };
 
-export default class TripEventEdit extends AbstractView {
+export default class TripEventEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
     // this._event = event; ???
@@ -73,6 +72,7 @@ export default class TripEventEdit extends AbstractView {
   // нужно отображать доп опции, соответствующие типу
   // cancel / delete ?
   // isFavorite добавила прямо в данные?
+  // менять описание при выборе пункта назначения
   getTemplate() {
     const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
     return (
@@ -201,37 +201,6 @@ export default class TripEventEdit extends AbstractView {
       .getElement()
       .querySelector(`.event__available-offers`)
       .addEventListener(`change`, this._offersChangeHandler);
-  }
-
-  updateData(update, isJustDataUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-        {},
-        this._data,
-        update
-    );
-
-    if (isJustDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    let prevElement = this.getElement();
-
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    replace(newElement, prevElement);
-    prevElement = null;
-
-    this.restoreHandlers();
   }
 
   _eventTypeChangeHandler(evt) {

@@ -8,7 +8,7 @@ export default class TripEvent extends AbstractView {
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 
-  _createTripEventOffersTemplate(offers) { // .slice(0, 3)
+  _createTripEventOffersTemplate(offers) { // ограничить до 3х
     return offers.map((offer) => {
       return offer.isChecked ?
         `<li class="event__offer">
