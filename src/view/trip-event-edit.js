@@ -265,3 +265,4 @@ export default class TripEventEdit extends SmartView {
 // cancel при создании новой точки маршрута
 // isFavorite добавила прямо в данные?
 // менять описание при выборе пункта назначения
+// ошибка в offers
