@@ -66,6 +66,7 @@ export default class Event {
 
   _replaceEventToForm() {
     replace(this._tripEventEditComponent, this._tripEventComponent);
+    document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
@@ -85,7 +86,6 @@ export default class Event {
 
   _handleRollupClick() {
     this._replaceEventToForm();
-    document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   _handleFormSubmit(event) {
