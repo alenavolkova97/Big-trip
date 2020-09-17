@@ -224,6 +224,7 @@ export default class TripEventEdit extends SmartView {
         {
           enableTime: true,
           dateFormat: `d/m/Y H:i`,
+          minDate: this._data.time.start,
           defaultDate: this._data.time.end,
           onClose: this._endDateChangeHandler
         }
