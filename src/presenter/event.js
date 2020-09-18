@@ -65,9 +65,9 @@ export default class Event {
   }
 
   _replaceEventToForm() {
+    this._changeMode();
     replace(this._tripEventEditComponent, this._tripEventComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
-    this._changeMode();
     this._mode = Mode.EDITING;
   }
 

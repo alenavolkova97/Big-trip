@@ -2,6 +2,11 @@ import {ARRIVALS, MOVEMENTS} from '../const.js';
 import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
 // destinations list will be received from the server
 import SmartView from './smart.js';
+import {formatEventDate} from '../utils/event.js';
+import Mode from '../presenter/event.js';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const BLANK_EVENT = {// нужны ли непустые значения по умолчанию ??
   isFavorite: false,
@@ -28,14 +33,20 @@ export default class TripEventEdit extends SmartView {
     super();
     // this._event = event; ???
     this._data = TripEventEdit.copyEvent(event);
+    this._startDatepicker = null;
+    this._endDatepicker = null;
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatePicker();
   }
 
   _createTripEventTimeTemplate(time) {
@@ -45,13 +56,13 @@ export default class TripEventEdit extends SmartView {
           From
         </label>
         <input class="event__input  event__input--time" id="event-start-time"
-          type="text" name="event-start-time" value="${time.start}">
+          type="text" name="event-start-time" value="${formatEventDate(time.start, Mode.EDITING)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time">
           To
         </label>
         <input class="event__input  event__input--time" id="event-end-time"
-          type="text" name="event-end-time" value="${time.end}">
+          type="text" name="event-end-time" value="${formatEventDate(time.end)}">
       </div>`
     );
   }
@@ -181,8 +192,43 @@ export default class TripEventEdit extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatePicker();
+
     this.setFormSubmitHandler();
     this.setFavoriteClickHandler();
+  }
+
+  _setDatePicker() {
+    if (this._startDatepicker) {
+      this._startDatepicker.destroy();
+      this._startDatepicker = null;
+    }
+
+    if (this._endDatepicker) {
+      this._endDatepicker.destroy();
+      this._endDatepicker = null;
+    }
+
+    this._startDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/Y H:i`,
+          defaultDate: this._data.time.start,
+          onClose: this._startDateChangeHandler
+        }
+    );
+
+    this._endDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/Y H:i`,
+          minDate: this._data.time.start,
+          defaultDate: this._data.time.end,
+          onClose: this._endDateChangeHandler
+        }
+    );
   }
 
   _setInnerHandlers() {
@@ -214,6 +260,24 @@ export default class TripEventEdit extends SmartView {
     this.updateData({
       destination: evt.target.value
     }, true);
+  }
+
+  _startDateChangeHandler([userDate]) {
+    this.updateData({
+      time: {
+        start: userDate,
+        end: this._data.time.end // ?
+      }
+    });
+  }
+
+  _endDateChangeHandler([userDate]) {
+    this.updateData({
+      time: {
+        start: this._data.time.start,
+        end: userDate
+      }
+    });
   }
 
   _priceInputHandler(evt) {
@@ -265,4 +329,3 @@ export default class TripEventEdit extends SmartView {
 // cancel при создании новой точки маршрута
 // isFavorite добавила прямо в данные?
 // менять описание при выборе пункта назначения
-// ошибка в offers
