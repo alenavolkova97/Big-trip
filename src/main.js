@@ -32,3 +32,24 @@ render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition
 
 infoPresenter.init();
 tripPresenter.init();
+
+// для проверки правильности работы поиска индекса нужного события УДАЛИТЬ
+// console.log(tripDays);
+
+// const update = tripDays[0].tripEvents[0];
+
+// let dayContainUpdateEvent;
+// let updateEventIndex;
+
+// for (let dayIndex = 0; dayIndex < tripDays.length; dayIndex++) {
+//   const day = tripDays[dayIndex];
+//   const eventIndex = day.tripEvents.findIndex((event) => update.id === event.id);
+//   if (eventIndex !== -1) {
+//     dayContainUpdateEvent = day;
+//     updateEventIndex = eventIndex;
+//     break;
+//   }
+// }
+
+// console.log(dayContainUpdateEvent, updateEventIndex);
+
