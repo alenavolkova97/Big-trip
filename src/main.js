@@ -33,7 +33,7 @@ render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition
 infoPresenter.init();
 tripPresenter.init();
 
-// для проверки правильности работы поиска индекса нужного события УДАЛИТЬ
+// для проверки правильности работы поиска индекса нужного события - УДАЛИТЬ
 // console.log(tripDays);
 
 // const update = tripDays[0].tripEvents[0];

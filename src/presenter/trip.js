@@ -21,8 +21,11 @@ export default class Trip {
     this._tripEventsSortingComponent = new TripEventsSortingView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleEventChange = this._handleEventChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+
+    this._daysModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -71,9 +74,20 @@ export default class Trip {
     }
   }
 
-  _handleEventChange(updatedEvent) {
-    // здесь будем вызывать обновление модели
-    this._eventPresenters[updatedEvent.id].init(updatedEvent);
+  _handleViewAction(actionType, updateType, update) {
+    console.log(actionType, updateType, update); // ОБНОВИТЬ МОДЕЛЬ
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  }
+
+  _handleModelEvent(updateType, data) {
+    console.log(updateType, data);
+    // ОБНОВИТЬ ПРЕДСТАВЛЕНИЕ
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   }
 
   _handleModeChange() {
@@ -144,7 +158,7 @@ export default class Trip {
   }
 
   _renderEvent(container, event) {
-    const eventPresenter = new EventPresenter(container, this._handleEventChange, this._handleModeChange);
+    const eventPresenter = new EventPresenter(container, this._handleViewAction, this._handleModeChange);
     eventPresenter.init(event);
     this._eventPresenters[event.id] = eventPresenter;
   }
