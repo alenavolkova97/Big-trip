@@ -8,6 +8,7 @@ import {render, remove} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 import EventPresenter from './event.js';
+import {ActionType, UpdateType} from "../const.js";
 
 export default class Trip {
   constructor(tripEventsContainer, daysModel) {
@@ -75,19 +76,34 @@ export default class Trip {
   }
 
   _handleViewAction(actionType, updateType, update) {
-    console.log(actionType, updateType, update); // ОБНОВИТЬ МОДЕЛЬ
-    // Здесь будем вызывать обновление модели.
+    switch (actionType) {
+      case ActionType.UPDATE_EVENT:
+        this._daysModel.updateEvent(updateType, update);
+        break;
+      case ActionType.ADD_EVENT:
+        this._daysModel.addEvent(updateType, update);
+        break;
+      case ActionType.DELETE_EVENT:
+        this._daysModel.deleteEvent(updateType, update);
+        break;
+    }
+    // ОБНОВИТЬ МОДЕЛЬ
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
     // update - обновленные данные
   }
 
   _handleModelEvent(updateType, data) {
-    console.log(updateType, data);
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._eventPresenters[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        break;
+      case UpdateType.MAJOR:
+        break;
+    }
     // ОБНОВИТЬ ПРЕДСТАВЛЕНИЕ
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
   }
 
   _handleModeChange() {

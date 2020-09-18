@@ -65,7 +65,7 @@ export default class Days extends Observer {
     this._notify(updateType, addEvent);
   }
 
-  deleteTask(updateType, deleteEvent) {
+  deleteEvent(updateType, deleteEvent) {
     let dayContainDeleteEvent;
     let dayContainDeleteEventIndex;
     let deleteEventIndex;
