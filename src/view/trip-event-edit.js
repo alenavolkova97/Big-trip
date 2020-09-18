@@ -1,9 +1,10 @@
 import {ARRIVALS, MOVEMENTS} from '../const.js';
 import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
 // destinations list will be received from the server
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 
 const BLANK_EVENT = {// нужны ли непустые значения по умолчанию ??
+  isFavorite: false,
   type: `Flight`,
   destination: `Geneva`,
   time: {
@@ -22,11 +23,19 @@ const BLANK_EVENT = {// нужны ли непустые значения по �
     `../../public/img/photos/5.jpg`]
 };
 
-export default class TripEventEdit extends AbstractView {
+export default class TripEventEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
-    this._event = event;
+    // this._event = event; ???
+    this._data = TripEventEdit.copyEvent(event);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   _createTripEventTimeTemplate(time) {
@@ -51,7 +60,8 @@ export default class TripEventEdit extends AbstractView {
     return offers.map((offer) =>
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.key}"
-          type="checkbox" name="event-offer-${offer.key}" ${offer.isChecked ? `checked` : ``}>
+          type="checkbox" name="event-offer-${offer.key}"  value="${offer.key}"
+          ${offer.isChecked ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${offer.key}">
           <span class="event__offer-title">${offer.title}</span>
           &plus;
@@ -61,7 +71,7 @@ export default class TripEventEdit extends AbstractView {
   }
 
   getTemplate() {
-    const {type, destination, time, price, offers, description, photos} = this._event;
+    const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
@@ -78,9 +88,12 @@ export default class TripEventEdit extends AbstractView {
                 <legend class="visually-hidden">Transfer</legend>
                 ${MOVEMENTS.map((movementType) => `<div class="event__type-item">
                     <input id="event-type-${movementType.toLowerCase()}" class="event__type-input
-                      visually-hidden" type="radio" name="event-type" value="${movementType.toLowerCase()}">
+                      visually-hidden" type="radio" name="event-type" value="${movementType.toLowerCase()}"
+                      ${type === movementType ? `checked` : ``}>
                     <label class="event__type-label  event__type-label--${movementType.toLowerCase()}"
-                      for="event-type-${movementType.toLowerCase()}">${movementType}</label>
+                      for="event-type-${movementType.toLowerCase()}">
+                      ${movementType}
+                    </label>
                   </div>`).join(``)}
               </fieldset>
 
@@ -88,7 +101,8 @@ export default class TripEventEdit extends AbstractView {
                 <legend class="visually-hidden">Activity</legend>
                 ${ARRIVALS.map((arrivalType) => `<div class="event__type-item">
                   <input id="event-type-${arrivalType.toLowerCase()}" class="event__type-input
-                    visually-hidden" type="radio" name="event-type" value="${arrivalType.toLowerCase()}">
+                    visually-hidden" type="radio" name="event-type" value="${arrivalType.toLowerCase()}"
+                    ${type === arrivalType ? `checked` : ``}>
                   <label class="event__type-label  event__type-label--${arrivalType.toLowerCase()}"
                     for="event-type-${arrivalType.toLowerCase()}">${arrivalType}</label>
                 </div>`).join(``)}
@@ -98,7 +112,8 @@ export default class TripEventEdit extends AbstractView {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination">
-              ${type} ${ARRIVALS.includes(type) ? `in` : `to`}
+              ${type[0].toUpperCase() + type.slice(1)}
+              ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`}
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
               type="text" name="event-destination" value="${destination}" list="destination-list">
@@ -111,16 +126,31 @@ export default class TripEventEdit extends AbstractView {
 
           <div class="event__field-group  event__field-group--price">
             <label class="event__label" for="event-price">
-              <span class="visually-hidden">${price}</span>
+              <span class="visually-hidden">Price</span>
               &euro;
             </label>
             <input class="event__input  event__input--price" id="event-price" type="text"
-              name="event-price" value="">
+              name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
+
+          <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
+            ${isFavorite ? `checked` : ``}>
+          <label class="event__favorite-btn" for="event-favorite">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </label>
+
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+
         </header>
+
         <section class="event__details">
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -145,13 +175,94 @@ export default class TripEventEdit extends AbstractView {
     );
   }
 
+  reset(event) {
+    this.updateData(event);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler();
+    this.setFavoriteClickHandler();
+  }
+
+  _setInnerHandlers() {
+    this
+      .getElement()
+      .querySelector(`.event__type-list`)
+      .addEventListener(`change`, this._eventTypeChangeHandler);
+    this
+      .getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
+    this
+      .getElement()
+      .querySelector(`.event__field-group--price`)
+      .addEventListener(`input`, this._priceInputHandler);
+    this
+      .getElement()
+      .querySelector(`.event__available-offers`)
+      .addEventListener(`change`, this._offersChangeHandler);
+  }
+
+  _eventTypeChangeHandler(evt) {
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+
+  _destinationInputHandler(evt) {
+    this.updateData({
+      destination: evt.target.value
+    }, true);
+  }
+
+  _priceInputHandler(evt) {
+    this.updateData({
+      price: evt.target.value
+    }, true);
+  }
+
+  _offersChangeHandler(evt) {
+    this.updateData({
+      offers: this._data.offers.map((offer) => {
+        if (offer.key === evt.target.value) {
+          offer.isChecked = !offer.isChecked;
+        }
+
+        return offer;
+      })
+    });
+  }
+
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._data);
+  }
+
+  _favoriteClickHandler() {
+    this._callback.favoriteClick();
   }
 
   setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
+    this._callback.formSubmit = callback || this._callback.formSubmit;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback || this._callback.favoriteClick;
+    this.getElement().querySelector(`.event__favorite-icon`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  static copyEvent(event) {
+    return Object.assign(
+        {},
+        event
+    );
+  }
 }
+
+// нужно отображать доп опции, соответствующие типу (при смене дополнительных опций выбранные значения не сохраняются)
+// cancel при создании новой точки маршрута
+// isFavorite добавила прямо в данные?
+// менять описание при выборе пункта назначения
+// ошибка в offers

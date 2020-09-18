@@ -3,22 +3,26 @@ import TripDaysContainerView from '../view/trip-days-container.js';
 import TripDayView from '../view/trip-day.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import TripEventsContainerAfterSortingView from '../view/trip-events-container-after-sorting.js';
-import TripEventEditView from '../view/trip-event-edit.js';
-import TripEventView from '../view/trip-event.js';
 import NoEventsView from '../view/no-events.js';
-import {render, replace} from '../utils/render.js';
+import {render, remove} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
+import EventPresenter from './event.js';
+import {updateItem} from '../utils/common.js';
 
 export default class Trip {
   constructor(tripEventsContainer) {
     this._tripEventsContainer = tripEventsContainer;
     this._currentSortType = SortType.DEFAULT;
+    this._tripDays = [];
+    this._eventPresenters = {};
 
     this._tripDaysContainerComponent = new TripDaysContainerView();
     this._tripEventsSortingComponent = new TripEventsSortingView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleEventChange = this._handleEventChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(tripDays, tripEvents) {
@@ -42,10 +46,15 @@ export default class Trip {
         this._tripEvents.sort(sortEventsByPrice);
         break;
       default:
-        this._tripEvents = this._sourcedTripEvents;
+        this._tripEvents = this._sourcedTripEvents.slice();
     }
 
     this._currentSortType = sortType;
+  }
+
+  _setDaySortingElementText(textContent) {
+    this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
+        .textContent = textContent;
   }
 
   _handleSortTypeChange(sortType) {
@@ -58,13 +67,23 @@ export default class Trip {
 
     if (sortType !== SortType.DEFAULT) {
       this._renderEventsAfterSorting();
-      this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
-        .textContent = ``;
+      this._setDaySortingElementText(``);
     } else {
       this._renderDays();
-      this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
-        .textContent = `Day`;
+      this._setDaySortingElementText(`Day`);
     }
+  }
+
+  _handleEventChange(updatedEvent) {
+    this._tripEvents = updateItem(this._tripEvents, updatedEvent);
+    this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
+    this._eventPresenters[updatedEvent.id].init(updatedEvent);
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._eventPresenters)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _renderSorting() {
@@ -84,6 +103,7 @@ export default class Trip {
 
   _renderDay(day) {
     const tripDayComponent = new TripDayView(day);
+    this._tripDays.push(tripDayComponent);
     render(this._tripDaysContainerComponent, tripDayComponent);
     this._renderEventsList(day.tripEvents, tripDayComponent);
   }
@@ -112,41 +132,17 @@ export default class Trip {
   }
 
   _clearEvents() {
-    this._tripDaysContainerComponent.getElement().innerHTML = ``;
+    this._tripDays.forEach((day) => remove(day));
+    Object
+      .values(this._eventPresenters)
+      .forEach((presenter) => presenter.destroy());
+    this._eventPresenters = {};
   }
 
   _renderEvent(container, event) {
-    const tripEventComponent = new TripEventView(event);
-    let tripEventEditComponent;
-
-    const replaceEventToForm = () => {
-      replace(tripEventEditComponent, tripEventComponent);
-    };
-
-    const replaceFormToEvent = () => {
-      replace(tripEventComponent, tripEventEditComponent);
-    };
-
-    const onEscPress = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        replaceFormToEvent();
-        document.removeEventListener(`keydown`, onEscPress);
-      }
-    };
-
-    tripEventComponent.setRollupClickHandler(() => {
-      if (!tripEventEditComponent) {
-        tripEventEditComponent = new TripEventEditView(event);
-      }
-      replaceEventToForm();
-      document.addEventListener(`keydown`, onEscPress);
-
-      tripEventEditComponent.setFormSubmitHandler(() => {
-        replaceFormToEvent();
-      });
-    });
-
-    render(container, tripEventComponent);
+    const eventPresenter = new EventPresenter(container, this._handleEventChange, this._handleModeChange);
+    eventPresenter.init(event);
+    this._eventPresenters[event.id] = eventPresenter;
   }
 
   _renderTrip() {

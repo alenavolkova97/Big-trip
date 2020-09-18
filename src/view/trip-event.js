@@ -8,13 +8,15 @@ export default class TripEvent extends AbstractView {
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 
-  _createTripEventOffersTemplate(offers) {
-    return offers.slice(0, 3).map((offer) =>
-      `<li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;
-        &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-      </li>`).join(``);
+  _createTripEventOffersTemplate(offers) { // ограничить до 3х
+    return offers.map((offer) => {
+      return offer.isChecked ?
+        `<li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+        </li>` : ``;
+    }).join(``);
   }
 
   getTemplate() {
@@ -26,7 +28,7 @@ export default class TripEvent extends AbstractView {
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png"
               alt="Event type icon">
           </div>
-          <h3 class="event__title">${type} ${ARRIVALS.includes(type) ? `in` : `to`} ${destination}</h3>
+          <h3 class="event__title">${type[0].toUpperCase() + type.slice(1)} ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`} ${destination}</h3>
 
           <div class="event__schedule">
             <p class="event__time">
