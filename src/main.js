@@ -9,7 +9,6 @@ import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
-// may be from 1 to 6 days (mock number)
 
 const headerElement = document.querySelector(`.page-header`);
 const headerContainerElement = headerElement.querySelector(`.trip-main`);
@@ -38,4 +37,4 @@ render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition
 
 
 infoPresenter.init(allEvents);
-tripPresenter.init(tripDays, allEvents);
+tripPresenter.init();

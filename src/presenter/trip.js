@@ -8,7 +8,6 @@ import {render, remove} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 import EventPresenter from './event.js';
-import {updateItem} from '../utils/common.js';
 
 export default class Trip {
   constructor(tripEventsContainer, daysModel) {
@@ -26,10 +25,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
   }
 
-  init(tripDays, tripEvents) {
-    this.tripDays = tripDays;
-    this._tripEvents = tripEvents;
-    this._sourcedTripEvents = this._tripEvents;
+  init() {
     this._renderTrip();
   }
 
@@ -76,8 +72,7 @@ export default class Trip {
   }
 
   _handleEventChange(updatedEvent) {
-    this._tripEvents = updateItem(this._tripEvents, updatedEvent);
-    this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
+    // здесь будем вызывать обновление модели
     this._eventPresenters[updatedEvent.id].init(updatedEvent);
   }
 
@@ -104,6 +99,7 @@ export default class Trip {
 
   _renderDay(day) {
     const tripDayComponent = new TripDayView(day);
+
     this._tripDays.push(tripDayComponent);
     render(this._tripDaysContainerComponent, tripDayComponent);
     this._renderEventsList(day.tripEvents, tripDayComponent);
@@ -154,7 +150,7 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._tripEvents.length === 0) {
+    if (this._getEvents().length === 0) {
       this._renderNoEvents();
       return;
     }
