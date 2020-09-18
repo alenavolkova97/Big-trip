@@ -18,23 +18,17 @@ const tripEventsFilterHeaderElement = tripControlsContainerElement.querySelector
 const mainElement = document.querySelector(`main`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
 
-const getAllEvents = (days) => {
-  return days.reduce((events, day) => [...events, ...day.tripEvents], []);
-};
-
-const allEvents = getAllEvents(tripDays);
-
 const daysModel = new DaysModel();
 daysModel.setDays(tripDays);
 
 const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
 
 const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel);
-const infoPresenter = new InfoPresenter(headerContainerElement); // сюда нужно передавать какую-нибудь модель ?
+const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
 render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
 render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition.AFTEREND);
 
 
-infoPresenter.init(allEvents);
+infoPresenter.init();
 tripPresenter.init();

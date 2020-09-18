@@ -4,19 +4,23 @@ import TripPriceView from '../view/trip-price.js';
 import {render, RenderPosition} from '../utils/render.js';
 
 export default class Info {
-  constructor(infoContainer) {
+  constructor(infoContainer, daysModel) {
+    this._daysModel = daysModel;
     this._infoContainer = infoContainer;
 
     this._tripInfoContainerComponent = new TripInfoContainerView();
     this._tripPriceComponent = new TripPriceView();
   }
 
-  init(tripEvents) {
-    this._tripEvents = tripEvents;
-    this._tripInfoComponent = new TripInfoView(this._tripEvents);
+  init() {
+    this._tripInfoComponent = new TripInfoView(this._getEvents());
 
     render(this._infoContainer, this._tripInfoContainerComponent, RenderPosition.AFTERBEGIN);
     this._renderAllInfo();
+  }
+
+  _getEvents() { // return all events
+    return this._daysModel.getAllEvents();
   }
 
   _renderPrice() {
@@ -30,7 +34,7 @@ export default class Info {
 
   _renderAllInfo() {
     this._renderPrice();
-    if (this._tripEvents.length !== 0) {
+    if (this._getEvents().length > 0) {
       this._renderTripInfo();
     }
   }
