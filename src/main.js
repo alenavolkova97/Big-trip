@@ -5,6 +5,8 @@ import {getRandomInteger} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import InfoPresenter from './presenter/info.js';
+import EventsModel from './model/events.js';
+import OffersModel from './model/offers.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
 // may be from 1 to 6 days (mock number)
@@ -27,13 +29,19 @@ const getAllEvents = (days) => {
   return allEvents;
 };
 
-const tripPresenter = new TripPresenter(tripEventsContainerElement);
-const infoPresenter = new InfoPresenter(headerContainerElement);
+const allEvents = getAllEvents(tripDays);
+
+const eventsModel = new EventsModel();
+eventsModel.setEvents(allEvents);
+
+const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
+
+const tripPresenter = new TripPresenter(tripEventsContainerElement, eventsModel);
+const infoPresenter = new InfoPresenter(headerContainerElement); // сюда нужно передавать какую-нибудь модель ?
 
 render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
 render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition.AFTEREND);
 
-const allEvents = getAllEvents(tripDays);
 
 infoPresenter.init(allEvents);
 tripPresenter.init(tripDays, allEvents);
