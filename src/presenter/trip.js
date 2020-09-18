@@ -14,12 +14,14 @@ export default class Trip {
   constructor(tripEventsContainer, daysModel) {
     this._daysModel = daysModel;
     this._tripEventsContainer = tripEventsContainer;
-    this._currentSortType = SortType.DEFAULT;
+    this._currentSortingType = SortType.DEFAULT;
     this._tripDays = [];
     this._eventPresenters = {};
 
     this._tripDaysContainerComponent = new TripDaysContainerView();
-    this._tripEventsSortingComponent = new TripEventsSortingView();
+
+    this._tripEventsSortingComponent = null;
+    this._noEventsComponent = null;
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -38,7 +40,7 @@ export default class Trip {
   }
 
   _getEvents() { // return all events (sorted, if necessary)
-    switch (this._currentSortType) {
+    switch (this._currentSortingType) {
       case SortType.TIME:
         return this._daysModel.getAllEvents().slice().sort(sortEventsByTime);
       case SortType.PRICE:
@@ -49,7 +51,12 @@ export default class Trip {
   }
 
   _renderNoEvents() {
+    if (this._noEventsComponent !== null) {
+      this._noEventsComponent = null;
+    }
+
     this._noEventsComponent = new NoEventsView();
+
     render(this._tripEventsContainer, this._noEventsComponent);
   }
 
@@ -59,18 +66,18 @@ export default class Trip {
   }
 
   _handleSortTypeChange(sortType) {
-    if (sortType === this._currentSortType) {
+    if (sortType === this._currentSortingType) {
       return;
     }
 
-    this._currentSortType = sortType;
-    this._clearEvents();
+    this._currentSortingType = sortType;
+    this._clearTrip({removeSortingComponent: false});
 
     if (sortType !== SortType.DEFAULT) {
       this._renderEventsAfterSorting();
       this._setDaySortingElementText(``);
     } else {
-      this._renderDays();
+      this._renderTrip();
       this._setDaySortingElementText(`Day`);
     }
   }
@@ -99,8 +106,12 @@ export default class Trip {
         this._eventPresenters[data.id].init(data);
         break;
       case UpdateType.MINOR:
+        this._clearTrip();
+        this._renderTrip();
         break;
       case UpdateType.MAJOR:
+        this._clearTrip({resetSortingType: true});
+        this._renderTrip();
         break;
     }
     // ОБНОВИТЬ ПРЕДСТАВЛЕНИЕ
@@ -113,8 +124,14 @@ export default class Trip {
   }
 
   _renderSorting() {
-    render(this._tripEventsContainer, this._tripEventsSortingComponent);
+    if (this._tripEventsSortingComponent !== null) {
+      this._tripEventsSortingComponent = null;
+    }
+
+    this._tripEventsSortingComponent = new TripEventsSortingView();
     this._tripEventsSortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    render(this._tripEventsContainer, this._tripEventsSortingComponent);
   }
 
   _renderDaysContainer() {
@@ -158,8 +175,15 @@ export default class Trip {
     this._renderEventsList(this._getEvents(), this._tripEventsContainerAfterSortingComponent);
   }
 
-  _clearEvents() {
+  _renderEvent(container, event) {
+    const eventPresenter = new EventPresenter(container, this._handleViewAction, this._handleModeChange);
+    eventPresenter.init(event);
+    this._eventPresenters[event.id] = eventPresenter;
+  }
+
+  _clearTrip({resetSortingType = false, removeSortingComponent = true} = {}) {
     this._tripDays.forEach((day) => remove(day));
+    this._tripDays = [];
 
     // if (this._tripEventsContainerAfterSortingComponent) { // сдвиг сортировки
     //   this._tripEventsContainerAfterSortingComponent.remove();
@@ -170,22 +194,32 @@ export default class Trip {
     Object
       .values(this._eventPresenters)
       .forEach((presenter) => presenter.destroy());
-    this._eventPresenters = {};
-  }
 
-  _renderEvent(container, event) {
-    const eventPresenter = new EventPresenter(container, this._handleViewAction, this._handleModeChange);
-    eventPresenter.init(event);
-    this._eventPresenters[event.id] = eventPresenter;
+    this._eventPresenters = {};
+
+    remove(this._noEventsComponent);
+
+    if (removeSortingComponent) {
+      remove(this._tripEventsSortingComponent);
+    }
+
+    if (resetSortingType) {
+      this._currentSortingType = SortType.DEFAULT;
+    }
   }
 
   _renderTrip() {
-    if (this._getEvents().length === 0) {
+    const eventsCount = this._getEvents().length;
+
+    if (eventsCount === 0) {
       this._renderNoEvents();
       return;
     }
 
-    this._renderSorting();
+    if (this._tripEventsSortingComponent === null) {
+      this._renderSorting();
+    }
+
     this._renderDaysContainer();
     this._renderDays();
   }
