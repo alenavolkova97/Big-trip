@@ -12,7 +12,7 @@ import {updateItem} from '../utils/common.js';
 
 export default class Trip {
   constructor(tripEventsContainer, daysModel) {
-    this._eventsModel = daysModel;
+    this._daysModel = daysModel;
     this._tripEventsContainer = tripEventsContainer;
     this._currentSortType = SortType.DEFAULT;
     this._tripDays = [];
@@ -37,28 +37,20 @@ export default class Trip {
     return this._daysModel.getDays();
   }
 
-  _getEvents() { // return all events
+  _getEvents() { // return all events (sorted, if necessary)
+    switch (this._currentSortType) {
+      case SortType.TIME:
+        return this._daysModel.getAllEvents().slice().sort(sortEventsByTime);
+      case SortType.PRICE:
+        return this._daysModel.getAllEvents().slice().sort(sortEventsByPrice);
+    }
+
     return this._daysModel.getAllEvents();
   }
 
   _renderNoEvents() {
     this._noEventsComponent = new NoEventsView();
     render(this._tripEventsContainer, this._noEventsComponent);
-  }
-
-  _sortEvents(sortType) {
-    switch (sortType) {
-      case SortType.TIME:
-        this._tripEvents.sort(sortEventsByTime);
-        break;
-      case SortType.PRICE:
-        this._tripEvents.sort(sortEventsByPrice);
-        break;
-      default:
-        this._tripEvents = this._sourcedTripEvents.slice();
-    }
-
-    this._currentSortType = sortType;
   }
 
   _setDaySortingElementText(textContent) {
@@ -71,7 +63,7 @@ export default class Trip {
       return;
     }
 
-    this._sortEvents(sortType);
+    this._currentSortType = sortType;
     this._clearEvents();
 
     if (sortType !== SortType.DEFAULT) {
@@ -105,7 +97,7 @@ export default class Trip {
   }
 
   _renderDays() {
-    this.tripDays.forEach((day) => {
+    this._getDays().forEach((day) => {
       this._renderDay(day);
     });
   }
@@ -137,7 +129,7 @@ export default class Trip {
     this._tripEventsContainerAfterSortingComponent = new TripEventsContainerAfterSortingView();
 
     this._renderEventsContainerAfterSorting(this._tripEventsContainerAfterSortingComponent);
-    this._renderEventsList(this._tripEvents, this._tripEventsContainerAfterSortingComponent);
+    this._renderEventsList(this._getEvents(), this._tripEventsContainerAfterSortingComponent);
   }
 
   _clearEvents() {
