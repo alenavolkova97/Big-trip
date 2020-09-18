@@ -5,7 +5,7 @@ import {getRandomInteger} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import InfoPresenter from './presenter/info.js';
-import EventsModel from './model/events.js';
+import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
@@ -20,23 +20,17 @@ const mainElement = document.querySelector(`main`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
 
 const getAllEvents = (days) => {
-  let allEvents = [];
-
-  days.forEach((day) => {
-    allEvents = [...allEvents, ...day.tripEvents];
-  });
-
-  return allEvents;
+  return days.reduce((events, day) => [...events, ...day.tripEvents], []);
 };
 
 const allEvents = getAllEvents(tripDays);
 
-const eventsModel = new EventsModel();
-eventsModel.setEvents(allEvents);
+const daysModel = new DaysModel();
+daysModel.setDays(tripDays);
 
 const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
 
-const tripPresenter = new TripPresenter(tripEventsContainerElement, eventsModel);
+const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel);
 const infoPresenter = new InfoPresenter(headerContainerElement); // сюда нужно передавать какую-нибудь модель ?
 
 render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);

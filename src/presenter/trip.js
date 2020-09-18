@@ -11,8 +11,8 @@ import EventPresenter from './event.js';
 import {updateItem} from '../utils/common.js';
 
 export default class Trip {
-  constructor(tripEventsContainer, eventsModel) {
-    this._eventsModel = eventsModel;
+  constructor(tripEventsContainer, daysModel) {
+    this._eventsModel = daysModel;
     this._tripEventsContainer = tripEventsContainer;
     this._currentSortType = SortType.DEFAULT;
     this._tripDays = [];
@@ -33,8 +33,12 @@ export default class Trip {
     this._renderTrip();
   }
 
-  _getEvents() {
-    return this._eventsModel.getEvents();
+  _getDays() { // return days
+    return this._daysModel.getDays();
+  }
+
+  _getEvents() { // return all events
+    return this._daysModel.getAllEvents();
   }
 
   _renderNoEvents() {
@@ -130,14 +134,21 @@ export default class Trip {
   }
 
   _renderEventsAfterSorting() {
-    const tripEventsContainerAfterSortingComponent = new TripEventsContainerAfterSortingView();
+    this._tripEventsContainerAfterSortingComponent = new TripEventsContainerAfterSortingView();
 
-    this._renderEventsContainerAfterSorting(tripEventsContainerAfterSortingComponent);
-    this._renderEventsList(this._tripEvents, tripEventsContainerAfterSortingComponent);
+    this._renderEventsContainerAfterSorting(this._tripEventsContainerAfterSortingComponent);
+    this._renderEventsList(this._tripEvents, this._tripEventsContainerAfterSortingComponent);
   }
 
   _clearEvents() {
     this._tripDays.forEach((day) => remove(day));
+
+    // if (this._tripEventsContainerAfterSortingComponent) { // сдвиг сортировки
+    //   this._tripEventsContainerAfterSortingComponent.remove();
+    // }
+
+    // console.log(this._tripEventsContainerAfterSortingComponent);
+
     Object
       .values(this._eventPresenters)
       .forEach((presenter) => presenter.destroy());
