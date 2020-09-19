@@ -37,6 +37,7 @@ export default class TripEventEdit extends SmartView {
     this._endDatepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
@@ -307,9 +308,18 @@ export default class TripEventEdit extends SmartView {
     this._callback.favoriteClick();
   }
 
+  _deleteClickHandler() {
+    this._callback.deleteClick(this._data);
+  }
+
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback || this._callback.formSubmit;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 
   setFavoriteClickHandler(callback) {
@@ -329,3 +339,4 @@ export default class TripEventEdit extends SmartView {
 // cancel при создании новой точки маршрута
 // isFavorite добавила прямо в данные?
 // менять описание при выборе пункта назначения
+// при удалении всех событий из дня остается пустой контейнер дня ?

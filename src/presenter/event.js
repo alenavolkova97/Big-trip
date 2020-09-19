@@ -20,6 +20,7 @@ export default class Event {
 
     this._handleRollupClick = this._handleRollupClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
@@ -35,6 +36,7 @@ export default class Event {
 
     this._tripEventComponent.setRollupClickHandler(this._handleRollupClick);
     this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._tripEventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._tripEventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevTripEventComponent === null || prevTripEventEditComponent === null) {
@@ -109,5 +111,12 @@ export default class Event {
             }
         )
     );
+  }
+
+  _handleDeleteClick(event) {
+    this._changeData(
+        ActionType.DELETE_EVENT,
+        UpdateType.MINOR,
+        event);
   }
 }
