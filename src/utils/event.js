@@ -47,3 +47,7 @@ export const formatEventDuration = (startDate, endDate) => {
     return ``;
   }
 };
+
+export const isDateEqual = (dateA, dateB) => {
+  return moment(dateA).isSame(dateB);
+};

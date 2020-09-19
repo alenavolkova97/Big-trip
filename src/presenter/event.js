@@ -1,7 +1,8 @@
 import TripEventView from '../view/trip-event.js';
 import TripEventEditView from '../view/trip-event-edit.js';
 import {render, replace, remove} from '../utils/render.js';
-import {ActionType, UpdateType} from "../const.js";
+import {ActionType, UpdateType} from '../const.js';
+import {isDateEqual} from '../utils/event.js';
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -91,11 +92,17 @@ export default class Event {
     this._replaceEventToForm();
   }
 
-  _handleFormSubmit(event) {
+  _handleFormSubmit(update) {
+    const isPatchUpdate =
+      this._event.price === update.price &&
+      isDateEqual(update.time.start, this._event.time.start) &&
+      isDateEqual(update.time.end, this._event.time.end);
+
     this._changeData(
         ActionType.UPDATE_EVENT,
-        UpdateType.MINOR,
-        event);
+        isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
+        update);
+
     this._replaceFormToEvent();
   }
 
@@ -113,10 +120,10 @@ export default class Event {
     );
   }
 
-  _handleDeleteClick(event) {
+  _handleDeleteClick(update) {
     this._changeData(
         ActionType.DELETE_EVENT,
         UpdateType.MINOR,
-        event);
+        update);
   }
 }

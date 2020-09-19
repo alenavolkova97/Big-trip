@@ -73,7 +73,7 @@ export default class Trip {
     this._currentSortingType = sortType;
     this._clearTrip({removeSortingComponent: false});
 
-    if (sortType !== SortType.DEFAULT) {
+    if (sortType !== SortType.DEFAULT) { // ?
       this._renderEventsAfterSorting();
       this._setDaySortingElementText(``);
     } else {
@@ -107,11 +107,11 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         this._clearTrip();
-        this._renderTrip();
+        this._renderTrip({isSortedEvents: true});
         break;
       case UpdateType.MAJOR:
         this._clearTrip({resetSortingType: true});
-        this._renderTrip();
+        this._renderTrip(); // ?
         break;
     }
     // ОБНОВИТЬ ПРЕДСТАВЛЕНИЕ
@@ -128,7 +128,7 @@ export default class Trip {
       this._tripEventsSortingComponent = null;
     }
 
-    this._tripEventsSortingComponent = new TripEventsSortingView();
+    this._tripEventsSortingComponent = new TripEventsSortingView(this._currentSortingType);
     this._tripEventsSortingComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
     render(this._tripEventsContainer, this._tripEventsSortingComponent);
@@ -201,6 +201,7 @@ export default class Trip {
 
     if (removeSortingComponent) {
       remove(this._tripEventsSortingComponent);
+      this._tripEventsSortingComponent = null;
     }
 
     if (resetSortingType) {
@@ -208,7 +209,7 @@ export default class Trip {
     }
   }
 
-  _renderTrip() {
+  _renderTrip({isSortedEvents = false} = {}) {
     const eventsCount = this._getEvents().length;
 
     if (eventsCount === 0) {
@@ -218,6 +219,13 @@ export default class Trip {
 
     if (this._tripEventsSortingComponent === null) {
       this._renderSorting();
+    }
+
+    if (isSortedEvents) {
+      this._renderDaysContainer();
+      this._renderEventsAfterSorting();
+      this._setDaySortingElementText(``);
+      return;
     }
 
     this._renderDaysContainer();
