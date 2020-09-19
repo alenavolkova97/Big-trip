@@ -187,6 +187,20 @@ export default class TripEventEdit extends SmartView {
     );
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this._startDatepicker) {
+      this._startDatepicker.destroy();
+      this._startDatepicker = null;
+    }
+
+    if (this._endDatepicker) {
+      this._endDatepicker.destroy();
+      this._endDatepicker = null;
+    }
+  }
+
   reset(event) {
     this.updateData(event);
   }
