@@ -128,7 +128,8 @@ export default class TripEventEdit extends SmartView {
               ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`}
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
-              type="text" name="event-destination" value="${destination}" list="destination-list">
+              type="text" name="event-destination" value="${destination}" list="destination-list"
+              pattern="${DESTINATIONS.join(`|`)}">
             <datalist id="destination-list">
               ${DESTINATIONS.map((it) => `<option value="${it}"></option>`).join(``)}
             </datalist>
@@ -141,7 +142,7 @@ export default class TripEventEdit extends SmartView {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price" type="text"
+            <input class="event__input  event__input--price" id="event-price" type="number"
               name="event-price" value="${price}">
           </div>
 

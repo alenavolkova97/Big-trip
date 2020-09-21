@@ -30,7 +30,6 @@ const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, f
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
 render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
-// render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition.AFTEREND);
 
 filterPresenter.init();
 infoPresenter.init();
