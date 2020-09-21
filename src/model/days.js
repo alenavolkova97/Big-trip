@@ -57,7 +57,7 @@ export default class Days extends Observer {
     this._notify(updateType, updateEvent);
   }
 
-  addEvent(updateType, addEvent) { // форма создания новой точки в начале списка ?
+  addEvent(updateType, addEvent) {
     this._days[0].tripEvents = [
       addEvent,
       ...this._days[0].tripEvents];

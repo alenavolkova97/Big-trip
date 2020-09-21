@@ -36,3 +36,8 @@ filterPresenter.init();
 infoPresenter.init();
 tripPresenter.init();
 
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
+  tripPresenter.createEvent();
+});
+
+
