@@ -7,6 +7,7 @@ import TripPresenter from './presenter/trip.js';
 import InfoPresenter from './presenter/info.js';
 import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
+import FilterModel from './model/filter.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
 
@@ -22,6 +23,7 @@ const daysModel = new DaysModel();
 daysModel.setDays(tripDays);
 
 const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
+const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
