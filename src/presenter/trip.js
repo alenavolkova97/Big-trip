@@ -38,19 +38,24 @@ export default class Trip {
     this._renderTrip();
   }
 
-  _getDays() { // return days
+  _getDays() { // return days with checked filter
     const filterType = this._filterModel.getFilter();
     let days = this._daysModel.getDays();
 
     days = days.map((day) => {
-      day.tripEvents = filter[filterType](day.tripEvents);
-      return day;
+      return Object.assign(
+          {},
+          day,
+          {
+            tripEvents: filter[filterType](day.tripEvents)
+          }
+      );
     });
 
     return days;
   }
 
-  _getEvents() { // return all events (sorted, if necessary)
+  _getEvents() { // return all events with checked filter (sorted, if necessary)
     const filterType = this._filterModel.getFilter();
     const events = this._daysModel.getAllEvents();
     const filtredEvents = filter[filterType](events);
@@ -88,12 +93,12 @@ export default class Trip {
     this._currentSortingType = sortType;
     this._clearTrip({removeSortingComponent: false});
 
-    if (sortType !== SortType.DEFAULT) { // ?
-      this._renderEventsAfterSorting();
-      this._setDaySortingElementText(``);
-    } else {
+    if (sortType === SortType.DEFAULT) {
       this._renderTrip();
       this._setDaySortingElementText(`Day`);
+    } else {
+      this._renderEventsAfterSorting();
+      this._setDaySortingElementText(``);
     }
   }
 
@@ -110,9 +115,6 @@ export default class Trip {
         break;
     }
     // ОБНОВИТЬ МОДЕЛЬ
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
   }
 
   _handleModelEvent(updateType, data) {
@@ -122,11 +124,11 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         this._clearTrip();
-        this._renderTrip(); // {isSortedEvents: true}
+        this._renderTrip({isSortedEvents: true});
         break;
       case UpdateType.MAJOR:
-        this._clearTrip(); // {resetSortingType: true}
-        this._renderTrip(); // ?
+        this._clearTrip({resetSortingType: true});
+        this._renderTrip();
         break;
     }
     // ОБНОВИТЬ ПРЕДСТАВЛЕНИЕ
@@ -155,7 +157,9 @@ export default class Trip {
 
   _renderDays() {
     this._getDays().forEach((day) => {
-      this._renderDay(day);
+      if (day.tripEvents.length > 0) {
+        this._renderDay(day);
+      }
     });
   }
 
@@ -200,11 +204,9 @@ export default class Trip {
     this._tripDays.forEach((day) => remove(day));
     this._tripDays = [];
 
-    // if (this._tripEventsContainerAfterSortingComponent) { // сдвиг сортировки
-    //   this._tripEventsContainerAfterSortingComponent.remove();
-    // }
-
-    // console.log(this._tripEventsContainerAfterSortingComponent);
+    if (this._tripEventsContainerAfterSortingComponent) {
+      remove(this._tripEventsContainerAfterSortingComponent);
+    }
 
     Object
       .values(this._eventPresenters)

@@ -280,7 +280,7 @@ export default class TripEventEdit extends SmartView {
   _startDateChangeHandler([userDate]) {
     this.updateData({
       time: {
-        start: userDate,
+        start: userDate.getTime(),
         end: this._data.time.end // ?
       }
     });
@@ -290,7 +290,7 @@ export default class TripEventEdit extends SmartView {
     this.updateData({
       time: {
         start: this._data.time.start,
-        end: userDate
+        end: userDate.getTime()
       }
     });
   }
