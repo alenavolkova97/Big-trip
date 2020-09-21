@@ -51,3 +51,11 @@ export const formatEventDuration = (startDate, endDate) => {
 export const isDateEqual = (dateA, dateB) => {
   return moment(dateA).isSame(dateB);
 };
+
+export const isDateBefore = (dateA, dateB) => {
+  return moment(dateA).isBefore(dateB);
+};
+
+export const isDateAfter = (dateA, dateB) => {
+  return moment(dateA).isAfter(dateB);
+};

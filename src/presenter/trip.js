@@ -9,10 +9,12 @@ import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 import EventPresenter from './event.js';
 import {ActionType, UpdateType} from "../const.js";
+import {filter} from '../utils/filter.js';
 
 export default class Trip {
-  constructor(tripEventsContainer, daysModel) {
+  constructor(tripEventsContainer, daysModel, filterModel) {
     this._daysModel = daysModel;
+    this._filterModel = filterModel;
     this._tripEventsContainer = tripEventsContainer;
     this._currentSortingType = SortType.DEFAULT;
     this._tripDays = [];
@@ -29,6 +31,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
 
     this._daysModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -36,18 +39,30 @@ export default class Trip {
   }
 
   _getDays() { // return days
-    return this._daysModel.getDays();
+    const filterType = this._filterModel.getFilter();
+    let days = this._daysModel.getDays();
+
+    days = days.map((day) => {
+      day.tripEvents = filter[filterType](day.tripEvents);
+      return day;
+    });
+
+    return days;
   }
 
   _getEvents() { // return all events (sorted, if necessary)
+    const filterType = this._filterModel.getFilter();
+    const events = this._daysModel.getAllEvents();
+    const filtredEvents = filter[filterType](events);
+
     switch (this._currentSortingType) {
       case SortType.TIME:
-        return this._daysModel.getAllEvents().slice().sort(sortEventsByTime);
+        return filtredEvents.sort(sortEventsByTime);
       case SortType.PRICE:
-        return this._daysModel.getAllEvents().slice().sort(sortEventsByPrice);
+        return filtredEvents.sort(sortEventsByPrice);
     }
 
-    return this._daysModel.getAllEvents();
+    return filtredEvents;
   }
 
   _renderNoEvents() {
@@ -107,10 +122,10 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         this._clearTrip();
-        this._renderTrip({isSortedEvents: true});
+        this._renderTrip(); // {isSortedEvents: true}
         break;
       case UpdateType.MAJOR:
-        this._clearTrip({resetSortingType: true});
+        this._clearTrip(); // {resetSortingType: true}
         this._renderTrip(); // ?
         break;
     }

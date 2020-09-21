@@ -1,10 +1,10 @@
 import SiteMenuView from './view/site-menu.js';
-import TripEventsFilterView from './view/trip-events-filter.js';
 import {generateTripDay} from './mock/trip-event.js';
 import {getRandomInteger} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import InfoPresenter from './presenter/info.js';
+import FilterPresenter from './presenter/filter.js';
 import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
@@ -25,13 +25,14 @@ daysModel.setDays(tripDays);
 const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel);
+const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
+const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
 render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
-render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition.AFTEREND);
+// render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition.AFTEREND);
 
-
+filterPresenter.init();
 infoPresenter.init();
 tripPresenter.init();
 
