@@ -41,10 +41,10 @@ export default class Trip {
     this._renderTrip();
   }
 
-  createEvent() {
+  createEvent(callback) {
     this._handleModeChange();
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING); // сброс сортировки ?
-    this._eventNewPresenter.init();
+    this._eventNewPresenter.init(callback);
   }
 
   _getDays() { // return days with checked filter

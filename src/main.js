@@ -8,6 +8,7 @@ import FilterPresenter from './presenter/filter.js';
 import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
+import {MenuItem} from "./const.js";
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
 
@@ -18,6 +19,7 @@ const siteMenuHeaderElement = tripControlsContainerElement.querySelector(`h2:nth
 const tripEventsFilterHeaderElement = tripControlsContainerElement.querySelector(`h2:nth-child(2)`);
 const mainElement = document.querySelector(`main`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
+const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
 
 const daysModel = new DaysModel();
 daysModel.setDays(tripDays);
@@ -29,14 +31,38 @@ const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filte
 const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
-render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
+const menuComponent = new SiteMenuView();
+
+render(siteMenuHeaderElement, menuComponent, RenderPosition.AFTEREND);
+
+const handleEventNewFormOpen = () => {
+  newEventButton.disabled = false;
+};
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      console.log(`table`);
+      // Показать доску
+      // Скрыть статистику
+      break;
+    case MenuItem.STATS:
+      console.log(`stats`);
+      // Скрыть доску
+      // Показать статистику
+      break;
+  }
+};
+
+menuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 infoPresenter.init();
 tripPresenter.init();
 
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
-  tripPresenter.createEvent();
+newEventButton.addEventListener(`click`, (evt) => {
+  evt.target.disabled = true;
+  tripPresenter.createEvent(handleEventNewFormOpen);
 });
 
 
