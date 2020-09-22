@@ -1,6 +1,25 @@
 export const ARRIVALS = [`Check-in`, `Sightseeing`, `Restaurant`];
 export const MOVEMENTS = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
 
+export const icons = {
+  'Check-in': `🏨`,
+  'Sightseeing': `🏛`,
+  'Restaurant': `🍴`,
+  'Taxi': `🚕`,
+  'Bus': `🚌`,
+  'Train': `🚂`,
+  'Ship': `🛥`,
+  'Transport': `🚊`,
+  'Drive': `🚗`,
+  'Flight': `✈`
+};
+
+export const MillisecondsInTimePeriod = {
+  MINUTE: 60000,
+  HOUR: 3600000,
+  DAY: 86400000
+};
+
 export const SortType = {
   DEFAULT: `event`,
   TIME: `time`,

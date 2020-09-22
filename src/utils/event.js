@@ -1,11 +1,6 @@
 import moment from "moment";
 import Mode from '../presenter/event.js';
-
-const MillisecondsInTimePeriod = {
-  MINUTE: 60000,
-  HOUR: 3600000,
-  DAY: 86400000
-};
+import {MillisecondsInTimePeriod} from '../const.js';
 
 export const sortEventsByTime = (eventA, eventB) => {
   const eventADuration = eventA.time.end - eventA.time.start;
@@ -29,23 +24,21 @@ export const formatEventDate = (date, mode) => {
 };
 
 export const formatEventDuration = (startDate, endDate) => {
-  const startEventDate = moment(startDate);
-  const endEventDate = moment(endDate);
-  // const startEventDate = moment(`Sat Sep 19 2020 07:40:33 GMT+0300 (Москва, стандартное время)`);
-  // const endEventDate = moment(`Sat Sep 19 2020 07:40:33 GMT+0300 (Москва, стандартное время)`);
-  const differenceInMilliseconds = endEventDate.diff(startEventDate, `milliseconds`);
+  const msDiff = Math.abs(endDate - startDate);
 
-  // return moment.utc(endEventDate.diff(startEventDate)).format(`DD[d] HH[h] mm[m]`);
+  const minuteInMs = MillisecondsInTimePeriod.MINUTE;
+  const hourInMs = MillisecondsInTimePeriod.HOUR;
+  const dayInMs = MillisecondsInTimePeriod.DAY;
 
-  if (differenceInMilliseconds < MillisecondsInTimePeriod.HOUR) {
-    return moment.utc(endEventDate.diff(startEventDate)).format(`mm[m]`);
-  } else if (differenceInMilliseconds < MillisecondsInTimePeriod.DAY) {
-    return moment.utc(endEventDate.diff(startEventDate)).format(`HH[h] mm[m]`);
-  } else if (differenceInMilliseconds >= MillisecondsInTimePeriod.DAY) {
-    return moment.utc(endEventDate.diff(startEventDate)).format(`DD[d] HH[h] mm[m]`);
-  } else {
-    return ``;
-  }
+  const days = Math.floor(msDiff / dayInMs);
+  const hours = Math.floor((msDiff % dayInMs) / hourInMs);
+  const minutes = Math.floor((msDiff % hourInMs) / minuteInMs);
+
+  return [
+    days > 0 ? `${days}d` : undefined,
+    hours > 0 ? `${hours}h` : undefined,
+    minutes > 0 ? `${minutes}m` : undefined,
+  ].filter(Boolean).join(` `);
 };
 
 export const isDateEqual = (dateA, dateB) => {

@@ -1,26 +1,32 @@
-import flatpickr from 'flatpickr';
 import SmartView from './smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {
+  makeItemsUniq,
+  countMoneyForEventType,
+  countEventsByTransport,
+  countHoursForEventType,
+  parseChartTime
+} from '../utils/statistics.js';
+import {MOVEMENTS, icons} from '../const.js';
 
-const moneyCtx = document.querySelector(`.statistic__money`);
-const transportCtx = document.querySelector(`.statistic__transport`);
-const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
-
-// Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
 const BAR_HEIGHT = 55;
-moneyCtx.height = BAR_HEIGHT * 6;
-transportCtx.height = BAR_HEIGHT * 4;
-timeSpendCtx.height = BAR_HEIGHT * 4;
 
-const renderMoneyChart = (moneyCtx, events) => { // events
+const renderMoneyChart = (moneyCtx, events) => {
+  const eventTypes = events.map((event) => event.type);
+  const uniqEventTypes = makeItemsUniq(eventTypes);
+  const uniqEventTypesInUpperCase = uniqEventTypes.map((type) => icons[type] + ` ` + type.toUpperCase());
+  const eventByTypeMoney = uniqEventTypes.map((type) => countMoneyForEventType(events, type));
+
+  moneyCtx.height = BAR_HEIGHT * uniqEventTypesInUpperCase.length;
+
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`✈️ FLY`, `???? STAY`, `???? DRIVE`, `????️ LOOK`, `???? EAT`, `???? RIDE`],
+      labels: uniqEventTypesInUpperCase,
       datasets: [{
-        data: [400, 300, 200, 160, 150, 100],
+        data: eventByTypeMoney,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -35,6 +41,7 @@ const renderMoneyChart = (moneyCtx, events) => { // events
           color: `#000000`,
           anchor: `end`,
           align: `start`,
+          offset: 15,
           formatter: (val) => `€ ${val}`
         }
       },
@@ -50,11 +57,11 @@ const renderMoneyChart = (moneyCtx, events) => { // events
           ticks: {
             fontColor: `#000000`,
             padding: 5,
-            fontSize: 13,
+            fontSize: 13
           },
           gridLines: {
             display: false,
-            drawBorder: false
+            drawBorder: false,
           },
           barThickness: 44,
         }],
@@ -80,14 +87,30 @@ const renderMoneyChart = (moneyCtx, events) => { // events
   });
 };
 
-const renderTransportChart = (transportCtx, events) => { // events
+const renderTransportChart = (transportCtx, events) => {
+  const eventTransport =
+    events
+      .filter((event) => MOVEMENTS.includes(event.type))
+      .map((event) => event.type);
+
+  const uniqEventTransport = makeItemsUniq(eventTransport);
+  const uniqEventTransportInUpperCase =
+    uniqEventTransport
+      .map((transport) => icons[transport] + ` ` + transport.toUpperCase());
+
+  const eventByTransportCounts =
+    uniqEventTransport
+      .map((transport) => countEventsByTransport(events, transport));
+
+  transportCtx.height = BAR_HEIGHT * uniqEventTransportInUpperCase.length;
+
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`???? DRIVE`, `???? RIDE`, `✈️ FLY`, `????️ SAIL`],
+      labels: uniqEventTransportInUpperCase,
       datasets: [{
-        data: [4, 3, 2, 1],
+        data: eventByTransportCounts,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -102,6 +125,7 @@ const renderTransportChart = (transportCtx, events) => { // events
           color: `#000000`,
           anchor: `end`,
           align: `start`,
+          offset: 15,
           formatter: (val) => `${val}x`
         }
       },
@@ -146,18 +170,92 @@ const renderTransportChart = (transportCtx, events) => { // events
     }
   });
 };
-export default class Statistics extends SmartView {
-  constructor() { // что передаем ?
-    super();
-  }
 
-  removeElement() {
-    super.removeElement();
+const renderTimeSpendChart = (timeSpendCtx, events) => {
+  const eventTypes = events.map((event) => event.type);
+  const uniqEventTypes = makeItemsUniq(eventTypes);
+  const uniqEventTypesInUpperCase = uniqEventTypes.map((type) => icons[type] + ` ` + type.toUpperCase());
+  const eventsByTypeTime = uniqEventTypes.map((type) => countHoursForEventType(events, type));
+  const parsedEventsByTypeTime = eventsByTypeTime.map(parseChartTime); // округлить ? или минуты ?
+  timeSpendCtx.height = BAR_HEIGHT * uniqEventTypesInUpperCase.length;
 
-    if (this._datepicker) {
-      this._datepicker.destroy();
-      this._datepicker = null;
+  return new Chart(timeSpendCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: uniqEventTypesInUpperCase,
+      datasets: [{
+        data: parsedEventsByTypeTime,
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          offset: 15,
+          formatter: (val) => `${val}H`
+        }
+      },
+      title: {
+        display: true,
+        text: `TIME SPENT`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 44,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
+      }
     }
+  });
+};
+export default class Statistics extends SmartView {
+  constructor(events) {
+    super();
+
+    this._events = events;
+
+    this._setCharts();
+
+    this._moneyChart = null;
+    this._transportChart = null;
+    this._timeSpendChart = null;
   }
 
   getTemplate() {
@@ -180,27 +278,33 @@ export default class Statistics extends SmartView {
     );
   }
 
-  restoreHandlers() {
+  removeElement() {
+    super.removeElement();
+
+    if (this._moneyChart !== null || this._transportChart !== null || this._timeSpendChart !== null) {
+      this._moneyChart = null;
+      this._transportChart = null;
+      this._timeSpendChart = null;
+    }
   }
 
-  _setDatepicker() {
-    if (this._datepicker) {
-      this._datepicker.destroy();
-      this._datepicker = null;
-    }
-
-    this._datepicker = flatpickr(
-        this.getElement().querySelector(`.statistic__period-input`),
-        {
-          mode: `range`,
-          dateFormat: `j F`,
-          defaultDate: [this._data.dateFrom, this._data.dateTo],
-          onChange: this._dateChangeHandler
-        }
-    );
+  restoreHandlers() {
+    this._setCharts();
   }
 
   _setCharts() {
-    // Нужно отрисовать три графика
+    if (this._moneyChart !== null || this._transportChart !== null || this._timeSpendChart !== null) {
+      this._moneyChart = null;
+      this._transportChart = null;
+      this._timeSpendChart = null;
+    }
+
+    const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
+    const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
+    const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
+
+    this._moneyChart = renderMoneyChart(moneyCtx, this._events);
+    this._transportChart = renderTransportChart(transportCtx, this._events);
+    this._timeSpendChart = renderTimeSpendChart(timeSpendCtx, this._events);
   }
 }

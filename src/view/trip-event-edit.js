@@ -31,7 +31,6 @@ const BLANK_EVENT = {// нужны ли непустые значения по �
 export default class TripEventEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
-    // this._event = event; ???
     this._data = TripEventEdit.copyEvent(event);
     this._startDatepicker = null;
     this._endDatepicker = null;
@@ -100,7 +99,7 @@ export default class TripEventEdit extends SmartView {
                 <legend class="visually-hidden">Transfer</legend>
                 ${MOVEMENTS.map((movementType) => `<div class="event__type-item">
                     <input id="event-type-${movementType.toLowerCase()}" class="event__type-input
-                      visually-hidden" type="radio" name="event-type" value="${movementType.toLowerCase()}"
+                      visually-hidden" type="radio" name="event-type" value="${movementType}"
                       ${type === movementType ? `checked` : ``}>
                     <label class="event__type-label  event__type-label--${movementType.toLowerCase()}"
                       for="event-type-${movementType.toLowerCase()}">
@@ -113,7 +112,7 @@ export default class TripEventEdit extends SmartView {
                 <legend class="visually-hidden">Activity</legend>
                 ${ARRIVALS.map((arrivalType) => `<div class="event__type-item">
                   <input id="event-type-${arrivalType.toLowerCase()}" class="event__type-input
-                    visually-hidden" type="radio" name="event-type" value="${arrivalType.toLowerCase()}"
+                    visually-hidden" type="radio" name="event-type" value="${arrivalType}"
                     ${type === arrivalType ? `checked` : ``}>
                   <label class="event__type-label  event__type-label--${arrivalType.toLowerCase()}"
                     for="event-type-${arrivalType.toLowerCase()}">${arrivalType}</label>

@@ -35,6 +35,7 @@ export default class Trip {
   }
 
   init() {
+    this.destroy();
     this._renderTrip();
 
     this._daysModel.addObserver(this._handleModelEvent);
@@ -110,13 +111,6 @@ export default class Trip {
     this._currentSortingType = sortType;
     this._clearTrip({removeSortingComponent: false});
     this._renderTrip();
-    // if (sortType === SortType.DEFAULT) {
-    //   this._renderTrip();
-    //   this._setDaySortingElementText(`Day`);
-    // } else {
-    //   this._renderEventsAfterSorting();
-    //   this._setDaySortingElementText(``);
-    // }
   }
 
   _handleViewAction(actionType, updateType, update) {
