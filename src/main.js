@@ -1,4 +1,5 @@
 import SiteMenuView from './view/site-menu.js';
+import StatisticsView from './view/statistics.js';
 import {generateTripDay} from './mock/trip-event.js';
 import {getRandomInteger} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
@@ -8,7 +9,7 @@ import FilterPresenter from './presenter/filter.js';
 import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
-import {MenuItem} from "./const.js";
+import {MenuItem, UpdateType, FilterType} from './const.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
 
@@ -18,8 +19,9 @@ const tripControlsContainerElement = headerContainerElement.querySelector(`.trip
 const siteMenuHeaderElement = tripControlsContainerElement.querySelector(`h2:nth-child(1)`);
 const tripEventsFilterHeaderElement = tripControlsContainerElement.querySelector(`h2:nth-child(2)`);
 const mainElement = document.querySelector(`main`);
+const pageContainerElement = mainElement.querySelector(`page-body__container`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
-const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
+const newEventButtonElement = document.querySelector(`.trip-main__event-add-btn`);
 
 const daysModel = new DaysModel();
 daysModel.setDays(tripDays);
@@ -36,7 +38,7 @@ const menuComponent = new SiteMenuView();
 render(siteMenuHeaderElement, menuComponent, RenderPosition.AFTEREND);
 
 const handleEventNewFormOpen = () => {
-  newEventButton.disabled = false;
+  newEventButtonElement.disabled = false;
 };
 
 const handleSiteMenuClick = (menuItem) => {
@@ -58,10 +60,14 @@ menuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 infoPresenter.init();
-tripPresenter.init();
+// tripPresenter.init();
+render(pageContainerElement, new StatisticsView(daysModel.())); // какой метод?
 
-newEventButton.addEventListener(`click`, (evt) => {
+newEventButtonElement.addEventListener(`click`, (evt) => {
   evt.target.disabled = true;
+  tripPresenter.destroy();
+  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING); // сброс сортировки ?
+  tripPresenter.init();
   tripPresenter.createEvent(handleEventNewFormOpen);
 });
 

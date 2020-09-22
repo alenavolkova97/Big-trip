@@ -31,19 +31,27 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._daysModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._eventNewPresenter = new EventNewPresenter(this._tripDaysContainerComponent, this._handleViewAction);
   }
 
   init() {
     this._renderTrip();
+
+    this._daysModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+  }
+
+  destroy() {
+    this._clearTrip({resetSortingType: true, removeSortingComponent: true});
+
+    remove(this._tripDaysContainerComponent);
+
+    this._daysModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   createEvent(callback) {
     this._handleModeChange();
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING); // сброс сортировки ?
     this._eventNewPresenter.init(callback);
   }
 
