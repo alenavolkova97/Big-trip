@@ -30,7 +30,7 @@ export const formatEventDate = (date, mode) => {
 
 export const formatEventDuration = (startDate, endDate) => {
   const startEventDate = moment(startDate);
-  const endEventDate = moment(endDate); // ?
+  const endEventDate = moment(endDate);
   // const startEventDate = moment(`Sat Sep 19 2020 07:40:33 GMT+0300 (Москва, стандартное время)`);
   // const endEventDate = moment(`Sat Sep 19 2020 07:40:33 GMT+0300 (Москва, стандартное время)`);
   const differenceInMilliseconds = endEventDate.diff(startEventDate, `milliseconds`);
@@ -46,4 +46,16 @@ export const formatEventDuration = (startDate, endDate) => {
   } else {
     return ``;
   }
+};
+
+export const isDateEqual = (dateA, dateB) => {
+  return moment(dateA).isSame(dateB);
+};
+
+export const isDateBefore = (dateA, dateB) => {
+  return moment(dateA).isBefore(dateB);
+};
+
+export const isDateAfter = (dateA, dateB) => {
+  return moment(dateA).isAfter(dateB);
 };

@@ -2,9 +2,10 @@ import AbstractView from './abstract.js';
 import {SortType} from '../const.js';
 
 export default class TripEventsSorting extends AbstractView {
-  constructor() {
+  constructor(currentSortingType) {
     super();
 
+    this._currentSortingType = currentSortingType;
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
@@ -15,13 +16,13 @@ export default class TripEventsSorting extends AbstractView {
 
         <div class="trip-sort__item  trip-sort__item--event">
           <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio"
-            name="trip-sort" value="sort-event" checked>
+            name="trip-sort" value="sort-event" ${this._currentSortingType === SortType.DEFAULT ? `checked` : ``}>
           <label class="trip-sort__btn" for="sort-event" data-sort-type="${SortType.DEFAULT}">Event</label>
         </div>
 
         <div class="trip-sort__item  trip-sort__item--time">
           <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio"
-            name="trip-sort" value="sort-time">
+            name="trip-sort" value="sort-time" ${this._currentSortingType === SortType.TIME ? `checked` : ``}>
           <label class="trip-sort__btn" for="sort-time" data-sort-type="${SortType.TIME}">
             Time
             <svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
@@ -32,7 +33,7 @@ export default class TripEventsSorting extends AbstractView {
 
         <div class="trip-sort__item  trip-sort__item--price">
           <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort"
-            value="sort-price">
+            value="sort-price" ${this._currentSortingType === SortType.PRICE ? `checked` : ``}>
           <label class="trip-sort__btn" for="sort-price" data-sort-type="${SortType.PRICE}">
             Price
             <svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">

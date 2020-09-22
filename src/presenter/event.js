@@ -1,6 +1,8 @@
 import TripEventView from '../view/trip-event.js';
 import TripEventEditView from '../view/trip-event-edit.js';
 import {render, replace, remove} from '../utils/render.js';
+import {ActionType, UpdateType} from '../const.js';
+import {isDateEqual} from '../utils/event.js';
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -19,6 +21,7 @@ export default class Event {
 
     this._handleRollupClick = this._handleRollupClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
@@ -34,6 +37,7 @@ export default class Event {
 
     this._tripEventComponent.setRollupClickHandler(this._handleRollupClick);
     this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._tripEventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._tripEventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevTripEventComponent === null || prevTripEventEditComponent === null) {
@@ -88,13 +92,24 @@ export default class Event {
     this._replaceEventToForm();
   }
 
-  _handleFormSubmit(event) {
-    this._changeData(event);
+  _handleFormSubmit(update) {
+    const isPatchUpdate =
+      this._event.price === update.price &&
+      isDateEqual(update.time.start, this._event.time.start) &&
+      isDateEqual(update.time.end, this._event.time.end);
+
+    this._changeData(
+        ActionType.UPDATE_EVENT,
+        isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
+        update);
+
     this._replaceFormToEvent();
   }
 
   _handleFavoriteClick() {
     this._changeData(
+        ActionType.UPDATE_EVENT,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._event,
@@ -103,5 +118,12 @@ export default class Event {
             }
         )
     );
+  }
+
+  _handleDeleteClick(update) {
+    this._changeData(
+        ActionType.DELETE_EVENT,
+        UpdateType.MINOR,
+        update);
   }
 }

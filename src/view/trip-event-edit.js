@@ -37,6 +37,7 @@ export default class TripEventEdit extends SmartView {
     this._endDatepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
@@ -127,7 +128,8 @@ export default class TripEventEdit extends SmartView {
               ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`}
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
-              type="text" name="event-destination" value="${destination}" list="destination-list">
+              type="text" name="event-destination" value="${destination}" list="destination-list"
+              pattern="${DESTINATIONS.join(`|`)}">
             <datalist id="destination-list">
               ${DESTINATIONS.map((it) => `<option value="${it}"></option>`).join(``)}
             </datalist>
@@ -140,7 +142,7 @@ export default class TripEventEdit extends SmartView {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price" type="text"
+            <input class="event__input  event__input--price" id="event-price" type="number"
               name="event-price" value="${price}">
           </div>
 
@@ -184,6 +186,20 @@ export default class TripEventEdit extends SmartView {
         </section>
       </form>`
     );
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._startDatepicker) {
+      this._startDatepicker.destroy();
+      this._startDatepicker = null;
+    }
+
+    if (this._endDatepicker) {
+      this._endDatepicker.destroy();
+      this._endDatepicker = null;
+    }
   }
 
   reset(event) {
@@ -265,7 +281,7 @@ export default class TripEventEdit extends SmartView {
   _startDateChangeHandler([userDate]) {
     this.updateData({
       time: {
-        start: userDate,
+        start: userDate.getTime(),
         end: this._data.time.end // ?
       }
     });
@@ -275,7 +291,7 @@ export default class TripEventEdit extends SmartView {
     this.updateData({
       time: {
         start: this._data.time.start,
-        end: userDate
+        end: userDate.getTime()
       }
     });
   }
@@ -307,9 +323,18 @@ export default class TripEventEdit extends SmartView {
     this._callback.favoriteClick();
   }
 
+  _deleteClickHandler() {
+    this._callback.deleteClick(this._data);
+  }
+
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback || this._callback.formSubmit;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 
   setFavoriteClickHandler(callback) {

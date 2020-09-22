@@ -6,3 +6,21 @@ export const SortType = {
   TIME: `time`,
   PRICE: `price`
 };
+
+export const ActionType = {
+  UPDATE_EVENT: `update_event`,
+  ADD_EVENT: `add_event`,
+  DELETE_EVENT: `delete_event`
+};
+
+export const UpdateType = {
+  PATCH: `patch`,
+  MINOR: `minor`,
+  MAJOR: `major`
+};
+
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};

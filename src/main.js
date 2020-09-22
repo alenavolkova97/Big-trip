@@ -1,13 +1,15 @@
 import SiteMenuView from './view/site-menu.js';
-import TripEventsFilterView from './view/trip-events-filter.js';
 import {generateTripDay} from './mock/trip-event.js';
 import {getRandomInteger} from './utils/common.js';
 import {RenderPosition, render} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import InfoPresenter from './presenter/info.js';
+import FilterPresenter from './presenter/filter.js';
+import DaysModel from './model/days.js';
+import OffersModel from './model/offers.js';
+import FilterModel from './model/filter.js';
 
 export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
-// may be from 1 to 6 days (mock number)
 
 const headerElement = document.querySelector(`.page-header`);
 const headerContainerElement = headerElement.querySelector(`.trip-main`);
@@ -17,23 +19,24 @@ const tripEventsFilterHeaderElement = tripControlsContainerElement.querySelector
 const mainElement = document.querySelector(`main`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
 
-const getAllEvents = (days) => {
-  let allEvents = [];
+const daysModel = new DaysModel();
+daysModel.setDays(tripDays);
 
-  days.forEach((day) => {
-    allEvents = [...allEvents, ...day.tripEvents];
-  });
+const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
+const filterModel = new FilterModel();
 
-  return allEvents;
-};
-
-const tripPresenter = new TripPresenter(tripEventsContainerElement);
-const infoPresenter = new InfoPresenter(headerContainerElement);
+const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
+const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel);
+const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
 render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
-render(tripEventsFilterHeaderElement, new TripEventsFilterView(), RenderPosition.AFTEREND);
 
-const allEvents = getAllEvents(tripDays);
+filterPresenter.init();
+infoPresenter.init();
+tripPresenter.init();
 
-infoPresenter.init(allEvents);
-tripPresenter.init(tripDays, allEvents);
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
+  tripPresenter.createEvent();
+});
+
+
