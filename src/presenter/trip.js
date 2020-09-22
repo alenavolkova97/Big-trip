@@ -9,7 +9,7 @@ import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 import EventPresenter from './event.js';
 import EventNewPresenter from './event-new.js';
-import {ActionType, UpdateType, FilterType} from "../const.js";
+import {ActionType, UpdateType} from "../const.js";
 import {filter} from '../utils/filter.js';
 
 export default class Trip {
