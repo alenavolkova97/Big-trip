@@ -10,9 +10,12 @@ import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
 import {MenuItem, UpdateType, FilterType} from './const.js';
+import Api from './api.js';
 
 export const tripDays = new Array(getRandomInteger(1, 1)).fill().map(generateTripDay);
 // временно 1 день
+const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
 
 const headerElement = document.querySelector(`.page-header`);
 const headerContainerElement = headerElement.querySelector(`.trip-main`);
@@ -23,6 +26,12 @@ const mainElement = document.querySelector(`main`);
 const pageContainerElement = mainElement.querySelector(`.page-body__container`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
 const newEventButtonElement = document.querySelector(`.trip-main__event-add-btn`);
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getEvents().then((events) => {
+  console.log(events);
+});
 
 const daysModel = new DaysModel();
 daysModel.setDays(tripDays);
