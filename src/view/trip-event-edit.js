@@ -1,6 +1,5 @@
 import {ARRIVALS, MOVEMENTS} from '../const.js';
 import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
-// destinations list will be received from the server
 import SmartView from './smart.js';
 import {formatEventDate} from '../utils/event.js';
 import Mode from '../presenter/event.js';

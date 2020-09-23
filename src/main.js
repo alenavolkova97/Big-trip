@@ -1,7 +1,5 @@
 import SiteMenuView from './view/site-menu.js';
 import StatisticsView from './view/statistics.js';
-import {generateTripDay} from './mock/trip-event.js';
-import {getRandomInteger} from './utils/common.js';
 import {RenderPosition, render, remove} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import InfoPresenter from './presenter/info.js';
@@ -9,11 +7,12 @@ import FilterPresenter from './presenter/filter.js';
 import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
+import DestinationsModel from './model/destinations.js';
+
 import {MenuItem, UpdateType, FilterType} from './const.js';
+import {groupEventsByDays} from './utils/event.js';
 import Api from './api.js';
 
-export const tripDays = new Array(getRandomInteger(1, 1)).fill().map(generateTripDay);
-// временно 1 день
 const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
 
@@ -24,19 +23,31 @@ const siteMenuHeaderElement = tripControlsContainerElement.querySelector(`h2:nth
 const tripEventsFilterHeaderElement = tripControlsContainerElement.querySelector(`h2:nth-child(2)`);
 const mainElement = document.querySelector(`main`);
 const pageContainerElement = mainElement.querySelector(`.page-body__container`);
-const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
+export const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
 const newEventButtonElement = document.querySelector(`.trip-main__event-add-btn`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
-api.getEvents().then((events) => {
-  console.log(events);
-});
-
 const daysModel = new DaysModel();
-daysModel.setDays(tripDays);
-
 const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
+const destinationsModel = new DestinationsModel();
+
+api.getEvents()
+  .then((events) => {
+    daysModel.setDays(UpdateType.INIT, groupEventsByDays(events));
+  })
+  .catch(() => {
+    daysModel.setDays(UpdateType.INIT, []);
+  });
+
+api.getDestinations()
+  .then((destinations) => {
+    destinationsModel.setDestinations(destinations);
+  })
+  .catch(() => {
+    destinationsModel.setDestinations([]); // ?
+  });
+
 const filterModel = new FilterModel();
 
 const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);

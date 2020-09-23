@@ -26,6 +26,7 @@ export const formatEventDate = (date, mode) => {
 export const formatEventDuration = (startDate, endDate) => {
   const msDiff = Math.abs(endDate - startDate);
 
+  const secondInMs = 1000;
   const minuteInMs = MillisecondsInTimePeriod.MINUTE;
   const hourInMs = MillisecondsInTimePeriod.HOUR;
   const dayInMs = MillisecondsInTimePeriod.DAY;
@@ -33,11 +34,13 @@ export const formatEventDuration = (startDate, endDate) => {
   const days = Math.floor(msDiff / dayInMs);
   const hours = Math.floor((msDiff % dayInMs) / hourInMs);
   const minutes = Math.floor((msDiff % hourInMs) / minuteInMs);
+  const seconds = Math.floor((msDiff % minuteInMs) / secondInMs);
 
   return [
     days > 0 ? `${days}d` : undefined,
     hours > 0 ? `${hours}h` : undefined,
     minutes > 0 ? `${minutes}m` : undefined,
+    seconds > 0 ? `${seconds}s` : undefined,
   ].filter(Boolean).join(` `);
 };
 
@@ -52,3 +55,27 @@ export const isDateBefore = (dateA, dateB) => {
 export const isDateAfter = (dateA, dateB) => {
   return moment(dateA).isAfter(dateB);
 };
+
+export const groupEventsByDays = (events) => {
+  const daysMap = {};
+
+  for (let i = 0; i < events.length; i++) {
+    const event = events[i];
+    // console.log(new Date(event.time.start).getTime());
+    const dayTs = moment(new Date(event.time.start).getTime()).startOf(`day`).valueOf();
+    // console.log(dayTs);
+
+    if (!daysMap[dayTs]) {
+      daysMap[dayTs] = [];
+    }
+
+    daysMap[dayTs].push(event);
+  }
+
+  const sortedDaysEntries = Object.entries(daysMap).sort((a, b) => a[0] - b[0]);
+
+  return sortedDaysEntries.map(([date, tripEvents]) => ({
+    date: parseInt(date, 10),
+    tripEvents,
+  }));
+}

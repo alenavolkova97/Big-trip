@@ -35,7 +35,8 @@ export const ActionType = {
 export const UpdateType = {
   PATCH: `patch`,
   MINOR: `minor`,
-  MAJOR: `major`
+  MAJOR: `major`,
+  INIT: `init`
 };
 
 export const FilterType = {

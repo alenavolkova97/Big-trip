@@ -5,12 +5,12 @@ export default class TripInfo extends AbstractView {
   constructor(events) {
     super();
     this._events = events;
+    console.log(this._events);
   }
 
   getTemplate() {
-    const destinationsWithRepeating = this._events
+    const destinations = this._events
       .map((tripEvent) => tripEvent.destination);
-    const destinations = Array.from(new Set(destinationsWithRepeating));
 
     return (
       `<div class="trip-info__main">
@@ -19,10 +19,12 @@ export default class TripInfo extends AbstractView {
           ${destinations[destinations.length - 1]}` : destinations.join(` &mdash; `)}
         </h1>
 
-        <p class="trip-info__dates">
-          ${formatDate(this._events[0].time.start)}&nbsp;&mdash;&nbsp;
-          ${formatDate(this._events[this._events.length - 1].time.end)}
-        </p>
+        ${this._events.length ? `
+          <p class="trip-info__dates">
+            ${formatDate(this._events[0].time.start)}&nbsp;&mdash;&nbsp;
+            ${formatDate(this._events[this._events.length - 1].time.end)}
+          </p>
+        ` : ``}
       </div>`
     );
   }

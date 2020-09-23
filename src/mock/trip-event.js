@@ -114,17 +114,18 @@ const generateEventPhotos = () => {
 export const generateTripEvent = () => {
   return {
     id: generateId(),
-    isFavorite: Boolean(getRandomInteger(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1)), // is_favorite
     type: generateEventType(),
     destination: generateEventDestination(),
     time: {
-      start: generateEventTime(),
-      end: generateEventTime()
+      start: generateEventTime(), // date_from
+      end: generateEventTime() // date_to
     },
-    price: getRandomInteger(1, 1000),
+    price: getRandomInteger(1, 1000), // base_price
     offers: OFFERS.map((offer) => Object.assign({}, offer)),
-    description: generateEventDestinationDescription(),
-    photos: generateEventPhotos()
+    description: generateEventDestinationDescription(), // ?
+    photos: generateEventPhotos() // ?
+    // + pictures
   };
 };
 
@@ -134,3 +135,5 @@ export const generateTripDay = () => {
     tripEvents: new Array(getRandomInteger(1, 10)).fill().map(generateTripEvent)
   };
 };
+
+console.log({eb:generateTripEvent()});

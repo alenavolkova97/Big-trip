@@ -6,8 +6,10 @@ export default class Days extends Observer {
     this._days = [];
   }
 
-  setDays(days) {
+  setDays(updateType, days) {
     this._days = days.slice();
+
+    this._notify(updateType);
   }
 
   getDays() {
@@ -93,5 +95,56 @@ export default class Days extends Observer {
     this._updateDay(dayContainDeleteEvent, dayContainDeleteEventIndex);
 
     this._notify(updateType);
+  }
+
+  static adaptEventToClient(event) {
+    // console.log({event});
+
+    const adaptedEvent = {
+      id: event.id,
+      destination: event.destination.name,
+      description: event.destination.description,
+      isFavorite: event.is_favorite,
+      offers: event.offers.map((offer) => ({
+        title: offer.title,
+        price: offer.price,
+        type: event.type,
+        // key, isChecked ???
+      })),
+      photos: event.destination.pictures.map((picture) => picture.src), // not using description of photo
+      price: event.base_price,
+      time: {
+        start: new Date(event.date_from).getTime(),
+        end: new Date(event.date_to).getTime()
+      },
+      type: event.type,
+    };
+
+    return adaptedEvent;
+  }
+
+  static adaptEventToServer(event) {
+    const adaptedEvent = {
+      'id': event.id,
+      'base_price': event.price,
+      'date_from': new Date(event.time.start).toISOString(),
+      'date_to': new Date(event.time.end).toISOString(),
+      'destination': {
+        description: event.description,
+        name: event.destination,
+        pictures: event.photos.map((photoSrc) => ({
+          src: photoSrc,
+          description: ``,
+        })),
+      },
+      'is_favorite': event.isFavorite,
+      'offers': event.offers.map((offer) => ({
+        title: offer.title,
+        price: offer.price,
+      })),
+      'type': event.type,
+    };
+
+    return adaptedEvent;
   }
 }

@@ -4,6 +4,7 @@ import TripDayView from '../view/trip-day.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import TripEventsContainerAfterSortingView from '../view/trip-events-container-after-sorting.js';
 import NoEventsView from '../view/no-events.js';
+import LoadingView from "../view/loading.js";
 import {render, remove} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
@@ -11,6 +12,7 @@ import EventPresenter from './event.js';
 import EventNewPresenter from './event-new.js';
 import {ActionType, UpdateType} from "../const.js";
 import {filter} from '../utils/filter.js';
+import {tripEventsContainerElement} from '../main.js';
 
 export default class Trip {
   constructor(tripEventsContainer, daysModel, filterModel) {
@@ -20,8 +22,10 @@ export default class Trip {
     this._currentSortingType = SortType.DEFAULT;
     this._tripDays = [];
     this._eventPresenters = {};
+    this._isLoading = true;
 
     this._tripDaysContainerComponent = new TripDaysContainerView();
+    this._loadingComponent = new LoadingView();
 
     this._tripEventsSortingComponent = null;
     this._noEventsComponent = null;
@@ -98,6 +102,10 @@ export default class Trip {
     render(this._tripEventsContainer, this._noEventsComponent);
   }
 
+  _renderLoading() {
+    render(tripEventsContainerElement, this._loadingComponent);
+  }
+
   _setDaySortingElementText(textContent) {
     this._tripEventsSortingComponent.getElement().querySelector(`.trip-sort__item--day`)
         .textContent = textContent;
@@ -141,6 +149,11 @@ export default class Trip {
         this._clearTrip({resetSortingType: true});
         this._renderTrip();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderTrip();
+        break;
     }
     // ОБНОВИТЬ ПРЕДСТАВЛЕНИЕ
   }
@@ -168,15 +181,15 @@ export default class Trip {
   }
 
   _renderDays() {
-    this._getDays().forEach((day) => {
+    this._getDays().forEach((day, index) => {
       if (day.tripEvents.length > 0) {
-        this._renderDay(day);
+        this._renderDay(day, index);
       }
     });
   }
 
-  _renderDay(day) {
-    const tripDayComponent = new TripDayView(day);
+  _renderDay(day, index) {
+    const tripDayComponent = new TripDayView(day, index);
 
     this._tripDays.push(tripDayComponent);
     render(this._tripDaysContainerComponent, tripDayComponent);
@@ -229,6 +242,7 @@ export default class Trip {
     this._eventPresenters = {};
 
     remove(this._noEventsComponent);
+    remove(this._loadingComponent);
 
     if (removeSortingComponent) {
       remove(this._tripEventsSortingComponent);
@@ -241,6 +255,11 @@ export default class Trip {
   }
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const eventsCount = this._getEvents().length;
 
     if (eventsCount === 0) {

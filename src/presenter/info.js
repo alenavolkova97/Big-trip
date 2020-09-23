@@ -1,7 +1,7 @@
 import TripInfoContainerView from '../view/trip-info-container.js';
 import TripInfoView from '../view/trip-info.js';
 import TripPriceView from '../view/trip-price.js';
-import {render, RenderPosition} from '../utils/render.js';
+import {render, remove, RenderPosition} from '../utils/render.js';
 
 export default class Info {
   constructor(infoContainer, daysModel) {
@@ -10,6 +10,10 @@ export default class Info {
 
     this._tripInfoContainerComponent = new TripInfoContainerView();
     this._tripPriceComponent = new TripPriceView();
+
+    this._handleDaysUpdates = this._handleDaysUpdates.bind(this);
+
+    this._daysModel.addObserver(this._handleDaysUpdates);
   }
 
   init() {
@@ -17,6 +21,11 @@ export default class Info {
 
     render(this._infoContainer, this._tripInfoContainerComponent, RenderPosition.AFTERBEGIN);
     this._renderAllInfo();
+  }
+
+  _handleDaysUpdates() {
+    remove(this._tripInfoComponent);
+    this.init();
   }
 
   _getEvents() { // return all events
