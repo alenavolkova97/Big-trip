@@ -9,7 +9,7 @@ import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 import EventPresenter from './event.js';
 import EventNewPresenter from './event-new.js';
-import {ActionType, UpdateType, FilterType} from "../const.js";
+import {ActionType, UpdateType} from "../const.js";
 import {filter} from '../utils/filter.js';
 
 export default class Trip {
@@ -31,20 +31,29 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._daysModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._eventNewPresenter = new EventNewPresenter(this._tripDaysContainerComponent, this._handleViewAction);
   }
 
   init() {
+    this.destroy();
     this._renderTrip();
+
+    this._daysModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  createEvent() {
+  destroy() {
+    this._clearTrip({resetSortingType: true, removeSortingComponent: true});
+
+    remove(this._tripDaysContainerComponent);
+
+    this._daysModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  createEvent(callback) {
     this._handleModeChange();
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING); // сброс сортировки ?
-    this._eventNewPresenter.init();
+    this._eventNewPresenter.init(callback);
   }
 
   _getDays() { // return days with checked filter
@@ -102,13 +111,6 @@ export default class Trip {
     this._currentSortingType = sortType;
     this._clearTrip({removeSortingComponent: false});
     this._renderTrip();
-    // if (sortType === SortType.DEFAULT) {
-    //   this._renderTrip();
-    //   this._setDaySortingElementText(`Day`);
-    // } else {
-    //   this._renderEventsAfterSorting();
-    //   this._setDaySortingElementText(``);
-    // }
   }
 
   _handleViewAction(actionType, updateType, update) {

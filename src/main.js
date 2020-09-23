@@ -1,15 +1,18 @@
 import SiteMenuView from './view/site-menu.js';
+import StatisticsView from './view/statistics.js';
 import {generateTripDay} from './mock/trip-event.js';
 import {getRandomInteger} from './utils/common.js';
-import {RenderPosition, render} from './utils/render.js';
+import {RenderPosition, render, remove} from './utils/render.js';
 import TripPresenter from './presenter/trip.js';
 import InfoPresenter from './presenter/info.js';
 import FilterPresenter from './presenter/filter.js';
 import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
+import {MenuItem, UpdateType, FilterType} from './const.js';
 
-export const tripDays = new Array(getRandomInteger(1, 6)).fill().map(generateTripDay);
+export const tripDays = new Array(getRandomInteger(1, 1)).fill().map(generateTripDay);
+// временно 1 день
 
 const headerElement = document.querySelector(`.page-header`);
 const headerContainerElement = headerElement.querySelector(`.trip-main`);
@@ -17,7 +20,9 @@ const tripControlsContainerElement = headerContainerElement.querySelector(`.trip
 const siteMenuHeaderElement = tripControlsContainerElement.querySelector(`h2:nth-child(1)`);
 const tripEventsFilterHeaderElement = tripControlsContainerElement.querySelector(`h2:nth-child(2)`);
 const mainElement = document.querySelector(`main`);
+const pageContainerElement = mainElement.querySelector(`.page-body__container`);
 const tripEventsContainerElement = mainElement.querySelector(`.trip-events`);
+const newEventButtonElement = document.querySelector(`.trip-main__event-add-btn`);
 
 const daysModel = new DaysModel();
 daysModel.setDays(tripDays);
@@ -29,14 +34,61 @@ const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filte
 const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
-render(siteMenuHeaderElement, new SiteMenuView(), RenderPosition.AFTEREND);
+const menuComponent = new SiteMenuView(MenuItem.TABLE);
+
+render(siteMenuHeaderElement, menuComponent, RenderPosition.AFTEREND);
+
+const handleEventNewFormOpen = () => {
+  newEventButtonElement.disabled = false;
+};
+
+let statisticsComponent = null;
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      remove(statisticsComponent);
+
+      tripPresenter.init();
+
+      pageContainerElement.classList.add(`page-body__container`);
+
+      break;
+
+    case MenuItem.STATS:
+      tripPresenter.destroy();
+
+      remove(statisticsComponent);
+      statisticsComponent = new StatisticsView(daysModel.getAllEvents());
+
+      render(pageContainerElement, statisticsComponent);
+
+      pageContainerElement.classList.remove(`page-body__container`);
+
+      break;
+  }
+};
+
+menuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 infoPresenter.init();
 tripPresenter.init();
 
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
-  tripPresenter.createEvent();
+newEventButtonElement.addEventListener(`click`, (evt) => {
+  evt.target.disabled = true;
+
+  remove(statisticsComponent);
+  tripPresenter.destroy();
+
+  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING); // сброс сортировки ?
+
+  if (!pageContainerElement.classList.contains(`page-body__container`)) {
+    pageContainerElement.classList.add(`page-body__container`);
+  }
+
+  tripPresenter.init();
+  tripPresenter.createEvent(handleEventNewFormOpen);
 });
 
 
