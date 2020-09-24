@@ -29,12 +29,12 @@ const newEventButtonElement = document.querySelector(`.trip-main__event-add-btn`
 const api = new Api(END_POINT, AUTHORIZATION);
 
 const daysModel = new DaysModel();
-const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
+const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
 const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
-const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel, destinationsModel);
+const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel, destinationsModel, offersModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
 const menuComponent = new SiteMenuView(MenuItem.TABLE);
@@ -108,6 +108,14 @@ api.getDestinations()
   })
   .catch(() => {
     destinationsModel.setDestinations([]); // ?
+  });
+
+api.getOffers()
+  .then((offers) => {
+    offersModel.setOffers(offers);
+  })
+  .catch(() => {
+    offersModel.setOffers([]); // ?
   });
 
 

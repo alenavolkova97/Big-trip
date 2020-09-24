@@ -8,6 +8,8 @@ export default class Offers extends Observer {
 
   setOffers(offers) {
     this._offers = offers.slice();
+
+    this._notify();
   }
 
   getOffers() {
@@ -15,7 +17,13 @@ export default class Offers extends Observer {
   }
 
   // static adaptOfferToClient(offer) {
-  //   const adaptedOffer =
+  //   const adaptedOffer = {
+  //     type: offer.type,
+  //     offers: offer.offers
+  //     key: `luggage`, // ???
+  //     title: `Add luggage`,
+  //     price: 30
+  //   };
 
   //   return adaptedOffer;
   // }

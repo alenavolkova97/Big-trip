@@ -4,7 +4,6 @@ import {formatDate} from '../utils/trip.js';
 export default class TripDay extends AbstractView {
   constructor(day, index) {
     super();
-    // console.log({ thisday: day })
     this._day = day;
     this._index = index;
   }

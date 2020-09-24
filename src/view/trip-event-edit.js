@@ -32,6 +32,7 @@ export default class TripEventEdit extends SmartView {
     super();
     this._data = TripEventEdit.copyEvent(event);
     this._destinations = null;
+    this._offers = null;
     this._startDatepicker = null;
     this._endDatepicker = null;
 
@@ -47,12 +48,6 @@ export default class TripEventEdit extends SmartView {
 
     this._setInnerHandlers();
     this._setDatePicker();
-  }
-
-  setDestinations(destinations) {
-    this._destinations = destinations;
-
-    this.updateElement();
   }
 
   _createTripEventTimeTemplate(time) {
@@ -91,11 +86,11 @@ export default class TripEventEdit extends SmartView {
     return Array.isArray(this._destinations) && this._destinations.length;
   }
 
+
   getTemplate() {
     const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
 
     console.log(this._hasDestinations());
-
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
@@ -226,6 +221,18 @@ export default class TripEventEdit extends SmartView {
     this.setFavoriteClickHandler();
   }
 
+  setDestinations(destinations) {
+    this._destinations = destinations;
+
+    this.updateElement();
+  }
+
+  setOffers(offers) {
+    this._offers = offers;
+
+    this.updateElement();
+  }
+
   _setDatePicker() {
     if (this._startDatepicker) {
       this._startDatepicker.destroy();
@@ -314,7 +321,7 @@ export default class TripEventEdit extends SmartView {
     }, true);
   }
 
-  _offersChangeHandler(evt) {
+  _offersChangeHandler(evt) { // ?
     this.updateData({
       offers: this._data.offers.map((offer) => {
         if (offer.key === evt.target.value) {
