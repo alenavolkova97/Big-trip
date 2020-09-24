@@ -1,5 +1,5 @@
 import DaysModel from './model/days.js';
-// import OffersModel from './model/offers.js';
+import OffersModel from './model/offers.js';
 import DestinationsModel from './model/destinations.js';
 
 const Method = {
@@ -20,8 +20,8 @@ export default class Api {
 
   getOffers() {
     return this._load({url: `offers`})
-    .then(Api.toJSON);
-    // .then((offers) => offers.map(OffersModel.adaptOfferToClient));
+      .then(Api.toJSON)
+      .then((offers) => offers.map(OffersModel.adaptOfferToClient));
   }
 
   getDestinations() {

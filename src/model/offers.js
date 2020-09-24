@@ -16,15 +16,16 @@ export default class Offers extends Observer {
     return this._offers;
   }
 
-  // static adaptOfferToClient(offer) {
-  //   const adaptedOffer = {
-  //     type: offer.type,
-  //     offers: offer.offers
-  //     key: `luggage`, // ???
-  //     title: `Add luggage`,
-  //     price: 30
-  //   };
+  static adaptOfferToClient(offerFromApi) {
+    const adaptedOffer = {
+      type: offerFromApi.type,
+      offers: offerFromApi.offers.map((offer) => ({
+        // key: `${offer.title.toLowerCase().replace(/ /g, `_`)}_${generateId(5)}`, ???
+        title: offer.title,
+        price: offer.price
+      })),
+    };
 
-  //   return adaptedOffer;
-  // }
+    return adaptedOffer;
+  }
 }

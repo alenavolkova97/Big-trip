@@ -10,14 +10,14 @@ export default class TripEvent extends AbstractView {
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 
-  _createTripEventOffersTemplate(offers) { // ограничить до 3х
-    return offers.map((offer) => {
-      return offer.isChecked ?
+  _createTripEventOffersTemplate(offers) {
+    return offers.slice(0, 3).map((offer) => {
+      return (
         `<li class="event__offer">
           <span class="event__offer-title">${offer.title}</span>
           &plus;
           &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-        </li>` : ``;
+        </li>`);
     }).join(``);
   }
 
@@ -45,10 +45,11 @@ export default class TripEvent extends AbstractView {
             &euro;&nbsp;<span class="event__price-value">${price}</span>
           </p>
 
-          <h4 class="visually-hidden">Offers:</h4>
+        ${offers.length !== 0 ?
+        `<h4 class="visually-hidden">Offers:</h4>
           <ul class="event__selected-offers">
-            ${this._createTripEventOffersTemplate(offers)}
-          </ul>
+          ${this._createTripEventOffersTemplate(offers)}
+          </ul>` : ``}
 
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>

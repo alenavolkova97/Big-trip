@@ -8,12 +8,11 @@ import DaysModel from './model/days.js';
 import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
 import DestinationsModel from './model/destinations.js';
-
 import {MenuItem, UpdateType, FilterType} from './const.js';
 import {groupEventsByDays} from './utils/event.js';
 import Api from './api.js';
 
-const AUTHORIZATION = `Basic kTy9gIdsz2317rD`;
+const AUTHORIZATION = `Basic qUn7gIdas1997SA`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
 
 const headerElement = document.querySelector(`.page-header`);
@@ -36,16 +35,13 @@ const filterModel = new FilterModel();
 const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
 const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel, destinationsModel, offersModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
-
 const menuComponent = new SiteMenuView(MenuItem.TABLE);
 
-render(siteMenuHeaderElement, menuComponent, RenderPosition.AFTEREND);
+let statisticsComponent = null;
 
 const handleEventNewFormOpen = () => {
   newEventButtonElement.disabled = false;
 };
-
-let statisticsComponent = null;
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -72,13 +68,7 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-menuComponent.setMenuClickHandler(handleSiteMenuClick);
-
-filterPresenter.init();
-infoPresenter.init();
-tripPresenter.init();
-
-newEventButtonElement.addEventListener(`click`, (evt) => {
+const newEventButtonClickHandler = (evt) => {
   evt.target.disabled = true;
 
   remove(statisticsComponent);
@@ -92,30 +82,28 @@ newEventButtonElement.addEventListener(`click`, (evt) => {
 
   tripPresenter.init();
   tripPresenter.createEvent(handleEventNewFormOpen);
+};
+
+filterPresenter.init();
+infoPresenter.init();
+tripPresenter.init();
+
+newEventButtonElement.addEventListener(`click`, (evt) => {
+  newEventButtonClickHandler(evt);
 });
 
-api.getEvents()
-  .then((events) => {
+Promise.all([api.getEvents(), api.getDestinations(), api.getOffers()])
+  .then(([events, destinations, offers]) => {
     daysModel.setDays(UpdateType.INIT, groupEventsByDays(events));
-  })
-  .catch(() => {
-    daysModel.setDays(UpdateType.INIT, []);
-  });
-
-api.getDestinations()
-  .then((destinations) => {
     destinationsModel.setDestinations(destinations);
-  })
-  .catch(() => {
-    destinationsModel.setDestinations([]); // ?
-  });
-
-api.getOffers()
-  .then((offers) => {
     offersModel.setOffers(offers);
   })
   .catch(() => {
-    offersModel.setOffers([]); // ?
+    daysModel.setDays(UpdateType.INIT, []);
+  })
+  .finally(() =>{
+    newEventButtonElement.disabled = false;
+    menuComponent.setMenuClickHandler(handleSiteMenuClick);
+    render(siteMenuHeaderElement, menuComponent, RenderPosition.AFTEREND);
   });
-
 

@@ -15,7 +15,7 @@ export default class Event {
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._destinationsModel = destinationsModel;
-    this._offersModel = offersModel; // ?
+    this._offersModel = offersModel;
 
     this._tripEventComponent = null;
     this._tripEventEditComponent = null;
@@ -40,7 +40,7 @@ export default class Event {
     const prevTripEventEditComponent = this._tripEventEditComponent;
 
     this._tripEventComponent = new TripEventView(this._event);
-    this._tripEventEditComponent = new TripEventEditView(this._event);
+    this._tripEventEditComponent = new TripEventEditView(this._event, this._destinationsModel.getDestinations(), this._offersModel.getOffers());
 
     this._tripEventComponent.setRollupClickHandler(this._handleRollupClick);
     this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);

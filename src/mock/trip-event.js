@@ -17,47 +17,47 @@
 //   `Nunc fermentum tortor ac porta dapibus.`,
 //   `In rutrum ac purus sit amet tempus.`];
 
-export const OFFERS = [
-  {
-    type: `flight`,
-    offers: [
-      {
-        key: `luggage`,
-        title: `Add luggage`,
-        price: 30
-      },
-      {
-        key: `comfort`,
-        title: `Switch to comfort class`,
-        price: 100
-      },
-      {
-        key: `meal`,
-        title: `Add meal`,
-        price: 15
-      },
-      {
-        key: `seats`,
-        title: `Choose seats`,
-        price: 5
-      },
-      {
-        key: `train`,
-        title: `Travel by train`,
-        price: 40
-      },
-      {
-        key: `luggage`,
-        title: `Add luggage`,
-        price: 30
-      }
-    ]
-  }
-];
+// export const OFFERS = [
+//   {
+//     type: `flight`,
+//     offers: [
+//       {
+//         key: `luggage`,
+//         title: `Add luggage`,
+//         price: 30,
+//       },
+//       {
+//         key: `comfort`,
+//         title: `Switch to comfort class`,
+//         price: 100,
+//       },
+//       {
+//         key: `meal`,
+//         title: `Add meal`,
+//         price: 15,
+//       },
+//       {
+//         key: `seats`,
+//         title: `Choose seats`,
+//         price: 5,
+//       },
+//       {
+//         key: `train`,
+//         title: `Travel by train`,
+//         price: 40,
+//       },
+//       {
+//         key: `luggage`,
+//         title: `Add luggage`,
+//         price: 30,
+//       }
+//     ]
+//   }
+// ];
 
-export const generateId = () => {
-  return Date.now() + parseInt(Math.random() * 10000, 10);
-};
+// export const generateId = () => {
+//   return Date.now() + parseInt(Math.random() * 10000, 10);
+// };
 
 // const generateEventType = () => {
 //   const types = ARRIVALS.concat(MOVEMENTS);

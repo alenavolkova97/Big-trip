@@ -28,11 +28,11 @@ const BLANK_EVENT = {// нужны ли непустые значения по �
 };
 
 export default class TripEventEdit extends SmartView {
-  constructor(event = BLANK_EVENT) {
+  constructor(event = BLANK_EVENT, destinations, offers) {
     super();
     this._data = TripEventEdit.copyEvent(event);
-    this._destinations = null;
-    this._offers = null;
+    this._destinations = destinations;
+    this._offers = [...offers];
     this._startDatepicker = null;
     this._endDatepicker = null;
 
@@ -68,13 +68,27 @@ export default class TripEventEdit extends SmartView {
     );
   }
 
-  _createTripEventOffersTemplate(offers) {
-    return offers.map((offer) =>
+  _createTripEventOffersTemplate(checkedOffers, needType) {
+    const checkedOffersMap = {};
+
+    for (let i = 0; i < checkedOffers.length; i++) {
+      const checkedOffer = checkedOffers[i];
+
+      checkedOffersMap[checkedOffer.title] = true;
+    }
+
+    const availableOffers = this._offers.find((offers) => offers.type === needType);
+
+    const filteredAvailableOffers = availableOffers ? availableOffers.offers.filter((offer) => !checkedOffersMap[offer.title]) : [];
+
+    const allOffers = checkedOffers.concat(filteredAvailableOffers);
+
+    return allOffers.map((offer) =>
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.key}"
-          type="checkbox" name="event-offer-${offer.key}"  value="${offer.key}"
-          ${offer.isChecked ? `checked` : ``}>
-        <label class="event__offer-label" for="event-offer-${offer.key}">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}"
+          type="checkbox" name="event-offer-${offer.title}"  value="${offer.title}"
+          ${checkedOffers.find((checkedOffer) => checkedOffer.title === offer.title) ? `checked` : ``}>
+        <label class="event__offer-label" for="event-offer-${offer.title}">
           <span class="event__offer-title">${offer.title}</span>
           &plus;
           &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -86,11 +100,9 @@ export default class TripEventEdit extends SmartView {
     return Array.isArray(this._destinations) && this._destinations.length;
   }
 
-
   getTemplate() {
     const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
 
-    console.log(this._hasDestinations());
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
@@ -174,9 +186,9 @@ export default class TripEventEdit extends SmartView {
         <section class="event__details">
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-            <div class="event__available-offers">
-              ${this._createTripEventOffersTemplate(offers)}
-            </div>
+              <div class="event__available-offers">
+                ${Array.isArray(this._offers) ? this._createTripEventOffersTemplate(offers, type) : ``}
+              </div>
           </section>
 
           <section class="event__section  event__section--destination">
@@ -228,7 +240,7 @@ export default class TripEventEdit extends SmartView {
   }
 
   setOffers(offers) {
-    this._offers = offers;
+    this._offers = [...offers];
 
     this.updateElement();
   }
@@ -371,5 +383,4 @@ export default class TripEventEdit extends SmartView {
 
 // нужно отображать доп опции, соответствующие типу (при смене дополнительных опций выбранные значения не сохраняются)
 // cancel при создании новой точки маршрута
-// isFavorite добавила прямо в данные?
 // менять описание при выборе пункта назначения

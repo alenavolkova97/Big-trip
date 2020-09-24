@@ -34,7 +34,7 @@ export default class Info {
 
   _renderPrice() {
     render(this._tripInfoContainerComponent, this._tripPriceComponent);
-    // цена должна быть = 0 при пустом массиве allEvents
+    // цена должна быть = 0 при пустом массиве allEvents и при loading
   }
 
   _renderTripInfo() {

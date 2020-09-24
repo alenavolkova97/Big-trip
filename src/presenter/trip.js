@@ -106,6 +106,7 @@ export default class Trip {
 
   _renderLoading() {
     render(tripEventsContainerElement, this._loadingComponent);
+
   }
 
   _setDaySortingElementText(textContent) {
@@ -135,7 +136,6 @@ export default class Trip {
         this._daysModel.deleteEvent(updateType, update);
         break;
     }
-    // ОБНОВИТЬ МОДЕЛЬ
   }
 
   _handleModelEvent(updateType, data) {
@@ -157,7 +157,6 @@ export default class Trip {
         this._renderTrip();
         break;
     }
-    // ОБНОВИТЬ ПРЕДСТАВЛЕНИЕ
   }
 
   _handleModeChange() {
