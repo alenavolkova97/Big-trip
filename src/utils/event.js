@@ -26,7 +26,7 @@ export const formatEventDate = (date, mode) => {
 export const formatEventDuration = (startDate, endDate) => {
   const msDiff = Math.abs(endDate - startDate);
 
-  const secondInMs = 1000;
+  const secondInMs = MillisecondsInTimePeriod.SECOND;
   const minuteInMs = MillisecondsInTimePeriod.MINUTE;
   const hourInMs = MillisecondsInTimePeriod.HOUR;
   const dayInMs = MillisecondsInTimePeriod.DAY;
@@ -61,9 +61,7 @@ export const groupEventsByDays = (events) => {
 
   for (let i = 0; i < events.length; i++) {
     const event = events[i];
-    // console.log(new Date(event.time.start).getTime());
     const dayTs = moment(new Date(event.time.start).getTime()).startOf(`day`).valueOf();
-    // console.log(dayTs);
 
     if (!daysMap[dayTs]) {
       daysMap[dayTs] = [];
@@ -78,4 +76,5 @@ export const groupEventsByDays = (events) => {
     date: parseInt(date, 10),
     tripEvents,
   }));
-}
+};
+

@@ -15,8 +15,6 @@ export default class Event {
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._destinationsModel = destinationsModel;
-    // console.log(this._destinationsModel);
-    console.log(this._destinationsModel.getDestinations());
 
     this._tripEventComponent = null;
     this._tripEventEditComponent = null;
