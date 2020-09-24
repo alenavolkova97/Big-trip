@@ -32,7 +32,7 @@ export default class TripEventEdit extends SmartView {
     super();
     this._data = TripEventEdit.copyEvent(event);
     this._destinations = destinations;
-    this._offers = [...offers];
+    this._offers = offers;
     this._startDatepicker = null;
     this._endDatepicker = null;
 
@@ -69,24 +69,12 @@ export default class TripEventEdit extends SmartView {
   }
 
   _createTripEventOffersTemplate(checkedOffers, needType) {
-    const checkedOffersMap = {};
-
-    for (let i = 0; i < checkedOffers.length; i++) {
-      const checkedOffer = checkedOffers[i];
-
-      checkedOffersMap[checkedOffer.title] = true;
-    }
-
     const availableOffers = this._offers.find((offers) => offers.type === needType);
 
-    const filteredAvailableOffers = availableOffers ? availableOffers.offers.filter((offer) => !checkedOffersMap[offer.title]) : [];
-
-    const allOffers = checkedOffers.concat(filteredAvailableOffers);
-
-    return allOffers.map((offer) =>
+    return availableOffers.offers.map((offer) =>
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}"
-          type="checkbox" name="event-offer-${offer.title}"  value="${offer.title}"
+          type="checkbox" name="event-offer-${offer.title}" value="${offer.title}"
           ${checkedOffers.find((checkedOffer) => checkedOffer.title === offer.title) ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${offer.title}">
           <span class="event__offer-title">${offer.title}</span>
@@ -334,15 +322,25 @@ export default class TripEventEdit extends SmartView {
   }
 
   _offersChangeHandler(evt) { // ?
-    this.updateData({
-      offers: this._data.offers.map((offer) => {
-        if (offer.key === evt.target.value) {
-          offer.isChecked = !offer.isChecked;
-        }
+    const currentOfferTitle = evt.target.value;
+    const checkedOffer = this._data.offers.find((offer) => offer.title === currentOfferTitle);
 
-        return offer;
-      })
-    });
+    if (checkedOffer) {
+      this.updateData({
+        offers: this._data.offers.filter((offer) => offer.title !== checkedOffer.title)
+      });
+    } else {
+      const foundOfferWithTitle = this._offers
+        .find((offers) => offers.type === this._data.type)
+        .offers
+        .find((offer) => offer.title === currentOfferTitle);
+
+      if (foundOfferWithTitle) {
+        this.updateData({
+          offers: [...this._data.offers, foundOfferWithTitle],
+        });
+      }
+    }
   }
 
   _formSubmitHandler(evt) {
