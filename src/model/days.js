@@ -98,8 +98,6 @@ export default class Days extends Observer {
   }
 
   static adaptEventToClient(event) {
-    // console.log({event});
-
     const adaptedEvent = {
       id: event.id,
       destination: event.destination.name,

@@ -15,9 +15,10 @@ import {filter} from '../utils/filter.js';
 import {tripEventsContainerElement} from '../main.js';
 
 export default class Trip {
-  constructor(tripEventsContainer, daysModel, filterModel) {
+  constructor(tripEventsContainer, daysModel, filterModel, destinationsModel) {
     this._daysModel = daysModel;
     this._filterModel = filterModel;
+    this._destinationsModel = destinationsModel;
     this._tripEventsContainer = tripEventsContainer;
     this._currentSortingType = SortType.DEFAULT;
     this._tripDays = [];
@@ -220,7 +221,7 @@ export default class Trip {
   }
 
   _renderEvent(container, event) {
-    const eventPresenter = new EventPresenter(container, this._handleViewAction, this._handleModeChange);
+    const eventPresenter = new EventPresenter(container, this._destinationsModel, this._handleViewAction, this._handleModeChange);
     eventPresenter.init(event);
     this._eventPresenters[event.id] = eventPresenter;
   }

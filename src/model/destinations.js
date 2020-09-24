@@ -8,6 +8,8 @@ export default class Destinations extends Observer {
 
   setDestinations(destinations) {
     this._destinations = destinations.slice();
+
+    this._notify();
   }
 
   getDestinations() {

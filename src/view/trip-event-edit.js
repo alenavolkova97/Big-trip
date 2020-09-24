@@ -1,5 +1,5 @@
 import {ARRIVALS, MOVEMENTS} from '../const.js';
-import {DESTINATIONS, OFFERS} from '../mock/trip-event.js';
+import {OFFERS} from '../mock/trip-event.js';
 import SmartView from './smart.js';
 import {formatEventDate} from '../utils/event.js';
 import Mode from '../presenter/event.js';
@@ -31,6 +31,7 @@ export default class TripEventEdit extends SmartView {
   constructor(event = BLANK_EVENT) {
     super();
     this._data = TripEventEdit.copyEvent(event);
+    this._destinations = null;
     this._startDatepicker = null;
     this._endDatepicker = null;
 
@@ -46,6 +47,12 @@ export default class TripEventEdit extends SmartView {
 
     this._setInnerHandlers();
     this._setDatePicker();
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations;
+
+    this.updateElement();
   }
 
   _createTripEventTimeTemplate(time) {
@@ -80,8 +87,15 @@ export default class TripEventEdit extends SmartView {
       </div>`).join(``);
   }
 
+  _hasDestinations() {
+    return Array.isArray(this._destinations) && this._destinations.length;
+  }
+
   getTemplate() {
     const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
+
+    console.log(this._hasDestinations());
+
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
@@ -127,9 +141,9 @@ export default class TripEventEdit extends SmartView {
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
               type="text" name="event-destination" value="${destination}" list="destination-list"
-              pattern="${DESTINATIONS.join(`|`)}">
+              pattern="${this._hasDestinations() ? this._destinations.join(`|`) : ``}">
             <datalist id="destination-list">
-              ${DESTINATIONS.map((it) => `<option value="${it}"></option>`).join(``)}
+              ${this._hasDestinations() ? this._destinations.map((it) => `<option value="${it}"></option>`).join(``) : ``}
             </datalist>
           </div>
 

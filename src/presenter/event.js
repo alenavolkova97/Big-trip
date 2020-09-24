@@ -10,10 +10,13 @@ const Mode = {
 };
 
 export default class Event {
-  constructor(eventListContainer, changeData, changeMode) {
+  constructor(eventListContainer, destinationsModel, changeData, changeMode) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._destinationsModel = destinationsModel;
+    // console.log(this._destinationsModel);
+    console.log(this._destinationsModel.getDestinations());
 
     this._tripEventComponent = null;
     this._tripEventEditComponent = null;
@@ -24,6 +27,12 @@ export default class Event {
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+
+    this._destinationsModel.addObserver(this._handleDestinationsModelUpdate.bind(this));
+  }
+
+  _handleDestinationsModelUpdate() {
+    this._tripEventEditComponent.setDestinations(this._destinationsModel.getDestinations());
   }
 
   init(event) {
@@ -66,6 +75,11 @@ export default class Event {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToEvent();
     }
+  }
+
+  _handleDestinationsUpdates() {
+    remove(this._tripInfoComponent);
+    this.init();
   }
 
   _replaceEventToForm() {

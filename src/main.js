@@ -31,27 +31,10 @@ const api = new Api(END_POINT, AUTHORIZATION);
 const daysModel = new DaysModel();
 const offersModel = new OffersModel(); // куда ее передавать и как в саму модель передать оферы ?
 const destinationsModel = new DestinationsModel();
-
-api.getEvents()
-  .then((events) => {
-    daysModel.setDays(UpdateType.INIT, groupEventsByDays(events));
-  })
-  .catch(() => {
-    daysModel.setDays(UpdateType.INIT, []);
-  });
-
-api.getDestinations()
-  .then((destinations) => {
-    destinationsModel.setDestinations(destinations);
-  })
-  .catch(() => {
-    destinationsModel.setDestinations([]); // ?
-  });
-
 const filterModel = new FilterModel();
 
 const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
-const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel);
+const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel, destinationsModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
 const menuComponent = new SiteMenuView(MenuItem.TABLE);
@@ -110,5 +93,21 @@ newEventButtonElement.addEventListener(`click`, (evt) => {
   tripPresenter.init();
   tripPresenter.createEvent(handleEventNewFormOpen);
 });
+
+api.getEvents()
+  .then((events) => {
+    daysModel.setDays(UpdateType.INIT, groupEventsByDays(events));
+  })
+  .catch(() => {
+    daysModel.setDays(UpdateType.INIT, []);
+  });
+
+api.getDestinations()
+  .then((destinations) => {
+    destinationsModel.setDestinations(destinations);
+  })
+  .catch(() => {
+    destinationsModel.setDestinations([]); // ?
+  });
 
 
