@@ -90,9 +90,28 @@ export default class TripEventEdit extends SmartView {
           </div>`).join(``);
   }
 
-  _createTripEventDescription(destination) {
+  _createTripEventDestinationSectionTemplate(destination) {
+    if (!this._destinations) {
+      return ``;
+    }
+
     const appropriateDestination = this._destinations.find((it) => it.name === destination);
 
+    return appropriateDestination ? `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">
+        ${this._createTripEventDescription(appropriateDestination)}
+      </p>
+
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+          ${this._createTripEventPtotosTemplate(appropriateDestination)}
+        </div>
+      </div>
+    </section>` : ``;
+  }
+
+  _createTripEventDescription(appropriateDestination) {
     if (appropriateDestination) {
       const appropriateDescription = appropriateDestination.description;
       return appropriateDescription;
@@ -101,9 +120,7 @@ export default class TripEventEdit extends SmartView {
     return ``;
   }
 
-  _createTripEventPtotosTemplate(destination) {
-    const appropriateDestination = this._destinations.find((it) => it.name === destination);
-
+  _createTripEventPtotosTemplate(appropriateDestination) {
     if (appropriateDestination) {
       return appropriateDestination.photos.map((photo) => `<img class="event__photo" src="${photo.src}"
       alt="Event photo">`).join(``);
@@ -202,19 +219,7 @@ export default class TripEventEdit extends SmartView {
 
         <section class="event__details">
           ${this._createTripEventOffersSectionTemplate(offers, type)}
-
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">
-              ${Array.isArray(this._destinations) ? this._createTripEventDescription(destination) : ``}
-            </p>
-
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-                ${Array.isArray(this._destinations) ? this._createTripEventPtotosTemplate(destination) : ``}
-              </div>
-            </div>
-          </section>
+          ${this._createTripEventDestinationSectionTemplate(destination)}
         </section>
       </form>`
     );
