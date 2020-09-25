@@ -1,5 +1,5 @@
-export const ARRIVALS = [`Check-in`, `Sightseeing`, `Restaurant`];
-export const MOVEMENTS = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+export const ARRIVALS = [`check-in`, `sightseeing`, `restaurant`];
+export const MOVEMENTS = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
 
 export const MillisecondsInTimePeriod = {
   MINUTE: 60000,
@@ -38,14 +38,14 @@ export const MenuItem = {
 };
 
 export const icons = {
-  'Check-in': `🏨`,
-  'Sightseeing': `🏛`,
-  'Restaurant': `🍴`,
-  'Taxi': `🚕`,
-  'Bus': `🚌`,
-  'Train': `🚂`,
-  'Ship': `🛥`,
-  'Transport': `🚊`,
-  'Drive': `🚗`,
-  'Flight': `✈`
+  'check-in': `🏨`,
+  'sightseeing': `🏛`,
+  'restaurant': `🍴`,
+  'taxi': `🚕`,
+  'bus': `🚌`,
+  'train': `🚂`,
+  'ship': `🛥`,
+  'transport': `🚊`,
+  'drive': `🚗`,
+  'flight': `✈`
 };
