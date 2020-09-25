@@ -4,18 +4,18 @@ import TripDayView from '../view/trip-day.js';
 import TripEventsListView from '../view/trip-events-list.js';
 import TripEventsContainerAfterSortingView from '../view/trip-events-container-after-sorting.js';
 import NoEventsView from '../view/no-events.js';
-import LoadingView from "../view/loading.js";
+import LoadingView from '../view/loading.js';
 import {render, remove} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
 import EventPresenter from './event.js';
 import EventNewPresenter from './event-new.js';
-import {ActionType, UpdateType} from "../const.js";
+import {ActionType, UpdateType} from '../const.js';
 import {filter} from '../utils/filter.js';
 import {tripEventsContainerElement} from '../main.js';
 
 export default class Trip {
-  constructor(tripEventsContainer, daysModel, filterModel, destinationsModel, offersModel) {
+  constructor(tripEventsContainer, daysModel, filterModel, destinationsModel, offersModel, api) {
     this._daysModel = daysModel;
     this._filterModel = filterModel;
     this._destinationsModel = destinationsModel;
@@ -25,6 +25,7 @@ export default class Trip {
     this._tripDays = [];
     this._eventPresenters = {};
     this._isLoading = true;
+    this._api = api;
 
     this._tripDaysContainerComponent = new TripDaysContainerView();
     this._loadingComponent = new LoadingView();
@@ -62,7 +63,7 @@ export default class Trip {
     this._eventNewPresenter.init(callback);
   }
 
-  _getDays() { // return days with checked filter
+  _getDays() {
     const filterType = this._filterModel.getFilter();
     let days = this._daysModel.getDays();
 
@@ -79,7 +80,7 @@ export default class Trip {
     return days;
   }
 
-  _getEvents() { // return all events with checked filter (sorted, if necessary)
+  _getEvents() {
     const filterType = this._filterModel.getFilter();
     const events = this._daysModel.getAllEvents();
     const filtredEvents = filter[filterType](events);
@@ -127,7 +128,8 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case ActionType.UPDATE_EVENT:
-        this._daysModel.updateEvent(updateType, update);
+        this._api.updateEvent(update)
+          .then((response) => this._daysModel.updateEvent(updateType, response));
         break;
       case ActionType.ADD_EVENT:
         this._daysModel.addEvent(updateType, update);

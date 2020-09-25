@@ -20,7 +20,6 @@ export default class Offers extends Observer {
     const adaptedOffer = {
       type: offerFromApi.type,
       offers: offerFromApi.offers.map((offer) => ({
-        // key: `${offer.title.toLowerCase().replace(/ /g, `_`)}_${generateId(5)}`, ???
         title: offer.title,
         price: offer.price
       })),

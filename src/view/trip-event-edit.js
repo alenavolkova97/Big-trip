@@ -1,13 +1,11 @@
 import {ARRIVALS, MOVEMENTS} from '../const.js';
-import {OFFERS} from '../mock/trip-event.js';
 import SmartView from './smart.js';
-import {formatEventDate} from '../utils/event.js';
-import Mode from '../presenter/event.js';
 import flatpickr from 'flatpickr';
+import moment from "moment";
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const BLANK_EVENT = {// нужны ли непустые значения по умолчанию ??
+const BLANK_EVENT = {
   isFavorite: false,
   type: `Flight`,
   destination: `Geneva`,
@@ -16,8 +14,7 @@ const BLANK_EVENT = {// нужны ли непустые значения по �
     end: `18/03/19 00:00`
   },
   price: ``,
-  offers: OFFERS,
-  // offers list (in case of create new event) will be received from the server
+  // offers: OFFERS,
   description: `Geneva is a city in Switzerland that lies at
     the southern tip of expansive Lac Léman (Lake Geneva).
     Surrounded by the Alps and Jura mountains,
@@ -57,13 +54,13 @@ export default class TripEventEdit extends SmartView {
           From
         </label>
         <input class="event__input  event__input--time" id="event-start-time"
-          type="text" name="event-start-time" value="${formatEventDate(time.start, Mode.EDITING)}">
+          type="text" name="event-start-time" value="${moment(time.start).format(`DD/MM/YYYY HH:mm`)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time">
           To
         </label>
         <input class="event__input  event__input--time" id="event-end-time"
-          type="text" name="event-end-time" value="${formatEventDate(time.end)}">
+          type="text" name="event-end-time" value="${moment(time.end).format(`DD/MM/YYYY HH:mm`)}">
       </div>`
     );
   }
@@ -156,7 +153,8 @@ export default class TripEventEdit extends SmartView {
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
+          <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox"
+          name="event-favorite"
             ${isFavorite ? `checked` : ``}>
           <label class="event__favorite-btn" for="event-favorite">
             <span class="visually-hidden">Add to favorite</span>
@@ -301,7 +299,7 @@ export default class TripEventEdit extends SmartView {
     this.updateData({
       time: {
         start: userDate.getTime(),
-        end: this._data.time.end // ?
+        end: this._data.time.end
       }
     });
   }
@@ -321,7 +319,7 @@ export default class TripEventEdit extends SmartView {
     }, true);
   }
 
-  _offersChangeHandler(evt) { // ?
+  _offersChangeHandler(evt) {
     const currentOfferTitle = evt.target.value;
     const checkedOffer = this._data.offers.find((offer) => offer.title === currentOfferTitle);
 
@@ -363,12 +361,14 @@ export default class TripEventEdit extends SmartView {
 
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
+    this.getElement().querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, this._deleteClickHandler);
   }
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback || this._callback.favoriteClick;
-    this.getElement().querySelector(`.event__favorite-icon`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement().querySelector(`.event__favorite-icon`)
+      .addEventListener(`click`, this._favoriteClickHandler);
   }
 
   static copyEvent(event) {

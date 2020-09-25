@@ -28,13 +28,12 @@ export default class Info {
     this.init();
   }
 
-  _getEvents() { // return all events
+  _getEvents() {
     return this._daysModel.getAllEvents();
   }
 
   _renderPrice() {
     render(this._tripInfoContainerComponent, this._tripPriceComponent);
-    // цена должна быть = 0 при пустом массиве allEvents и при loading
   }
 
   _renderTripInfo() {

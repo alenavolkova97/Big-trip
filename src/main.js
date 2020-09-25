@@ -32,9 +32,10 @@ const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
+const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel, destinationsModel, offersModel, api);
 const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
-const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel, destinationsModel, offersModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
+
 const menuComponent = new SiteMenuView(MenuItem.TABLE);
 
 let statisticsComponent = null;

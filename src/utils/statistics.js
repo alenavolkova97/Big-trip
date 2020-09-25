@@ -14,7 +14,8 @@ export const countEventsByTransport = (events, transport) => {
 
 export const countHoursForEventType = (events, type) => {
   const eventsForType = events.filter((event) => event.type === type);
-  return eventsForType.reduce((counter, event) => counter + moment(event.time.end).diff(event.time.start), 0);
+  return eventsForType.reduce((counter, event) =>
+    counter + moment(event.time.end).diff(event.time.start), 0);
 };
 
 export const parseChartTime = (time) => time / MillisecondsInTimePeriod.HOUR;

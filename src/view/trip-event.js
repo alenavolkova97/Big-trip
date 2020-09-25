@@ -34,9 +34,9 @@ export default class TripEvent extends AbstractView {
 
           <div class="event__schedule">
             <p class="event__time">
-              <time class="event__start-time" datetime="2019-03-18T10:30">${formatEventDate(time.start, Mode.DEFAULT)}</time>
+              <time class="event__start-time" datetime="2019-03-18T10:30">${formatEventDate(time.start)}</time>
               &mdash;
-              <time class="event__end-time" datetime="2019-03-18T11:00">${formatEventDate(time.end, Mode.DEFAULT)}</time>
+              <time class="event__end-time" datetime="2019-03-18T11:00">${formatEventDate(time.end)}</time>
             </p>
             <p class="event__duration">${formatEventDuration(time.start, time.end)}</p>
           </div>

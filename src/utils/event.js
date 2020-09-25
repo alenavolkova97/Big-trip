@@ -1,5 +1,4 @@
-import moment from "moment";
-import Mode from '../presenter/event.js';
+import moment from 'moment';
 import {MillisecondsInTimePeriod} from '../const.js';
 
 export const sortEventsByTime = (eventA, eventB) => {
@@ -13,14 +12,8 @@ export const sortEventsByPrice = (eventA, eventB) => {
   return eventB.price - eventA.price;
 };
 
-export const formatEventDate = (date, mode) => {
-  if (mode === Mode.DEFAULT) {
-    return moment(date).format(`HH:mm`);
-  } else if (mode === Mode.EDITING) {
-    return moment(date).format(`DD/MM/YYYY HH:mm`); // ?
-  } else {
-    return ``;
-  }
+export const formatEventDate = (date) => {
+  return moment(date).format(`HH:mm`);
 };
 
 export const formatEventDuration = (startDate, endDate) => {
@@ -78,16 +71,3 @@ export const groupEventsByDays = (events) => {
 export const generateNumberId = () => {
   return Date.now() + parseInt(Math.random() * 10000, 10);
 };
-
-// export function generateId(length = 5) {
-//   const characters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`;
-//   const charactersLength = characters.length;
-
-//   let result = ``;
-
-//   for (let i = 0; i < length; i++) {
-//     result += characters.charAt(Math.floor(Math.random() * charactersLength)); // ?
-//   }
-
-//   return result;
-// }

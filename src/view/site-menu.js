@@ -1,5 +1,5 @@
 import SmartView from './smart.js';
-import {MenuItem} from "../const.js";
+import {MenuItem} from '../const.js';
 
 export default class SiteMenu extends SmartView {
   constructor(currentMenuItem) {
@@ -12,10 +12,10 @@ export default class SiteMenu extends SmartView {
   getTemplate() {
     return (
       `<nav class="trip-controls__trip-tabs  trip-tabs">
-        <a class="trip-tabs__btn ${this._currentMenuItem === MenuItem.TABLE ? `trip-tabs__btn--active` : ``}"
-         href="#" data-menu-item="${MenuItem.TABLE}">Table</a>
-        <a class="trip-tabs__btn ${this._currentMenuItem === MenuItem.STATS ? `trip-tabs__btn--active` : ``}"
-         href="#" data-menu-item="${MenuItem.STATS}">Stats</a>
+        <a class="trip-tabs__btn ${this._currentMenuItem === MenuItem.TABLE ?
+        `trip-tabs__btn--active` : ``}" href="#" data-menu-item="${MenuItem.TABLE}">Table</a>
+        <a class="trip-tabs__btn ${this._currentMenuItem === MenuItem.STATS ?
+        `trip-tabs__btn--active` : ``}" href="#" data-menu-item="${MenuItem.STATS}">Stats</a>
       </nav>`
     );
   }

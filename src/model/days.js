@@ -105,9 +105,8 @@ export default class Days extends Observer {
       isFavorite: event.is_favorite,
       offers: event.offers.map((offer) => ({
         title: offer.title,
-        price: offer.price,
-        type: event.type,
-        // key, isChecked ???
+        price: offer.price
+        // type: event.type,
       })),
       photos: event.destination.pictures.map((picture) => picture.src), // not using description of photo
       price: event.base_price,
@@ -115,7 +114,7 @@ export default class Days extends Observer {
         start: new Date(event.date_from).getTime(),
         end: new Date(event.date_to).getTime()
       },
-      type: event.type,
+      type: event.type // event.type[0].toLowerCase() + event.type.slice(1),
     };
 
     return adaptedEvent;
@@ -124,7 +123,7 @@ export default class Days extends Observer {
   static adaptEventToServer(event) {
     const adaptedEvent = {
       'id': event.id,
-      'base_price': event.price,
+      'base_price': parseInt(event.price, 10),
       'date_from': new Date(event.time.start).toISOString(),
       'date_to': new Date(event.time.end).toISOString(),
       'destination': {

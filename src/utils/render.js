@@ -7,11 +7,6 @@ export const RenderPosition = {
   AFTEREND: `afterend`
 };
 
-// оставила, потому что на лекции говорили, что эта функция еще понадобится, комментирование в конце удалю
-// export const renderTemplate = (container, template, place = RenderPosition.BEFOREEND) => {
-//   container.insertAdjacentHTML(place, template);
-// };
-
 export const render = (container, child, place = RenderPosition.BEFOREEND) => {
   if (!container) {
     throw new Error(`No container provided...`);
