@@ -9,7 +9,6 @@ export default class Info {
     this._infoContainer = infoContainer;
 
     this._tripInfoContainerComponent = new TripInfoContainerView();
-    this._tripPriceComponent = new TripPriceView();
 
     this._handleDaysUpdates = this._handleDaysUpdates.bind(this);
 
@@ -18,6 +17,7 @@ export default class Info {
 
   init() {
     this._tripInfoComponent = new TripInfoView(this._getEvents());
+    this._tripPriceComponent = new TripPriceView(this._getEvents());
 
     render(this._infoContainer, this._tripInfoContainerComponent, RenderPosition.AFTERBEGIN);
     this._renderAllInfo();
@@ -25,6 +25,7 @@ export default class Info {
 
   _handleDaysUpdates() {
     remove(this._tripInfoComponent);
+    remove(this._tripPriceComponent);
     this.init();
   }
 
