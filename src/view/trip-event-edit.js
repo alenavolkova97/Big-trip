@@ -316,7 +316,8 @@ export default class TripEventEdit extends SmartView {
 
   _eventTypeChangeHandler(evt) {
     this.updateData({
-      type: evt.target.value
+      type: evt.target.value,
+      offers: []
     });
   }
 
