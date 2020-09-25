@@ -57,6 +57,7 @@ const handleSiteMenuClick = (menuItem) => {
       break;
 
     case MenuItem.STATS:
+      filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
       tripPresenter.destroy();
 
       remove(statisticsComponent);
