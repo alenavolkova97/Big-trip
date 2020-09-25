@@ -1,7 +1,6 @@
 import {ARRIVALS} from '../const.js';
 import AbstractView from './abstract.js';
 import {formatEventDate, formatEventDuration} from '../utils/event.js';
-import Mode from '../presenter/event.js';
 
 export default class TripEvent extends AbstractView {
   constructor(event) {
@@ -30,13 +29,18 @@ export default class TripEvent extends AbstractView {
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png"
               alt="Event type icon">
           </div>
-          <h3 class="event__title">${type[0].toUpperCase() + type.slice(1)} ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`} ${destination}</h3>
+          <h3 class="event__title">${type[0].toUpperCase() + type.slice(1)}
+            ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`} ${destination}</h3>
 
           <div class="event__schedule">
             <p class="event__time">
-              <time class="event__start-time" datetime="2019-03-18T10:30">${formatEventDate(time.start)}</time>
+              <time class="event__start-time" datetime="2019-03-18T10:30">
+                ${formatEventDate(time.start)}
+              </time>
               &mdash;
-              <time class="event__end-time" datetime="2019-03-18T11:00">${formatEventDate(time.end)}</time>
+              <time class="event__end-time" datetime="2019-03-18T11:00">
+                ${formatEventDate(time.end)}
+              </time>
             </p>
             <p class="event__duration">${formatEventDuration(time.start, time.end)}</p>
           </div>
@@ -65,7 +69,8 @@ export default class TripEvent extends AbstractView {
 
   setRollupClickHandler(callback) {
     this._callback.rollupClick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupClickHandler);
+    this.getElement().querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, this._rollupClickHandler);
   }
 }
 

@@ -32,7 +32,8 @@ const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel, destinationsModel, offersModel, api);
+const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel,
+    destinationsModel, offersModel, api);
 const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
@@ -75,7 +76,7 @@ const newEventButtonClickHandler = (evt) => {
   remove(statisticsComponent);
   tripPresenter.destroy();
 
-  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING); // сброс сортировки ?
+  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
 
   if (!pageContainerElement.classList.contains(`page-body__container`)) {
     pageContainerElement.classList.add(`page-body__container`);
