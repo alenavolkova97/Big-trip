@@ -114,7 +114,7 @@ export default class Days extends Observer {
         start: new Date(event.date_from).getTime(),
         end: new Date(event.date_to).getTime()
       },
-      type: event.type // event.type[0].toLowerCase() + event.type.slice(1),
+      type: event.type
     };
 
     return adaptedEvent;

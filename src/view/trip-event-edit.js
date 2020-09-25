@@ -37,6 +37,7 @@ export default class TripEventEdit extends SmartView {
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
+    this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatePicker();
@@ -372,6 +373,10 @@ export default class TripEventEdit extends SmartView {
     this._callback.deleteClick(this._data);
   }
 
+  _rollupButtonClickHandler() {
+    this._callback.rollupButtonClick();
+  }
+
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback || this._callback.formSubmit;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
@@ -381,6 +386,12 @@ export default class TripEventEdit extends SmartView {
     this._callback.deleteClick = callback;
     this.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, this._deleteClickHandler);
+  }
+
+  setRollupButtonClickHandler(callback) {
+    this._callback.rollupButtonClick = callback || this._callback.rollupButtonClick;
+    this.getElement().querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, this._rollupButtonClickHandler);
   }
 
   setFavoriteClickHandler(callback) {
