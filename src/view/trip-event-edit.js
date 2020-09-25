@@ -92,12 +92,23 @@ export default class TripEventEdit extends SmartView {
     return ``;
   }
 
+  _createTripEventPtotosTemplate(destination) {
+    const appropriateDestination = this._destinations.find((it) => it.name === destination);
+
+    if (appropriateDestination) {
+      return appropriateDestination.photos.map((photo) => `<img class="event__photo" src="${photo.src}"
+      alt="Event photo">`).join(``);
+    }
+
+    return ``;
+  }
+
   _hasDestinations() {
     return Array.isArray(this._destinations) && this._destinations.length;
   }
 
   getTemplate() {
-    const {isFavorite, type, destination, time, price, offers, photos} = this._data; // description
+    const {isFavorite, type, destination, time, price, offers} = this._data;
 
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -196,8 +207,7 @@ export default class TripEventEdit extends SmartView {
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                ${photos.map((photo) => `<img class="event__photo" src="${photo}"
-                  alt="Event photo">`).join(``)}
+                ${Array.isArray(this._destinations) ? this._createTripEventPtotosTemplate(destination) : ``}
               </div>
             </div>
           </section>
