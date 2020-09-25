@@ -129,7 +129,7 @@ export default class TripEventEdit extends SmartView {
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination">
               ${type[0].toUpperCase() + type.slice(1)}
-              ${ARRIVALS.includes(type[0].toUpperCase() + type.slice(1)) ? `in` : `to`}
+              ${ARRIVALS.includes(type) ? `in` : `to`}
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
               type="text" name="event-destination" value="${destination}" list="destination-list"
