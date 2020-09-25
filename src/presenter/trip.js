@@ -38,7 +38,7 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._tripDaysContainerComponent, this._handleViewAction);
+    this._eventNewPresenter = new EventNewPresenter(this._tripDaysContainerComponent, this._destinationsModel, this._handleViewAction);
   }
 
   init() {

@@ -3,9 +3,10 @@ import {render, RenderPosition, remove} from '../utils/render.js';
 import {ActionType, UpdateType} from '../const.js';
 
 export default class EventNew {
-  constructor(eventListContainer, changeData) {
+  constructor(eventListContainer, destinationsModel, changeData) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
+    this._destinationsModel = destinationsModel;
 
     this._tripEventEditComponent = null;
     this._destroyCallback = null;
@@ -13,6 +14,9 @@ export default class EventNew {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleDestinationsUpdate = this._handleDestinationsUpdate.bind(this);
+
+    this._destinationsModel.addObserver(this._handleDestinationsUpdate);
   }
 
   init(callback) {
@@ -22,7 +26,7 @@ export default class EventNew {
       return;
     }
 
-    this._tripEventEditComponent = new TripEventEditView();
+    this._tripEventEditComponent = new TripEventEditView(undefined, this._destinationsModel.getDestinations());
 
     this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._tripEventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
@@ -50,6 +54,12 @@ export default class EventNew {
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       this.destroy();
+    }
+  }
+
+  _handleDestinationsUpdate() {
+    if (this._tripEventEditComponent) {
+      this._tripEventEditComponent.setDestinations(this._destinationsModel.getDestinations());
     }
   }
 

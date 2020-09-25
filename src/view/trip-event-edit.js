@@ -8,7 +8,7 @@ import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 const BLANK_EVENT = {
   isFavorite: false,
   type: `Flight`,
-  destination: `Geneva`,
+  destination: ``,
   time: {
     start: `18/03/19 00:00`,
     end: `18/03/19 00:00`
@@ -168,7 +168,7 @@ export default class TripEventEdit extends SmartView {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price" type="number"
+            <input class="event__input  event__input--price" id="event-price" type="number" min="0" step="1"
               name="event-price" value="${price}">
           </div>
 
