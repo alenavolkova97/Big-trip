@@ -24,6 +24,12 @@ export default class SiteMenu extends SmartView {
     this.setMenuClickHandler();
   }
 
+  setMenuItem(currentMenuItem) {
+    this._currentMenuItem = currentMenuItem;
+
+    this.updateElement();
+  }
+
   _menuClickHandler(evt) {
     this._currentMenuItem = evt.target.dataset.menuItem;
 

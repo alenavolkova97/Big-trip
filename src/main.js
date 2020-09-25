@@ -74,6 +74,8 @@ const handleSiteMenuClick = (menuItem) => {
 const newEventButtonClickHandler = (evt) => {
   evt.target.disabled = true;
 
+  menuComponent.setMenuItem(MenuItem.TABLE);
+
   remove(statisticsComponent);
   tripPresenter.destroy();
 
