@@ -67,7 +67,3 @@ export const groupEventsByDays = (events) => {
     tripEvents,
   }));
 };
-
-export const generateNumberId = () => {
-  return Date.now() + parseInt(Math.random() * 10000, 10);
-};

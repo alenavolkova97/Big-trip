@@ -1,7 +1,6 @@
 import TripEventEditView from '../view/trip-event-edit.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {ActionType, UpdateType} from '../const.js';
-import {generateNumberId} from '../utils/event.js';
 
 export default class EventNew {
   constructor(eventListContainer, changeData) {
@@ -58,7 +57,7 @@ export default class EventNew {
     this._changeData(
         ActionType.ADD_EVENT,
         UpdateType.MINOR,
-        Object.assign({id: generateNumberId()}, update)
+        update
     );
     this.destroy();
   }

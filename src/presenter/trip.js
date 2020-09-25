@@ -132,10 +132,12 @@ export default class Trip {
           .then((response) => this._daysModel.updateEvent(updateType, response));
         break;
       case ActionType.ADD_EVENT:
-        this._daysModel.addEvent(updateType, update);
+        this._api.addEvent(update)
+          .then((response) => this._daysModel.addEvent(updateType, response));
         break;
       case ActionType.DELETE_EVENT:
-        this._daysModel.deleteEvent(updateType, update);
+        this._api.deleteEvent(update)
+          .then(() => this._daysModel.deleteEvent(updateType, update));
         break;
     }
   }
