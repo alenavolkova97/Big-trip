@@ -298,10 +298,13 @@ export default class TripEventEdit extends SmartView {
       .getElement()
       .querySelector(`.event__type-list`)
       .addEventListener(`change`, this._eventTypeChangeHandler);
-    this
-      .getElement()
-      .querySelector(`.event__input--destination`)
-      .addEventListener(`input`, this._destinationInputHandler);
+
+    const availableDescriptionContainer = this.getElement().querySelector(`.event__input--destination`);
+
+    if (availableDescriptionContainer) {
+      availableDescriptionContainer.addEventListener(`change`, this._destinationInputHandler);
+    }
+
     this
       .getElement()
       .querySelector(`.event__field-group--price`)
@@ -324,7 +327,7 @@ export default class TripEventEdit extends SmartView {
   _destinationInputHandler(evt) {
     this.updateData({
       destination: evt.target.value
-    }, true);
+    });
   }
 
   _startDateChangeHandler([userDate]) {
