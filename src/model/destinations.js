@@ -16,8 +16,17 @@ export default class Destinations extends Observer {
     return this._destinations;
   }
 
-  static adaptDestinationToClient(destination) {
-    const adaptedDestination = destination.name;
+  static adaptDestinationToClient(destinationFromApi) {
+    const adaptedDestination = {
+      description: destinationFromApi.description,
+      name: destinationFromApi.name,
+      photos: destinationFromApi.pictures.map((picture) => ({
+        src: picture.src,
+        description: picture.description
+      }))
+    };
+
+    // const adaptedDestination = destination.name;
 
     return adaptedDestination;
   }

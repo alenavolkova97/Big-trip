@@ -81,12 +81,23 @@ export default class TripEventEdit extends SmartView {
       </div>`).join(``);
   }
 
+  _createTripEventDescription(destination) {
+    const appropriateDestination = this._destinations.find((it) => it.name === destination);
+
+    if (appropriateDestination) {
+      const appropriateDescription = appropriateDestination.description;
+      return appropriateDescription;
+    }
+
+    return ``;
+  }
+
   _hasDestinations() {
     return Array.isArray(this._destinations) && this._destinations.length;
   }
 
   getTemplate() {
-    const {isFavorite, type, destination, time, price, offers, description, photos} = this._data;
+    const {isFavorite, type, destination, time, price, offers, photos} = this._data; // description
 
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -133,9 +144,9 @@ export default class TripEventEdit extends SmartView {
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
               type="text" name="event-destination" value="${destination}" list="destination-list"
-              pattern="${this._hasDestinations() ? this._destinations.join(`|`) : ``}">
+              pattern="${this._hasDestinations() ? this._destinations.map((it) => it.name).join(`|`) : ``}">
             <datalist id="destination-list">
-              ${this._hasDestinations() ? this._destinations.map((it) => `<option value="${it}"></option>`).join(``) : ``}
+              ${this._hasDestinations() ? this._destinations.map((it) => `<option value="${it.name}"></option>`).join(``) : ``}
             </datalist>
           </div>
 
@@ -179,7 +190,9 @@ export default class TripEventEdit extends SmartView {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${description}</p>
+            <p class="event__destination-description">
+              ${Array.isArray(this._destinations) ? this._createTripEventDescription(destination) : ``}
+            </p>
 
             <div class="event__photos-container">
               <div class="event__photos-tape">

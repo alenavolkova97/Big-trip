@@ -103,7 +103,7 @@ Promise.all([api.getEvents(), api.getDestinations(), api.getOffers()])
   .catch(() => {
     daysModel.setDays(UpdateType.INIT, []);
   })
-  .finally(() =>{
+  .finally(() => {
     newEventButtonElement.disabled = false;
     menuComponent.setMenuClickHandler(handleSiteMenuClick);
     render(siteMenuHeaderElement, menuComponent, RenderPosition.AFTEREND);
