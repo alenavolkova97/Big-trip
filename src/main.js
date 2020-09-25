@@ -86,9 +86,12 @@ const newEventButtonClickHandler = (evt) => {
   tripPresenter.createEvent(handleEventNewFormOpen);
 };
 
-filterPresenter.init();
+menuComponent.setMenuClickHandler(handleSiteMenuClick);
+render(siteMenuHeaderElement, menuComponent, RenderPosition.AFTEREND);
+
 infoPresenter.init();
 tripPresenter.init();
+filterPresenter.init();
 
 newEventButtonElement.addEventListener(`click`, (evt) => {
   newEventButtonClickHandler(evt);
@@ -105,7 +108,5 @@ Promise.all([api.getEvents(), api.getDestinations(), api.getOffers()])
   })
   .finally(() => {
     newEventButtonElement.disabled = false;
-    menuComponent.setMenuClickHandler(handleSiteMenuClick);
-    render(siteMenuHeaderElement, menuComponent, RenderPosition.AFTEREND);
   });
 
