@@ -15,7 +15,7 @@ const BLANK_EVENT = {
   },
   price: 0,
   offers: [], // ?
-  description: ``, // ?
+  description: `fgfgfgfgfgfgfg`, // ?
   photos: [] // ?
 };
 
@@ -236,6 +236,8 @@ export default class TripEventEdit extends SmartView {
 
     this.setFormSubmitHandler();
     this.setFavoriteClickHandler();
+    this.setDeleteClickHandler();
+    this.setRollupButtonClickHandler();
   }
 
   setDestinations(destinations) {
@@ -369,7 +371,8 @@ export default class TripEventEdit extends SmartView {
     this._callback.favoriteClick();
   }
 
-  _deleteClickHandler() {
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
     this._callback.deleteClick(this._data);
   }
 
@@ -383,7 +386,7 @@ export default class TripEventEdit extends SmartView {
   }
 
   setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
+    this._callback.deleteClick = callback || this._callback.deleteClick;
     this.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, this._deleteClickHandler);
   }
