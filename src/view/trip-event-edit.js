@@ -7,21 +7,16 @@ import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const BLANK_EVENT = {
   isFavorite: false,
-  type: `Flight`,
-  destination: ``,
+  type: `flight`,
+  destination: `Chamonix`, // ?
   time: {
-    start: `18/03/19 00:00`,
-    end: `18/03/19 00:00`
+    start: new Date(),
+    end: new Date()
   },
-  price: ``,
-  // offers: OFFERS,
-  description: `Geneva is a city in Switzerland that lies at
-    the southern tip of expansive Lac Léman (Lake Geneva).
-    Surrounded by the Alps and Jura mountains,
-    the city has views of dramatic Mont Blanc.`,
-  photos: [`../../public/img/photos/1.jpg`, `../../public/img/photos/2jpg`,
-    `../../public/img/photos/3.jpg`, `../../public/img/photos/4.jpg`,
-    `../../public/img/photos/5.jpg`]
+  price: 0,
+  offers: [], // ?
+  description: ``, // ?
+  photos: [] // ?
 };
 
 export default class TripEventEdit extends SmartView {
@@ -249,7 +244,7 @@ export default class TripEventEdit extends SmartView {
   }
 
   setOffers(offers) {
-    this._offers = [...offers];
+    this._offers = offers;
 
     this.updateElement();
   }
