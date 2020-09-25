@@ -181,7 +181,7 @@ export default class TripEventEdit extends SmartView {
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
               type="text" name="event-destination" value="${destination}" list="destination-list"
-              pattern="${this._hasDestinations() ? this._destinations.map((it) => it.name).join(`|`) : ``}">
+              pattern="${this._hasDestinations() ? this._destinations.map((it) => it.name).join(`|`) : ``}" required>
             <datalist id="destination-list">
               ${this._hasDestinations() ? this._destinations.map((it) => `<option value="${it.name}"></option>`).join(``) : ``}
             </datalist>
