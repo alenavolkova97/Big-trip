@@ -18,5 +18,5 @@ export const countHoursForEventType = (events, type) => {
     counter + moment(event.time.end).diff(event.time.start), 0);
 };
 
-export const parseChartTime = (time) => time / MillisecondsInTimePeriod.HOUR;
+export const parseChartTime = (time) => Math.floor(time / MillisecondsInTimePeriod.HOUR);
 
