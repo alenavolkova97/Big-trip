@@ -49,8 +49,7 @@ export const isDateAfter = (dateA, dateB) => {
 export const groupEventsByDays = (events) => {
   const daysMap = {};
 
-  for (let i = 0; i < events.length; i++) {
-    const event = events[i];
+  for (const event of events) {
     const dayTs = moment(new Date(event.time.start).getTime()).startOf(`day`).valueOf();
 
     if (!daysMap[dayTs]) {
