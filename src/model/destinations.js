@@ -26,8 +26,6 @@ export default class Destinations extends Observer {
       }))
     };
 
-    // const adaptedDestination = destination.name;
-
     return adaptedDestination;
   }
 }
