@@ -22,7 +22,7 @@ const BLANK_EVENT = {
 export default class TripEventEdit extends SmartView {
   constructor(event = BLANK_EVENT, destinations, offers) {
     super();
-    this._data = TripEventEdit.copyEvent(event);
+    this._data = TripEventEdit.parseEventToData(event);
     this._destinations = destinations;
     this._offers = offers;
     this._startDatepicker = null;
@@ -387,7 +387,7 @@ export default class TripEventEdit extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._data);
+    this._callback.formSubmit(TripEventEdit.parseDataToEvent(this._data));
   }
 
   _favoriteClickHandler() {
@@ -396,7 +396,7 @@ export default class TripEventEdit extends SmartView {
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(this._data);
+    this._callback.deleteClick(TripEventEdit.parseDataToEvent(this._data));
   }
 
   _rollupButtonClickHandler() {
@@ -426,10 +426,25 @@ export default class TripEventEdit extends SmartView {
       .addEventListener(`click`, this._favoriteClickHandler);
   }
 
-  static copyEvent(event) {
+  static parseEventToData(event) {
     return Object.assign(
         {},
-        event
+        event,
+        {
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false
+        }
     );
+  }
+
+  static parseDataToEvent(data) {
+    data = Object.assign({}, data);
+
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+
+    return data;
   }
 }
