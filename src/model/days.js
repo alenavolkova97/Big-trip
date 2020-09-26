@@ -4,6 +4,7 @@ import {groupEventsByDays} from '../utils/event.js';
 export default class Days extends Observer {
   constructor() {
     super();
+
     this._days = [];
   }
 
@@ -32,6 +33,7 @@ export default class Days extends Observer {
     for (let dayIndex = 0; dayIndex < this._days.length; dayIndex++) {
       const day = this._days[dayIndex];
       const eventIndex = day.tripEvents.findIndex((event) => updateEvent.id === event.id);
+
       if (eventIndex !== -1) {
         dayContainUpdateEvent = day;
         updateEventIndex = eventIndex;
@@ -50,7 +52,6 @@ export default class Days extends Observer {
     ];
 
     this._updateDays(groupEventsByDays(this.getAllEvents()));
-
     this._notify(updateType, updateEvent);
   }
 
@@ -69,6 +70,7 @@ export default class Days extends Observer {
     for (let dayIndex = 0; dayIndex < this._days.length; dayIndex++) {
       const day = this._days[dayIndex];
       const eventIndex = day.tripEvents.findIndex((event) => deleteEvent.id === event.id);
+
       if (eventIndex !== -1) {
         dayContainDeleteEvent = day;
         deleteEventIndex = eventIndex;
@@ -86,7 +88,6 @@ export default class Days extends Observer {
     ];
 
     this._updateDays(groupEventsByDays(this.getAllEvents()));
-
     this._notify(updateType);
   }
 

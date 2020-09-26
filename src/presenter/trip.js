@@ -38,7 +38,8 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._tripDaysContainerComponent, this._destinationsModel, this._offersModel, this._handleViewAction);
+    this._eventNewPresenter = new EventNewPresenter(this._tripDaysContainerComponent,
+        this._destinationsModel, this._offersModel, this._handleViewAction);
   }
 
   init() {
@@ -177,6 +178,7 @@ export default class Trip {
 
   _handleModeChange() {
     this._eventNewPresenter.destroy();
+
     Object
       .values(this._eventPresenters)
       .forEach((presenter) => presenter.resetView());
@@ -209,12 +211,14 @@ export default class Trip {
     const tripDayComponent = new TripDayView(day, index);
 
     this._tripDays.push(tripDayComponent);
+
     render(this._tripDaysContainerComponent, tripDayComponent);
     this._renderEventsList(day.tripEvents, tripDayComponent);
   }
 
   _renderEventsList(events, container) {
     const tripEventsListComponent = new TripEventsListView();
+
     render(container, tripEventsListComponent);
     this._renderEvents(events, tripEventsListComponent);
   }
@@ -237,7 +241,9 @@ export default class Trip {
   }
 
   _renderEvent(container, event) {
-    const eventPresenter = new EventPresenter(container, this._destinationsModel, this._offersModel, this._handleViewAction, this._handleModeChange);
+    const eventPresenter = new EventPresenter(container, this._destinationsModel,
+        this._offersModel, this._handleViewAction, this._handleModeChange);
+
     eventPresenter.init(event);
     this._eventPresenters[event.id] = eventPresenter;
   }

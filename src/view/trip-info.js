@@ -4,12 +4,12 @@ import {formatDate} from '../utils/trip.js';
 export default class TripInfo extends AbstractView {
   constructor(events) {
     super();
+
     this._events = events;
   }
 
   getTemplate() {
-    const destinations = this._events
-      .map((tripEvent) => tripEvent.destination);
+    const destinations = this._events.map((tripEvent) => tripEvent.destination);
 
     return (
       `<div class="trip-info__main">

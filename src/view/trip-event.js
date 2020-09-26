@@ -5,6 +5,7 @@ import {formatEventDate, formatEventDuration} from '../utils/event.js';
 export default class TripEvent extends AbstractView {
   constructor(event) {
     super();
+
     this._event = event;
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
@@ -22,6 +23,7 @@ export default class TripEvent extends AbstractView {
 
   getTemplate() {
     const {type, destination, time, price, offers} = this._event;
+
     return (
       `<li class="trip-events__item">
         <div class="event">

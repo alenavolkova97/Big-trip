@@ -43,6 +43,7 @@ export default class Info {
 
   _renderAllInfo() {
     this._renderPrice();
+
     if (this._getEvents().length > 0) {
       this._renderTripInfo();
     }

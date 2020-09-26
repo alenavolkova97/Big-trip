@@ -3,6 +3,7 @@ import AbstractView from './abstract.js';
 export default class TripEventsFilter extends AbstractView {
   constructor(filters, currentFilter) {
     super();
+
     this._filters = filters;
     this._currentFilter = currentFilter;
 

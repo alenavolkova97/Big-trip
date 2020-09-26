@@ -22,7 +22,9 @@ const BLANK_EVENT = {
 export default class TripEventEdit extends SmartView {
   constructor(event = BLANK_EVENT, destinations, offers) {
     super();
+
     this._data = TripEventEdit.parseEventToData(event);
+
     this._destinations = destinations;
     this._offers = offers;
     this._startDatepicker = null;
@@ -318,12 +320,13 @@ export default class TripEventEdit extends SmartView {
   }
 
   _setInnerHandlers() {
+    const availableDescriptionContainer = this.getElement().querySelector(`.event__input--destination`);
+    const availableOffersContainer = this.getElement().querySelector(`.event__available-offers`);
+
     this
       .getElement()
       .querySelector(`.event__type-list`)
       .addEventListener(`change`, this._eventTypeChangeHandler);
-
-    const availableDescriptionContainer = this.getElement().querySelector(`.event__input--destination`);
 
     if (availableDescriptionContainer) {
       availableDescriptionContainer.addEventListener(`change`, this._destinationInputHandler);
@@ -333,8 +336,6 @@ export default class TripEventEdit extends SmartView {
       .getElement()
       .querySelector(`.event__field-group--price`)
       .addEventListener(`input`, this._priceInputHandler);
-
-    const availableOffersContainer = this.getElement().querySelector(`.event__available-offers`);
 
     if (availableOffersContainer) {
       availableOffersContainer.addEventListener(`change`, this._offersChangeHandler);

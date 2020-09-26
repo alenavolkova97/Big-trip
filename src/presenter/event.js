@@ -25,6 +25,7 @@ export default class Event {
 
     this._tripEventComponent = null;
     this._tripEventEditComponent = null;
+
     this._mode = Mode.DEFAULT;
 
     this._handleRollupClick = this._handleRollupClick.bind(this);
@@ -57,6 +58,7 @@ export default class Event {
 
     if (prevTripEventComponent === null || prevTripEventEditComponent === null) {
       render(this._eventListContainer, this._tripEventComponent);
+
       return;
     }
 
@@ -125,14 +127,19 @@ export default class Event {
 
   _replaceEventToForm() {
     this._changeMode();
+
     replace(this._tripEventEditComponent, this._tripEventComponent);
+
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+
     this._mode = Mode.EDITING;
   }
 
   _replaceFormToEvent() {
     replace(this._tripEventComponent, this._tripEventEditComponent);
+
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+
     this._mode = Mode.DEFAULT;
   }
 

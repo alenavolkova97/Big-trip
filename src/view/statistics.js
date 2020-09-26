@@ -177,6 +177,7 @@ const renderTimeSpendChart = (timeSpendCtx, events) => {
   const uniqEventTypesInUpperCase = uniqEventTypes.map((type) => icons[type] + ` ` + type.toUpperCase());
   const eventsByTypeTime = uniqEventTypes.map((type) => countHoursForEventType(events, type));
   const parsedEventsByTypeTime = eventsByTypeTime.map(parseChartTime);
+
   timeSpendCtx.height = BAR_HEIGHT * uniqEventTypesInUpperCase.length;
 
   return new Chart(timeSpendCtx, {

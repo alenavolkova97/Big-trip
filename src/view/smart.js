@@ -4,6 +4,7 @@ import {replace} from '../utils/render.js';
 export default class Smart extends AbstractView {
   constructor() {
     super();
+
     this._data = {};
   }
 

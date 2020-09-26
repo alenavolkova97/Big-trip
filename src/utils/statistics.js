@@ -5,6 +5,7 @@ export const makeItemsUniq = (items) => [...new Set(items)];
 
 export const countMoneyForEventType = (events, type) => {
   const eventsForType = events.filter((event) => event.type === type);
+
   return eventsForType.reduce((counter, event) => counter + Number(event.price), 0);
 };
 
@@ -14,6 +15,7 @@ export const countEventsByTransport = (events, transport) => {
 
 export const countHoursForEventType = (events, type) => {
   const eventsForType = events.filter((event) => event.type === type);
+
   return eventsForType.reduce((counter, event) =>
     counter + moment(event.time.end).diff(event.time.start), 0);
 };
