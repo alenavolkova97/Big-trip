@@ -10,17 +10,6 @@ export default class TripEvent extends AbstractView {
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 
-  _createTripEventOffersTemplate(offers) {
-    return offers.slice(0, 3).map((offer) => {
-      return (
-        `<li class="event__offer">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;
-          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-        </li>`);
-    }).join(``);
-  }
-
   getTemplate() {
     const {type, destination, time, price, offers} = this._event;
 
@@ -65,14 +54,25 @@ export default class TripEvent extends AbstractView {
     );
   }
 
-  _rollupClickHandler() {
-    this._callback.rollupClick();
-  }
-
   setRollupClickHandler(callback) {
     this._callback.rollupClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, this._rollupClickHandler);
+  }
+
+  _createTripEventOffersTemplate(offers) {
+    return offers.slice(0, 3).map((offer) => {
+      return (
+        `<li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+        </li>`);
+    }).join(``);
+  }
+
+  _rollupClickHandler() {
+    this._callback.rollupClick();
   }
 }
 

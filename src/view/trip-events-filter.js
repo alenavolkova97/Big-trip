@@ -10,6 +10,22 @@ export default class TripEventsFilter extends AbstractView {
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
+  getTemplate() {
+    return (
+      `<form class="trip-filters" action="#" method="get">
+      ${this._filters
+        .map((filter) => this._createFilterItemTemplate(filter, this._currentFilter))
+        .join(``)}
+        <button class="visually-hidden" type="submit">Accept filter</button>
+      </form>`
+    );
+  }
+
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
+  }
+
   _createFilterItemTemplate(filter, currentFilter) {
     const {type, name} = filter;
 
@@ -22,23 +38,7 @@ export default class TripEventsFilter extends AbstractView {
     );
   }
 
-  getTemplate() {
-    return (
-      `<form class="trip-filters" action="#" method="get">
-      ${this._filters
-        .map((filter) => this._createFilterItemTemplate(filter, this._currentFilter))
-        .join(``)}
-        <button class="visually-hidden" type="submit">Accept filter</button>
-      </form>`
-    );
-  }
-
   _filterTypeChangeHandler(evt) {
     this._callback.filterTypeChange(evt.target.value);
-  }
-
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
   }
 }

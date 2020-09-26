@@ -115,16 +115,6 @@ export default class Event {
     }
   }
 
-  _handleOffersUpdate() {
-    this._tripEventEditComponent.setOffers(this._offersModel.getOffers());
-  }
-
-  _handleDestinationsUpdate() {
-    if (this._tripEventEditComponent) {
-      this._tripEventEditComponent.setDestinations(this._destinationsModel.getDestinations());
-    }
-  }
-
   _replaceEventToForm() {
     this._changeMode();
 
@@ -141,6 +131,16 @@ export default class Event {
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
 
     this._mode = Mode.DEFAULT;
+  }
+
+  _handleOffersUpdate() {
+    this._tripEventEditComponent.setOffers(this._offersModel.getOffers());
+  }
+
+  _handleDestinationsUpdate() {
+    if (this._tripEventEditComponent) {
+      this._tripEventEditComponent.setDestinations(this._destinationsModel.getDestinations());
+    }
   }
 
   _escKeyDownHandler(evt) {

@@ -23,12 +23,6 @@ export default class Info {
     this._renderAllInfo();
   }
 
-  _handleDaysUpdates() {
-    remove(this._tripInfoComponent);
-    remove(this._tripPriceComponent);
-    this.init();
-  }
-
   _getEvents() {
     return this._daysModel.getAllEvents();
   }
@@ -47,5 +41,11 @@ export default class Info {
     if (this._getEvents().length > 0) {
       this._renderTripInfo();
     }
+  }
+
+  _handleDaysUpdates() {
+    remove(this._tripInfoComponent);
+    remove(this._tripPriceComponent);
+    this.init();
   }
 }

@@ -30,17 +30,17 @@ export default class SiteMenu extends SmartView {
     this.updateElement();
   }
 
+  setMenuClickHandler(callback) {
+    this._callback.menuClick = callback || this._callback.menuClick;
+
+    this.getElement().addEventListener(`click`, this._menuClickHandler);
+  }
+
   _menuClickHandler(evt) {
     this._currentMenuItem = evt.target.dataset.menuItem;
 
     this._callback.menuClick(this._currentMenuItem);
 
     this.updateElement();
-  }
-
-  setMenuClickHandler(callback) {
-    this._callback.menuClick = callback || this._callback.menuClick;
-
-    this.getElement().addEventListener(`click`, this._menuClickHandler);
   }
 }

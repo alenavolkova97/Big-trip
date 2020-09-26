@@ -116,74 +116,6 @@ export default class Trip {
         .textContent = textContent;
   }
 
-  _handleSortTypeChange(sortType) {
-    if (sortType === this._currentSortingType) {
-      return;
-    }
-
-    this._currentSortingType = sortType;
-    this._clearTrip({removeSortingComponent: false});
-    this._renderTrip();
-  }
-
-  _handleViewAction(actionType, updateType, update) {
-    switch (actionType) {
-      case ActionType.UPDATE_EVENT:
-        this._eventPresenters[update.id].setViewState(EventPresenterViewState.SAVING);
-        this._api.updateEvent(update)
-          .then((response) => this._daysModel.updateEvent(updateType, response))
-          .catch(() => {
-            this._eventPresenters[update.id].setViewState(EventPresenterViewState.ABORTING);
-          });
-        break;
-      case ActionType.ADD_EVENT:
-        this._eventNewPresenter.setSaving();
-        this._api.addEvent(update)
-          .then((response) => this._daysModel.addEvent(updateType, response))
-          .catch(() => {
-            this._eventNewPresenter.setAborting();
-          });
-        break;
-      case ActionType.DELETE_EVENT:
-        this._eventPresenters[update.id].setViewState(EventPresenterViewState.DELETING);
-        this._api.deleteEvent(update)
-          .then(() => this._daysModel.deleteEvent(updateType, update))
-          .catch(() => {
-            this._eventPresenters[update.id].setViewState(EventPresenterViewState.ABORTING);
-          });
-        break;
-    }
-  }
-
-  _handleModelEvent(updateType, data) {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        this._eventPresenters[data.id].init(data);
-        break;
-      case UpdateType.MINOR:
-        this._clearTrip();
-        this._renderTrip();
-        break;
-      case UpdateType.MAJOR:
-        this._clearTrip({resetSortingType: true});
-        this._renderTrip();
-        break;
-      case UpdateType.INIT:
-        this._isLoading = false;
-        remove(this._loadingComponent);
-        this._renderTrip();
-        break;
-    }
-  }
-
-  _handleModeChange() {
-    this._eventNewPresenter.destroy();
-
-    Object
-      .values(this._eventPresenters)
-      .forEach((presenter) => presenter.resetView());
-  }
-
   _renderSorting() {
     if (this._tripEventsSortingComponent !== null) {
       this._tripEventsSortingComponent = null;
@@ -303,6 +235,74 @@ export default class Trip {
       this._renderEventsAfterSorting();
       this._setDaySortingElementText(``);
     }
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (sortType === this._currentSortingType) {
+      return;
+    }
+
+    this._currentSortingType = sortType;
+    this._clearTrip({removeSortingComponent: false});
+    this._renderTrip();
+  }
+
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case ActionType.UPDATE_EVENT:
+        this._eventPresenters[update.id].setViewState(EventPresenterViewState.SAVING);
+        this._api.updateEvent(update)
+          .then((response) => this._daysModel.updateEvent(updateType, response))
+          .catch(() => {
+            this._eventPresenters[update.id].setViewState(EventPresenterViewState.ABORTING);
+          });
+        break;
+      case ActionType.ADD_EVENT:
+        this._eventNewPresenter.setSaving();
+        this._api.addEvent(update)
+          .then((response) => this._daysModel.addEvent(updateType, response))
+          .catch(() => {
+            this._eventNewPresenter.setAborting();
+          });
+        break;
+      case ActionType.DELETE_EVENT:
+        this._eventPresenters[update.id].setViewState(EventPresenterViewState.DELETING);
+        this._api.deleteEvent(update)
+          .then(() => this._daysModel.deleteEvent(updateType, update))
+          .catch(() => {
+            this._eventPresenters[update.id].setViewState(EventPresenterViewState.ABORTING);
+          });
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._eventPresenters[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        this._clearTrip();
+        this._renderTrip();
+        break;
+      case UpdateType.MAJOR:
+        this._clearTrip({resetSortingType: true});
+        this._renderTrip();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderTrip();
+        break;
+    }
+  }
+
+  _handleModeChange() {
+    this._eventNewPresenter.destroy();
+
+    Object
+      .values(this._eventPresenters)
+      .forEach((presenter) => presenter.resetView());
   }
 }
 

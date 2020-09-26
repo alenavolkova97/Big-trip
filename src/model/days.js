@@ -22,10 +22,6 @@ export default class Days extends Observer {
     return this._days.reduce((events, day) => [...events, ...day.tripEvents], []);
   }
 
-  _updateDays(newDays) {
-    this._days = newDays;
-  }
-
   updateEvent(updateType, updateEvent) {
     let dayContainUpdateEvent;
     let updateEventIndex;
@@ -89,6 +85,10 @@ export default class Days extends Observer {
 
     this._updateDays(groupEventsByDays(this.getAllEvents()));
     this._notify(updateType);
+  }
+
+  _updateDays(newDays) {
+    this._days = newDays;
   }
 
   static adaptEventToClient(event) {
