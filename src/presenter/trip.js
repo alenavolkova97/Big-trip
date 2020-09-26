@@ -130,17 +130,26 @@ export default class Trip {
       case ActionType.UPDATE_EVENT:
         this._eventPresenters[update.id].setViewState(EventPresenterViewState.SAVING);
         this._api.updateEvent(update)
-          .then((response) => this._daysModel.updateEvent(updateType, response));
+          .then((response) => this._daysModel.updateEvent(updateType, response))
+          .catch(() => {
+            this._eventPresenters[update.id].setViewState(EventPresenterViewState.ABORTING);
+          });
         break;
       case ActionType.ADD_EVENT:
         this._eventNewPresenter.setSaving();
         this._api.addEvent(update)
-          .then((response) => this._daysModel.addEvent(updateType, response));
+          .then((response) => this._daysModel.addEvent(updateType, response))
+          .catch(() => {
+            this._eventNewPresenter.setAborting();
+          });
         break;
       case ActionType.DELETE_EVENT:
         this._eventPresenters[update.id].setViewState(EventPresenterViewState.DELETING);
         this._api.deleteEvent(update)
-          .then(() => this._daysModel.deleteEvent(updateType, update));
+          .then(() => this._daysModel.deleteEvent(updateType, update))
+          .catch(() => {
+            this._eventPresenters[update.id].setViewState(EventPresenterViewState.ABORTING);
+          });
         break;
     }
   }

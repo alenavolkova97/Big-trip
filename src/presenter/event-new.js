@@ -63,6 +63,18 @@ export default class NewEvent {
     });
   }
 
+  setAborting() {
+    const resetFormState = () => {
+      this._tripEventEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this._tripEventEditComponent.shake(resetFormState);
+  }
+
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       this.destroy();
