@@ -230,7 +230,7 @@ export default class TripEventEdit extends SmartView {
             </svg>
           </label>
 
-          <button class="event__rollup-btn" type="button">
+          <button class="event__rollup-btn" type="button" ${isDisabled ? `disabled` : ``}>
             <span class="visually-hidden">Open event</span>
           </button>
 

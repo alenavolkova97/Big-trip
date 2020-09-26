@@ -8,7 +8,7 @@ import LoadingView from '../view/loading.js';
 import {render, remove} from '../utils/render.js';
 import {SortType} from '../const.js';
 import {sortEventsByTime, sortEventsByPrice} from '../utils/event.js';
-import EventPresenter from './event.js';
+import EventPresenter, {State as EventPresenterViewState} from './event.js';
 import EventNewPresenter from './event-new.js';
 import {ActionType, UpdateType} from '../const.js';
 import {filter} from '../utils/filter.js';
@@ -128,14 +128,17 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case ActionType.UPDATE_EVENT:
+        this._eventPresenters[update.id].setViewState(EventPresenterViewState.SAVING);
         this._api.updateEvent(update)
           .then((response) => this._daysModel.updateEvent(updateType, response));
         break;
       case ActionType.ADD_EVENT:
+        this._eventNewPresenter.setSaving();
         this._api.addEvent(update)
           .then((response) => this._daysModel.addEvent(updateType, response));
         break;
       case ActionType.DELETE_EVENT:
+        this._eventPresenters[update.id].setViewState(EventPresenterViewState.DELETING);
         this._api.deleteEvent(update)
           .then(() => this._daysModel.deleteEvent(updateType, update));
         break;
