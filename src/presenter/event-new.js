@@ -15,6 +15,7 @@ export default class NewEvent {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleRollupClick = this._handleRollupClick.bind(this);
     this._handleDestinationsUpdate = this._handleDestinationsUpdate.bind(this);
     this._handleOffersUpdate = this._handleOffersUpdate.bind(this);
 
@@ -33,6 +34,7 @@ export default class NewEvent {
 
     this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._tripEventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._tripEventEditComponent.setRollupButtonClickHandler(this._handleRollupClick);
 
     render(this._eventListContainer, this._tripEventEditComponent, RenderPosition.BEFOREBEGIN);
 
@@ -60,6 +62,10 @@ export default class NewEvent {
     }
   }
 
+  _handleRollupClick() {
+    this.destroy();
+  }
+
   _handleDestinationsUpdate() {
     if (this._tripEventEditComponent) {
       this._tripEventEditComponent.setDestinations(this._destinationsModel.getDestinations());
@@ -68,7 +74,6 @@ export default class NewEvent {
 
   _handleOffersUpdate() {
     if (this._tripEventEditComponent) {
-      debugger;
       this._tripEventEditComponent.setOffers(this._offersModel.getOffers());
     }
   }
