@@ -56,6 +56,13 @@ export default class NewEvent {
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
+  setSaving() {
+    this._tripEventEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       this.destroy();
@@ -84,7 +91,6 @@ export default class NewEvent {
         UpdateType.MINOR,
         update
     );
-    this.destroy();
   }
 
   _handleDeleteClick() {

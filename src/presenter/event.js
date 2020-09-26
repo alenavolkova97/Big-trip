@@ -9,6 +9,11 @@ const Mode = {
   EDITING: `EDITING`
 };
 
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`
+};
+
 export default class Event {
   constructor(eventListContainer, destinationsModel, offersModel, changeData, changeMode) {
     this._eventListContainer = eventListContainer;
@@ -59,7 +64,8 @@ export default class Event {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._tripEventEditComponent, prevTripEventEditComponent);
+      replace(this._tripEventComponent, prevTripEventEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevTripEventComponent);
@@ -69,6 +75,23 @@ export default class Event {
   destroy() {
     remove(this._tripEventComponent);
     remove(this._tripEventEditComponent);
+  }
+
+  setViewState(state) {
+    switch (state) {
+      case State.SAVING:
+        this._tripEventEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case State.DELETING:
+        this._tripEventEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+    }
   }
 
   resetView() {
@@ -120,9 +143,8 @@ export default class Event {
     this._changeData(
         ActionType.UPDATE_EVENT,
         isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
-        update);
-
-    this._replaceFormToEvent();
+        update
+    );
   }
 
   _handleRollupButtonClick() {
