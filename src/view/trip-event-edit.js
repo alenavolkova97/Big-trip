@@ -8,15 +8,15 @@ import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 const BLANK_EVENT = {
   isFavorite: false,
   type: `flight`,
-  destination: `Chamonix`, // ?
+  destination: ``,
   time: {
     start: new Date(),
     end: new Date()
   },
   price: 0,
-  offers: [], // ?
-  description: `fgfgfgfgfgfgfg`, // ?
-  photos: [] // ?
+  offers: [],
+  description: ``,
+  photos: []
 };
 
 export default class TripEventEdit extends SmartView {
@@ -325,13 +325,17 @@ export default class TripEventEdit extends SmartView {
   _eventTypeChangeHandler(evt) {
     this.updateData({
       type: evt.target.value,
-      offers: []
+      offers: [],
     });
   }
 
   _destinationInputHandler(evt) {
+    const destination = this._destinations.find((it) => it.name === evt.target.value);
+
     this.updateData({
-      destination: evt.target.value
+      destination: destination.name,
+      photos: destination.photos.map((picture) => picture.src),
+      description: destination.description,
     });
   }
 
