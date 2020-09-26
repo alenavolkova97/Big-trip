@@ -1,4 +1,5 @@
 import Observer from '../utils/observer.js';
+import {groupEventsByDays} from '../utils/event.js';
 
 export default class Days extends Observer {
   constructor() {
@@ -18,6 +19,10 @@ export default class Days extends Observer {
 
   getAllEvents() {
     return this._days.reduce((events, day) => [...events, ...day.tripEvents], []);
+  }
+
+  _updateDays(newDays) {
+    this._days = newDays;
   }
 
   _updateDay(day, dayIndex) {
@@ -54,7 +59,7 @@ export default class Days extends Observer {
       ...dayContainUpdateEvent.tripEvents.slice(updateEventIndex + 1)
     ];
 
-    this._updateDay(dayContainUpdateEvent, dayContainUpdateEventIndex);
+    this._updateDays(groupEventsByDays(this.getAllEvents()));
 
     this._notify(updateType, updateEvent);
   }
@@ -106,9 +111,8 @@ export default class Days extends Observer {
       offers: event.offers.map((offer) => ({
         title: offer.title,
         price: offer.price
-        // type: event.type,
       })),
-      photos: event.destination.pictures.map((picture) => picture.src), // not using description of photo
+      photos: event.destination.pictures.map((picture) => picture.src),
       price: event.base_price,
       time: {
         start: new Date(event.date_from).getTime(),
