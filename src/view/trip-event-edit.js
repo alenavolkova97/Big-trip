@@ -43,25 +43,27 @@ export default class TripEventEdit extends SmartView {
     this._setDatePicker();
   }
 
-  _createTripEventTimeTemplate(time) {
+  _createTripEventTimeTemplate(time, isDisabled) {
     return (
       `<div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time">
           From
         </label>
         <input class="event__input  event__input--time" id="event-start-time"
-          type="text" name="event-start-time" value="${moment(time.start).format(`DD/MM/YYYY HH:mm`)}">
+          type="text" name="event-start-time" value="${moment(time.start).format(`DD/MM/YYYY HH:mm`)}"
+          ${isDisabled ? `disabled` : ``}>
         &mdash;
         <label class="visually-hidden" for="event-end-time">
           To
         </label>
         <input class="event__input  event__input--time" id="event-end-time"
-          type="text" name="event-end-time" value="${moment(time.end).format(`DD/MM/YYYY HH:mm`)}">
+          type="text" name="event-end-time" value="${moment(time.end).format(`DD/MM/YYYY HH:mm`)}"
+          ${isDisabled ? `disabled` : ``}>
       </div>`
     );
   }
 
-  _createTripEventOffersSectionTemplate(checkedOffers, needType) {
+  _createTripEventOffersSectionTemplate(checkedOffers, needType, isDisabled) {
     if (!this._offers) {
       return ``;
     }
@@ -71,17 +73,18 @@ export default class TripEventEdit extends SmartView {
     return Array.isArray(availableOffers.offers) && availableOffers.offers.length ? `<section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${this._createTripEventOffersTemplate(checkedOffers, availableOffers)}
+          ${this._createTripEventOffersTemplate(checkedOffers, availableOffers, isDisabled)}
         </div>
       </section>` : ``;
   }
 
-  _createTripEventOffersTemplate(checkedOffers, availableOffers) {
+  _createTripEventOffersTemplate(checkedOffers, availableOffers, isDisabled) {
     return availableOffers.offers.map((offer) =>
       `<div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}"
               type="checkbox" name="event-offer-${offer.title}" value="${offer.title}"
-              ${checkedOffers.find((checkedOffer) => checkedOffer.title === offer.title) ? `checked` : ``}>
+              ${checkedOffers.find((checkedOffer) => checkedOffer.title === offer.title) ? `checked` : ``}
+              ${isDisabled ? `disabled` : ``}>
             <label class="event__offer-label" for="event-offer-${offer.title}">
               <span class="event__offer-title">${offer.title}</span>
               &plus;
@@ -134,7 +137,17 @@ export default class TripEventEdit extends SmartView {
   }
 
   getTemplate() {
-    const {isFavorite, type, destination, time, price, offers} = this._data;
+    const {
+      isFavorite,
+      type,
+      destination,
+      time,
+      price,
+      offers,
+      isDisabled,
+      isSaving,
+      isDeleting
+    } = this._data;
 
     return (
       `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -145,7 +158,8 @@ export default class TripEventEdit extends SmartView {
               <img class="event__type-icon" width="17" height="17"
                 src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox"
+            ${isDisabled ? `disabled` : ``}>
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -181,13 +195,14 @@ export default class TripEventEdit extends SmartView {
             </label>
             <input class="event__input  event__input--destination" id="event-destination"
               type="text" name="event-destination" value="${destination}" list="destination-list"
-              pattern="${this._hasDestinations() ? this._destinations.map((it) => it.name).join(`|`) : ``}" required>
+              pattern="${this._hasDestinations() ? this._destinations.map((it) => it.name).join(`|`) : ``}"
+              ${isDisabled ? `disabled` : ``} required>
             <datalist id="destination-list">
               ${this._hasDestinations() ? this._destinations.map((it) => `<option value="${it.name}"></option>`).join(``) : ``}
             </datalist>
           </div>
 
-          ${this._createTripEventTimeTemplate(time)}
+          ${this._createTripEventTimeTemplate(time, isDisabled)}
 
           <div class="event__field-group  event__field-group--price">
             <label class="event__label" for="event-price">
@@ -195,15 +210,19 @@ export default class TripEventEdit extends SmartView {
               &euro;
             </label>
             <input class="event__input  event__input--price" id="event-price" type="number" min="0" step="1"
-              name="event-price" value="${price}">
+              name="event-price" value="${price}" ${isDisabled ? `disabled` : ``}>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? `disabled` : ``}>
+            ${isSaving ? `Saving...` : `Save`}
+          </button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>
+            ${isDeleting ? `Deleting...` : `Delete`}
+          </button>
 
           <input id="event-favorite" class="event__favorite-checkbox  visually-hidden" type="checkbox"
           name="event-favorite"
-            ${isFavorite ? `checked` : ``}>
+            ${isFavorite ? `checked` : ``} ${isDisabled ? `disabled` : ``}>
           <label class="event__favorite-btn" for="event-favorite">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -218,7 +237,7 @@ export default class TripEventEdit extends SmartView {
         </header>
 
         <section class="event__details">
-          ${this._createTripEventOffersSectionTemplate(offers, type)}
+          ${this._createTripEventOffersSectionTemplate(offers, type, isDisabled)}
           ${this._createTripEventDestinationSectionTemplate(destination)}
         </section>
       </form>`
