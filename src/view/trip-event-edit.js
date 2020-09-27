@@ -32,12 +32,12 @@ export default class TripEventEdit extends SmartView {
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._offersChangeHandler = this._offersChangeHandler.bind(this);
     this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
 
@@ -176,7 +176,6 @@ export default class TripEventEdit extends SmartView {
     this._setDatePicker();
 
     this.setFormSubmitHandler();
-    this.setFavoriteClickHandler();
     this.setDeleteClickHandler();
     this.setRollupButtonClickHandler();
   }
@@ -208,12 +207,6 @@ export default class TripEventEdit extends SmartView {
     this._callback.rollupButtonClick = callback || this._callback.rollupButtonClick;
     this.getElement().querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, this._rollupButtonClickHandler);
-  }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback || this._callback.favoriteClick;
-    this.getElement().querySelector(`.event__favorite-icon`)
-      .addEventListener(`click`, this._favoriteClickHandler);
   }
 
   _createTripEventTimeTemplate(time, isDisabled) {
@@ -345,6 +338,7 @@ export default class TripEventEdit extends SmartView {
   _setInnerHandlers() {
     const availableDescriptionContainer = this.getElement().querySelector(`.event__input--destination`);
     const availableOffersContainer = this.getElement().querySelector(`.event__available-offers`);
+    const favoriteElement = this.getElement().querySelector(`.event__favorite-icon`);
 
     this
       .getElement()
@@ -362,6 +356,10 @@ export default class TripEventEdit extends SmartView {
 
     if (availableOffersContainer) {
       availableOffersContainer.addEventListener(`change`, this._offersChangeHandler);
+    }
+
+    if (favoriteElement) {
+      favoriteElement.addEventListener(`click`, this._favoriteClickHandler);
     }
   }
 
@@ -406,6 +404,12 @@ export default class TripEventEdit extends SmartView {
     }, true);
   }
 
+  _favoriteClickHandler() {
+    this.updateData({
+      isFavorite: !this._data.isFavorite,
+    });
+  }
+
   _offersChangeHandler(evt) {
     const currentOfferTitle = evt.target.value;
     const checkedOffer = this._data.offers.find((offer) => offer.title === currentOfferTitle);
@@ -431,10 +435,6 @@ export default class TripEventEdit extends SmartView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(TripEventEdit.parseDataToEvent(this._data));
-  }
-
-  _favoriteClickHandler() {
-    this._callback.favoriteClick();
   }
 
   _deleteClickHandler(evt) {

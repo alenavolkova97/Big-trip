@@ -28,11 +28,10 @@ export default class Event {
 
     this._mode = Mode.DEFAULT;
 
-    this._handleRollupClick = this._handleRollupClick.bind(this);
+    this._handleRolloutClick = this._handleRolloutClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleRollupButtonClick = this._handleRollupButtonClick.bind(this);
     this._handleDestinationsUpdate = this._handleDestinationsUpdate.bind(this);
     this._handleOffersUpdate = this._handleOffersUpdate.bind(this);
@@ -50,10 +49,9 @@ export default class Event {
     this._tripEventComponent = new TripEventView(this._event);
     this._tripEventEditComponent = new TripEventEditView(this._event, this._destinationsModel.getDestinations(), this._offersModel.getOffers());
 
-    this._tripEventComponent.setRollupClickHandler(this._handleRollupClick);
+    this._tripEventComponent.setRolloutClickHandler(this._handleRolloutClick);
     this._tripEventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._tripEventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
-    this._tripEventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._tripEventEditComponent.setRollupButtonClickHandler(this._handleRollupButtonClick);
 
     if (prevTripEventComponent === null || prevTripEventEditComponent === null) {
@@ -150,7 +148,7 @@ export default class Event {
     }
   }
 
-  _handleRollupClick() {
+  _handleRolloutClick() {
     this._replaceEventToForm();
   }
 
@@ -170,20 +168,6 @@ export default class Event {
   _handleRollupButtonClick() {
     this._tripEventEditComponent.reset(this._event);
     this._replaceFormToEvent();
-  }
-
-  _handleFavoriteClick() {
-    this._changeData(
-        ActionType.UPDATE_EVENT,
-        UpdateType.PATCH,
-        Object.assign(
-            {},
-            this._event,
-            {
-              isFavorite: !this._event.isFavorite
-            }
-        )
-    );
   }
 
   _handleDeleteClick(update) {

@@ -12,7 +12,7 @@ import {MenuItem, UpdateType, FilterType} from './const.js';
 import {groupEventsByDays} from './utils/event.js';
 import Api from './api.js';
 
-const AUTHORIZATION = `Basic qUn7gIdas1297SA`;
+const AUTHORIZATION = `Basic qUn7g12Idas1297SA`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const headerElement = document.querySelector(`.page-header`);

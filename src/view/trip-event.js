@@ -7,7 +7,7 @@ export default class TripEvent extends AbstractView {
     super();
 
     this._event = event;
-    this._rollupClickHandler = this._rollupClickHandler.bind(this);
+    this._rolloutClickHandler = this._rolloutClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -54,10 +54,10 @@ export default class TripEvent extends AbstractView {
     );
   }
 
-  setRollupClickHandler(callback) {
-    this._callback.rollupClick = callback;
+  setRolloutClickHandler(callback) {
+    this._callback.rolloutClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, this._rollupClickHandler);
+      .addEventListener(`click`, this._rolloutClickHandler);
   }
 
   _createTripEventOffersTemplate(offers) {
@@ -71,8 +71,8 @@ export default class TripEvent extends AbstractView {
     }).join(``);
   }
 
-  _rollupClickHandler() {
-    this._callback.rollupClick();
+  _rolloutClickHandler() {
+    this._callback.rolloutClick();
   }
 }
 
