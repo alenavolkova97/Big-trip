@@ -38,7 +38,7 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._tripDaysContainerComponent,
+    this._eventNewPresenter = new EventNewPresenter(this._tripDaysContainerComponent, this._daysModel,
         this._destinationsModel, this._offersModel, this._handleViewAction);
   }
 
@@ -62,6 +62,10 @@ export default class Trip {
   createEvent(callback) {
     this._handleModeChange();
     this._eventNewPresenter.init(callback);
+  }
+
+  deleteNoEventComponent() {
+    remove(this._noEventsComponent);
   }
 
   _getDays() {
@@ -260,7 +264,9 @@ export default class Trip {
       case ActionType.ADD_EVENT:
         this._eventNewPresenter.setSaving();
         this._api.addEvent(update)
-          .then((response) => this._daysModel.addEvent(updateType, response))
+          .then((response) => {
+            return this._daysModel.addEvent(updateType, response);
+          })
           .catch(() => {
             this._eventNewPresenter.setAborting();
           });

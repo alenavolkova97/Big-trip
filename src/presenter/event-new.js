@@ -1,13 +1,16 @@
 import TripEventEditView from '../view/trip-event-edit.js';
+import {tripPresenter} from '../main.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {ActionType, UpdateType} from '../const.js';
+import {tripEventsContainerElement} from '../main.js';
 
 export default class NewEvent {
-  constructor(eventListContainer, destinationsModel, offersModel, changeData) {
+  constructor(eventListContainer, daysModel, destinationsModel, offersModel, changeData) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
+    this._daysModel = daysModel;
 
     this._tripEventEditComponent = null;
     this._destroyCallback = null;
@@ -36,9 +39,15 @@ export default class NewEvent {
     this._tripEventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
     this._tripEventEditComponent.setRollupButtonClickHandler(this._handleRollupClick);
 
-    render(this._eventListContainer, this._tripEventEditComponent, RenderPosition.BEFOREBEGIN);
-
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+
+    if (!this._daysModel.getAllEvents().length) {
+      tripPresenter.deleteNoEventComponent();
+      render(tripEventsContainerElement, this._tripEventEditComponent);
+      return;
+    }
+
+    render(this._eventListContainer, this._tripEventEditComponent, RenderPosition.BEFOREBEGIN);
   }
 
   destroy() {

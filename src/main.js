@@ -12,7 +12,7 @@ import {MenuItem, UpdateType, FilterType} from './const.js';
 import {groupEventsByDays} from './utils/event.js';
 import Api from './api.js';
 
-const AUTHORIZATION = `Basic qUn7gIdas1907SA`;
+const AUTHORIZATION = `Basic qUn7gIdas1397SA`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const headerElement = document.querySelector(`.page-header`);
@@ -32,7 +32,7 @@ const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel,
+export const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel,
     destinationsModel, offersModel, api);
 const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);

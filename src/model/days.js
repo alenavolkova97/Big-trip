@@ -52,9 +52,17 @@ export default class Days extends Observer {
   }
 
   addEvent(updateType, addEvent) {
-    this._days[0].tripEvents = [
-      addEvent,
-      ...this._days[0].tripEvents];
+
+    if (this._days.length === 0) {
+      const events = [];
+      events.push(addEvent);
+      this._updateDays(groupEventsByDays(events));
+    } else {
+      this._days[0].tripEvents = [
+        addEvent,
+        ...this._days[0].tripEvents];
+      this._updateDays(groupEventsByDays(this.getAllEvents()));
+    }
 
     this._notify(updateType, addEvent);
   }
