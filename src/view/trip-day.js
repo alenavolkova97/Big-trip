@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-element.js';
 import {formatDate} from '../utils/trip.js';
 
 export default class TripDay extends AbstractView {

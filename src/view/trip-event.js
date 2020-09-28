@@ -1,6 +1,8 @@
 import {ARRIVALS} from '../const.js';
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-element.js';
 import {formatEventDate, formatEventDuration} from '../utils/event.js';
+
+const MAX_OFFERS_QUANTITY_IN_EVENT = 3;
 
 export default class TripEvent extends AbstractView {
   constructor(event) {
@@ -61,7 +63,7 @@ export default class TripEvent extends AbstractView {
   }
 
   _createTripEventOffersTemplate(offers) {
-    return offers.slice(0, 3).map((offer) => {
+    return offers.slice(0, MAX_OFFERS_QUANTITY_IN_EVENT).map((offer) => {
       return (
         `<li class="event__offer">
           <span class="event__offer-title">${offer.title}</span>

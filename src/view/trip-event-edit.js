@@ -373,6 +373,10 @@ export default class TripEventEdit extends SmartView {
   _destinationInputHandler(evt) {
     const destination = this._destinations.find((it) => it.name === evt.target.value);
 
+    if (!destination) {
+      return;
+    }
+
     this.updateData({
       destination: destination.name,
       photos: destination.photos.map((picture) => picture.src),

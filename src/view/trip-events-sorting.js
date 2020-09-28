@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-element.js';
 import {SortType} from '../const.js';
 
 export default class TripEventsSorting extends AbstractView {

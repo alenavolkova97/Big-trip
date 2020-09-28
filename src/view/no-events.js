@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-element.js';
 
 export default class NoEvents extends AbstractView {
   getTemplate() {

@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-element.js';
 
 export default class TripPrice extends AbstractView {
   constructor(events) {
