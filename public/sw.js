@@ -27,6 +27,7 @@ self.addEventListener(`install`, (evt) => {
             `/img/header-bg.png`,
             `/img/header-bg@2x.png`,
             `/img/logo.png`,
+            `https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800&display=swap`
           ]);
         })
   );

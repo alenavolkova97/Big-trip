@@ -10,7 +10,7 @@ import FilterModel from './model/filter.js';
 import DestinationsModel from './model/destinations.js';
 import {MenuItem, UpdateType, FilterType} from './const.js';
 import {groupEventsByDays} from './utils/event.js';
-import Api from './api.js';
+import Api from './api/api.js';
 
 const AUTHORIZATION = `Basic qUn7g12Idas1297SA`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;

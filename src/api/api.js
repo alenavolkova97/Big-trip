@@ -1,6 +1,6 @@
-import DaysModel from './model/days.js';
-import OffersModel from './model/offers.js';
-import DestinationsModel from './model/destinations.js';
+import DaysModel from '../model/days.js';
+import OffersModel from '../model/offers.js';
+import DestinationsModel from '../model/destinations.js';
 
 const Method = {
   GET: `GET`,
