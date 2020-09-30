@@ -11,9 +11,16 @@ import DestinationsModel from './model/destinations.js';
 import {MenuItem, UpdateType, FilterType} from './const.js';
 import {groupEventsByDays} from './utils/event.js';
 import Api from './api/api.js';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 
-const AUTHORIZATION = `Basic qUn7g12Idas1297SA`;
+const AUTHORIZATION = `Basic qUn7g12Idas131297SA`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v12`;
+const STORE_EVENTS = `${STORE_PREFIX}-events-${STORE_VER}`;
+const STORE_OFFERS = `${STORE_PREFIX}-offers-${STORE_VER}`;
+const STORE_DESTINATIONS = `${STORE_PREFIX}-destinations-${STORE_VER}`;
 
 const headerElement = document.querySelector(`.page-header`);
 const headerContainerElement = headerElement.querySelector(`.trip-main`);
@@ -26,6 +33,10 @@ export const tripEventsContainerElement = mainElement.querySelector(`.trip-event
 const newEventButtonElement = document.querySelector(`.trip-main__event-add-btn`);
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const storeEvents = new Store(STORE_EVENTS);
+const storeOffers = new Store(STORE_OFFERS);
+const storeDestinations = new Store(STORE_DESTINATIONS);
+const apiWithProvider = new Provider(api, storeEvents, storeOffers, storeDestinations);
 
 const daysModel = new DaysModel();
 const offersModel = new OffersModel();
@@ -33,7 +44,7 @@ const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
 export const tripPresenter = new TripPresenter(tripEventsContainerElement, daysModel, filterModel,
-    destinationsModel, offersModel, api);
+    destinationsModel, offersModel, apiWithProvider);
 const filterPresenter = new FilterPresenter(tripEventsFilterHeaderElement, filterModel);
 const infoPresenter = new InfoPresenter(headerContainerElement, daysModel);
 
@@ -100,7 +111,8 @@ newEventButtonElement.addEventListener(`click`, (evt) => {
   newEventButtonClickHandler(evt);
 });
 
-Promise.all([api.getEvents(), api.getDestinations(), api.getOffers()])
+Promise.all([apiWithProvider.getEvents(), apiWithProvider.getDestinations(),
+  apiWithProvider.getOffers()])
   .then(([events, destinations, offers]) => {
     daysModel.setDays(UpdateType.INIT, groupEventsByDays(events));
     destinationsModel.setDestinations(destinations);
@@ -120,5 +132,14 @@ window.addEventListener(`load`, () => {
     }).catch(() => {
       console.error(`ServiceWorker isn't available`); // eslint-disable-line
     });
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
 });
 

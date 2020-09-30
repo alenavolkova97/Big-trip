@@ -1,5 +1,5 @@
 export default class Store {
-  constructor(key, storage) {
+  constructor(key, storage = window.localStorage) {
     this._storage = storage;
     this._storeKey = key;
   }
